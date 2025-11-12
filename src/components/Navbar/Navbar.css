@@ -1,0 +1,28 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 0rem 2rem;
+
+  & h1 {
+    flex: 0;
+  }
+
+  & ul {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0rem 1rem;
+    margin: 0rem 1rem;
+    border: 0.1rem solid black;
+    border-radius: 1rem;
+
+    flex: 1;
+  }
+  & div {
+    flex: 0;
+    display: flex;
+    gap: 1rem;
+  }
+}
