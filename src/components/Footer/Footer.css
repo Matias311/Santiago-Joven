@@ -1,0 +1,25 @@
+footer {
+  background-color: #4c4c4c;
+  color: #ffffff;
+  & .contenido {
+    display: flex;
+    background-color: #272727;
+    border-radius: 4rem 4rem 0rem 0rem;
+    padding: 3rem 2rem;
+    gap: 1rem;
+    justify-content: space-evenly;
+    align-items: center;
+
+    & img {
+      width: 25rem;
+      aspect-ratio: auto;
+    }
+
+    & div {
+      & a {
+        text-decoration: underline;
+        text-underline-offset: 0.3rem;
+      }
+    }
+  }
+}
