@@ -1,0 +1,46 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  gap: 1rem;
+
+  & h1 {
+    flex: 0;
+
+    & img {
+      width: 12rem;
+      aspect-ratio: auto;
+    }
+  }
+
+  & ul {
+    display: flex;
+    gap: 2rem;
+    max-width: 40%;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    margin: 0rem 1rem;
+    border: 0.1rem solid black;
+    border-radius: 1rem;
+    & li {
+      font-size: 1.3rem;
+
+      &:hover {
+        text-decoration: underline red;
+        cursor: pointer;
+      }
+    }
+
+    flex: 1;
+  }
+  & div {
+    flex: 0;
+    display: flex;
+    gap: 1rem;
+    & .icon {
+      font-size: 1.8rem;
+    }
+  }
+}

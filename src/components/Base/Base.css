@@ -1,0 +1,27 @@
+.base-page-style {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  overflow: hidden;
+
+  & .custom-shape-divider-bottom-1763161839 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+  }
+
+  & .custom-shape-divider-bottom-1763161839 svg {
+    position: relative;
+    display: block;
+    width: calc(145% + 1.3px);
+    height: 142px;
+  }
+
+  & .custom-shape-divider-bottom-1763161839 .shape-fill {
+    fill: #4c4c4c;
+  }
+}
