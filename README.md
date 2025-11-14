@@ -4,6 +4,9 @@
 - NodeJS
 - Git 
 
+> [!IMPORTANT]
+> Para utilizar iconos tienen que copiarlos de aqui: <https://fontawesome.com/search?ic=free-collection> 
+
 ## Instalacion y configuracion de la aplicacion
 - Clonar el repositorio para poder trabajar
 ```bash
