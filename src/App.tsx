@@ -2,8 +2,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./components/pages/Home/Home";
 import PersonasMayores from "./components/pages/PersonasMayores/PersonasMayores";
+import Inicio from "./components/pages/inicio/inicio";
+import Agenda from "./components/pages/agenda/agenda";
+import Talleres from "./components/pages/talleres/talleres";
 import { Base } from "./components/Base/Base";
 import Footer from "./components/Footer/Footer";
+
 
 function App() {
   return (
@@ -12,6 +16,9 @@ function App() {
       <Routes>
         {/* Aqui tienen que poner exactamente lo mismo, pero cambiando el elemento por el componente que les corresponda  */}
         <Route path="/" element={<Home />} />
+        <Route path="/inicio" element={<Inicio />} />
+        <Route path="/agenda" element={<Agenda />} />
+        <Route path="/talleres" element={<Talleres />} />
         <Route
           path="/personas-mayores"
           element={<Base content={<PersonasMayores />} />}
