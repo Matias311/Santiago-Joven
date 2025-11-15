@@ -13,222 +13,163 @@ import CentroMujerSantiago from "../../../assets/MujeresIgualdadGenero/CentroMuj
 
 export default function MujeresIgualdadGenero() {
   return (
-    <div style={styles.pageContainer}>
-      <h1 style={styles.title}>Mujeres e Igualdad de Género</h1>
-      <section
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          rowGap: 50,
-          placeItems: "center",
-        }}
-      >
+    <section className="main-section">
+      <h1 className="title">Mujeres e Igualdad de Género</h1>
+
+      <section className="section-service-list">
         {/* --------------------Fila 1-------------------- */}
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
               alt="Imagen de Bienestar y Autocuidado"
-              style={styles.serviceContainerImg}
+              className="service-containerImg"
               src={BienestarAutocuidado}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>
-              Bienestar y Autocuidado
-            </h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            />
+            <h3 className="subtitle">Bienestar y Autocuidado</h3>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
-              alt="Imagen de Estudios y capacitacion de genero"
-              style={styles.serviceContainerImg}
+              alt="Imagen de Estudios y capacitación de género"
+              className="service-containerImg"
               src={EstudiosCapacitacionGenero}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>
-              Estudios y capacitacion de género
-            </h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            />
+            <h3 className="subtitle">Estudios y Capacitación de Género</h3>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
               alt="Imagen de Organizaciones de Mujeres"
-              style={styles.serviceContainerImg}
+              className="service-containerImg"
               src={OrganizacionesMujeres}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>
-              Organizaciones de Mujeres
-            </h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            />
+            <h3 className="subtitle">Organizaciones de Mujeres</h3>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         {/* --------------------Fila 2-------------------- */}
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
-              alt="Imagen de Atencion Integral Social, Psicologico y Juridico"
-              style={styles.serviceContainerImg}
+              alt="Imagen de Atención Integral Social, Psicológico y Jurídico"
+              className="service-containerImg"
               src={AtencionIntegral}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>
+            />
+            <h3 className="subtitle">
               Atención Integral (Social - Psicológico - Jurídico)
             </h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
               alt="Imagen de Brigada de Cuidados"
-              style={styles.serviceContainerImg}
+              className="service-containerImg"
               src={BrigadaCuidados}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>Brigada de Cuidados</h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            />
+            <h3 className="subtitle">Brigada de Cuidados</h3>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
-              alt="Imagen de Talleres Programa Santiago x la No Violencia de Genero"
-              style={styles.serviceContainerImg}
+              alt="Imagen de Talleres Programa Santiago x la No Violencia de Género"
+              className="service-containerImg"
               src={ProgramaNoViolenciaGenero}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>
+            />
+            <h3 className="subtitle">
               Talleres Programa Santiago x la No Violencia de Género
             </h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         {/* --------------------Fila 3-------------------- */}
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
               alt="Imagen de Escuela de Emprendedoras Santiago Mujeres"
-              style={styles.serviceContainerImg}
+              className="service-containerImg"
               src={EscuelaEmprendedoras}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>
+            />
+            <h3 className="subtitle">
               Escuela de Emprendedoras Santiago Mujeres
             </h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
               alt="Imagen de Programa Mujer, Derechos Sexuales y Reproductivos - Convenio SERNAMEG"
-              style={styles.serviceContainerImg}
+              className="service-containerImg"
               src={ProgramaMujerDerechoSexRep}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>
+            />
+            <h3 className="subtitle">
               Programa Mujer, Derechos Sexuales y Reproductivos - Convenio
               SERNAMEG
             </h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
               alt="Imagen de Programa 4 a 7 - Convenio SERNAMEG"
-              style={styles.serviceContainerImg}
+              className="service-containerImg"
               src={Programa4a7}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>
-              Programa 4 a 7 - Convenio SERNAMEG
-            </h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            />
+            <h3 className="subtitle">Programa 4 a 7 - Convenio SERNAMEG</h3>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
-        {/* Fila 4 */}
+        {/* --------------------Fila 4-------------------- */}
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
-              alt="Imagen de Programa de Prevencion en Violencia contra las Mujeres - Convenio SERNAMEG"
-              style={styles.serviceContainerImg}
+              alt="Imagen de Programa de Prevención en Violencia contra las Mujeres - Convenio SERNAMEG"
+              className="service-containerImg"
               src={ProgramaPrevencionViolencia}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>
+            />
+            <h3 className="subtitle">
               Programa de Prevención en Violencia contra las Mujeres - Convenio
               SERNAMEG
             </h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         <a href="">
-          <div style={styles.serviceContainer}>
+          <div className="service-container">
             <img
-              alt="Imagen de Centro de la Mujer Santiago - Convenio"
-              style={styles.serviceContainerImg}
+              alt="Imagen de Centro de la Mujer Santiago - Convenio SERNAMEG"
+              className="service-containerImg"
               src={CentroMujerSantiago}
-            ></img>
-            <h3 style={styles.serviceContainerTitle}>
+            />
+            <h3 className="subtitle">
               Centro de la Mujer Santiago - Convenio SERNAMEG
             </h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
       </section>
-      {/* imagen wave diseño xd */}
-      <img src={wave} style={{ width: "100%", display: "block" }}></img>
-    </div>
+
+      {/* imagen wave xd */}
+      <img src={wave} className="wave.img" />
+    </section>
   );
 }
-
-const styles = {
-  pageContainer: {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: 100,
-  },
-
-  title: {
-    color: "#6080BF",
-    fontSize: "4rem",
-    fontWeight: 600,
-    textAlign: "center" as const,
-  },
-
-  serviceContainerTitle: {
-    color: "#6080BF",
-    fontSize: "1.5rem",
-    fontWeight: 500,
-  },
-
-  serviceContainerP: {
-    color: "#6080BF",
-    fontSize: "1.3rem",
-    fontWeight: 300,
-  },
-
-  serviceContainer: {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "5%",
-    overflow: "hidden",
-    textAlign: "center" as const,
-    width: 530,
-    height: 407,
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderColor: "#C2C2C2",
-    borderRadius: 60,
-  },
-
-  serviceContainerImg: {
-    width: "100%",
-    height: 245,
-  },
-};

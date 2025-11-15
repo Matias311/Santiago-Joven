@@ -5,87 +5,37 @@ import CentroAtencionF from "../../../assets/DiversidadSexualImg/CentroAtencionF
 
 export default function DiversidadSexual() {
   return (
-    <div style={styles.pageContainer}>
-      <h1 style={styles.title}>Diversidad Sexual</h1>
-      <section
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          placeItems: "center",
-        }}
-      >
+    <section className="main-section">
+      <h1 className="title">Diversidad Sexual</h1>
+
+      <section className="section-service-list">
         <a href="">
-          <div style={styles.serviceContainer}>
-            <img style={styles.serviceContainerImg} src={ApoyoLaboralT}></img>
-            <h3 style={styles.serviceContainerTitle}>Apoyo Laboral Trans</h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+          <div className="service-container">
+            <img className="service-containerImg" src={ApoyoLaboralT} />
+            <h3 className="subtitle">Apoyo Laboral Trans</h3>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         <a href="">
-          <div style={styles.serviceContainer}>
-            <img style={styles.serviceContainerImg} src={ProgramaSocialA}></img>
-            <h3 style={styles.serviceContainerTitle}>Apoyo Laboral Trans</h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+          <div className="service-container">
+            <img className="service-containerImg" src={ProgramaSocialA} />
+            <h3 className="subtitle">Apoyo Laboral Trans</h3>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
 
         <a href="">
-          <div style={styles.serviceContainer}>
-            <img style={styles.serviceContainerImg} src={CentroAtencionF}></img>
-            <h3 style={styles.serviceContainerTitle}>Apoyo Laboral Trans</h3>
-            <p style={styles.serviceContainerP}>Ver más »</p>
+          <div className="service-container">
+            <img className="service-containerImg" src={CentroAtencionF} />
+            <h3 className="subtitle">Apoyo Laboral Trans</h3>
+            <p className="see-more">Ver más »</p>
           </div>
         </a>
       </section>
+
       {/* imagen wave diseño xd */}
-      <img src={wave} style={{ width: "100%", display: "block" }}></img>
-    </div>
+      <img src={wave} className="wave.img" />
+    </section>
   );
 }
-
-const styles = {
-  pageContainer: {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: 100,
-  },
-
-  title: {
-    color: "#6080BF",
-    fontSize: "4rem",
-    fontWeight: 600,
-    textAlign: "center" as const,
-  },
-
-  serviceContainerTitle: {
-    color: "#6080BF",
-    fontSize: "1.5rem",
-    fontWeight: 500,
-  },
-
-  serviceContainerP: {
-    color: "#6080BF",
-    fontSize: "1.3rem",
-    fontWeight: 300,
-  },
-
-  serviceContainer: {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "5%",
-    overflow: "hidden",
-    textAlign: "center" as const,
-    width: 530,
-    height: 407,
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderColor: "#C2C2C2",
-    borderRadius: 60,
-  },
-
-  serviceContainerImg: {
-    width: "100%",
-    height: 245,
-  },
-};

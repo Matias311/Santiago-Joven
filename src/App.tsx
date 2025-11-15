@@ -17,13 +17,13 @@ function App() {
         {/* Aqui tienen que poner exactamente lo mismo, pero cambiando el elemento por el componente que les corresponda  */}
         <Route path="/" element={<Home />} />
         {/* --------------------Partes Joshua xd (yo jiji)-------------------- */}
-        <Route path="/Encuesta" element={<Encuesta />} />
-        <Route path="/DiversidadSexual" element={<DiversidadSexual />} />
+        <Route path="/encuesta" element={<Encuesta />} />
+        <Route path="/diversidad-sexual" element={<DiversidadSexual />} />
         <Route
-          path="/MujeresIgualdadGenero"
+          path="/mujeres-igualdad-genero"
           element={<MujeresIgualdadGenero />}
         />
-        <Route path="/ServiciosSociales" element={<ServiciosSociales />} />
+        <Route path="/servicios-sociales" element={<ServiciosSociales />} />
         <Route
           path="/personas-mayores"
           element={<Base content={<PersonasMayores />} />}
