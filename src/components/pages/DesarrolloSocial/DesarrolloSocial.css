@@ -1,0 +1,140 @@
+.contenedor-desarrollo {
+  width: 100%;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+}
+
+.caja-flexible {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 30px;
+  margin-left: -20px;
+}
+
+/* Titulo con la tarjeta gris :[ */
+.tarjeta-titulo {
+  background-color: #4C4C4C;
+  padding: 24px 50px 24px 32px;
+  border-top-right-radius: 80px;
+  border-bottom-right-radius: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 350px;
+  min-width: 250px;
+  flex-shrink: 0;
+}
+
+/* Título principal (odié hacer todo lo que tenga que ver con esta tarjeta) */
+.titulo-principal {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  line-height: 1;
+}
+
+.titulo-principal span {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #6080BF;
+  display: block;
+  margin: 0;
+  padding: 2px 0;
+}
+
+/* Imagen */
+.caja-imagen {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.imagen-wrapper {
+  width: 100%;
+  max-width: 900px;
+  min-width: 260px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.imagen-principal {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Textoooooooo */
+.seccion-texto {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 40px;
+  padding: 0 20px;
+  color: #717171;
+}
+
+.subtitulo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #4a6eb1;
+  margin-bottom: 8px;
+}
+
+.parrafo,
+.departamento,
+.lista li {
+  font-size: 1rem;
+}
+
+.departamento {
+  font-weight: 700;
+  margin: 10px 0 4px;
+}
+
+.lista {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+/* Espacio antes del footer pa que no choque con las ondas*/
+.espacio-footer {
+  height: 150px;
+}
+
+
+@media (max-width: 768px) {
+  .caja-flexible {
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0;
+  }
+
+  .tarjeta-titulo {
+    width: fit-content;
+    height: auto;
+    border-radius: 20px;
+    padding: 16px 32px;
+  }
+
+  .caja-imagen {
+    padding-left: 0;
+  }
+
+  .titulo-principal span {
+    font-size: 2.2rem;
+  }
+}
