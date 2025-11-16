@@ -1,0 +1,77 @@
+/* Contenedor principal */
+.gestion-y-administracion-comunitaria-container {
+  padding: 30px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+}
+
+/* Header: título lateral + imagen hero */
+.ddc-header {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  padding-top: 24px;
+  margin-bottom: 28px;
+}
+
+.side-title {
+  flex: 0 0 340px;
+  background: #2f465a;
+  color: #d1e3ff;
+  padding: 34px 42px;
+  border-radius: 40px;
+  font-weight: 800;
+  line-height: 1.02;
+  text-align: left;
+  box-shadow: 0 8px 26px rgba(47,70,90,0.18);
+  font-size: 32px;
+}
+
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 1 auto;
+}
+
+.hero-image {
+  width: 480px;
+  max-width: 54vw;
+  height: 200px;
+  border-radius: 48px;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  border: 6px solid #fff;
+}
+
+/* Contenido principal */
+.ddc-content {
+  margin-top: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #424242;
+}
+
+.intro-section {
+  max-width: 900px;
+}
+
+.intro {
+  margin-top: 8px;
+}
+
+.intro p {
+  color: #555;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.ddc-content h2 {
+  font-size: 26px;
+  color: #2f465a;
+  margin: 8px 0 12px 0;
+  font-weight: 800;
+}
