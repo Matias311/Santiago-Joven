@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import PersonasMayores from "./components/pages/PersonasMayores/PersonasMayores";
+import ParticipacionCiudadana from "./components/pages/ParticipacionCiudadana/ParticipacionCiudadana";
+import DesarrolloSocial from "./components/pages/DesarrolloSocial/DesarrolloSocial";
 import Inicio from "./components/pages/inicio/inicio";
 import Agenda from "./components/pages/agenda/agenda";
 import Talleres from "./components/pages/talleres/talleres";
@@ -19,6 +21,14 @@ function App() {
         <Route
           path="/personas-mayores"
           element={<Base content={<PersonasMayores />} />}
+        />
+        <Route
+          path="/participacion-ciudadana"
+          element={<Base content={<ParticipacionCiudadana />} />}
+        />
+        <Route
+          path="/desarrollo-social"
+          element={<Base content={<DesarrolloSocial />} />}
         />
       </Routes>
       <Footer />

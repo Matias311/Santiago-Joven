@@ -14,27 +14,29 @@ export default function Navbar() {
       <h1>
         <img src={logo} alt="Municipalidad de santiago" />
       </h1>
-      <ul>
-        <li>
-          <Link to="/inicio">Inicio</Link>
-        </li>
-        {/* TODO: aqui se debe crear un componente de dropdown para agregar bien la funcionalidad */}
-        <li>
-          Servicios
-          <FontAwesomeIcon icon={faCaretDown} />
-        </li>
-        <li>
-          <Link to="/agenda">Agenda</Link>
-        </li>
-        <li>
-          <Link to="/talleres">Talleres</Link>
-        </li>
-        {/* TODO: aqui se debe crear un componente de dropdown para agregar bien la funcionalidad */}
-        <li>
-          Conocenos
-          <FontAwesomeIcon icon={faCaretDown} />
-        </li>
-      </ul>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Inicio</Link>
+          </li>
+          {/* TODO: aqui se debe crear un componente de dropdown para agregar bien la funcionalidad */}
+          <li>
+            Servicios
+            <FontAwesomeIcon icon={faCaretDown} />
+          </li>
+          <li>
+            <Link to="/agenda">Agenda</Link>
+          </li>
+          <li>
+            <Link to="/talleres">Talleres</Link>
+          </li>
+          {/* TODO: aqui se debe crear un componente de dropdown para agregar bien la funcionalidad */}
+          <li>
+            Conocenos
+            <FontAwesomeIcon icon={faCaretDown} />
+          </li>
+        </ul>
+      </nav>
       <div>
         <FontAwesomeIcon className="icon" icon={faInstagram} />
         <FontAwesomeIcon className="icon" icon={faYoutube} />
