@@ -56,6 +56,7 @@
 - personas mayores
 - migrantes
 - participación ciudadana
+- pueblos originarios
 
 ### Joshua:
 - encuesta

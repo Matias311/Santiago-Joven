@@ -16,6 +16,8 @@ import Footer from "./components/Footer/Footer";
 import ServiciosSociales from "./components/pages/ServiciosSociales/ServiciosSociales";
 import GestionYAdministracionComunitaria from "./components/pages/GestionYAdministracionComunitaria/GestionYAdministracionComunitaria";
 import DireccionDeDesarrolloComunitario from "./components/pages/DirecciónDeDesarrolloComunitario/DireccionDeDesarrolloComunitario";
+import Migrantes from "./components/pages/Migrantes/Migrantes";
+import PueblosOriginarios from "./components/pages/PueblosOriginarios/PueblosOriginarios";
 
 function App() {
   return (
@@ -41,9 +43,10 @@ function App() {
           element={<Base content={<DeportesRecreacion />} />}
         />
         <Route
-          path="/pages/personasMayores"
+          path="/personas-mayores"
           element={<Base content={<PersonasMayores />} />}
         />
+        <Route path="/migrantes" element={<Base content={<Migrantes />} />} />
         <Route
           path="/servicios-sociales"
           element={<Base content={<ServiciosSociales />} />}
@@ -63,6 +66,10 @@ function App() {
         <Route
           path="/desarrollo-social"
           element={<Base content={<DesarrolloSocial />} />}
+        />
+        <Route
+          path="/pueblos-originarios"
+          element={<Base content={<PueblosOriginarios />} />}
         />
       </Routes>
       <Footer />
