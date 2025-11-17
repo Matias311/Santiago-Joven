@@ -1,0 +1,116 @@
+/* Contenedor principal */
+.direccion-desarrollo-comunitario-container {
+	padding: 30px 24px;
+	max-width: 1000px;
+	margin: 0 auto;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #333;
+}
+
+/* Header: título lateral + imagen hero */
+.ddc-header {
+	position: relative;
+	display: flex;
+	gap: 36px;
+	align-items: center;
+	padding-top: 28px; /* espacio para el título lateral */
+	margin-bottom: 28px;
+}
+
+.side-title {
+	position: relative;
+	flex: 0 0 320px; /* ancho fijo aproximado */
+	background: #2f465a; /* color oscuro */
+	color: #ffffff; /* texto blanco */
+	padding: 34px 40px; /* caja más grande */
+	border-radius: 40px;
+	font-weight: 800;
+	line-height: 1.02;
+	text-align: left;
+	box-shadow: 0 8px 26px rgba(47,70,90,0.18);
+	font-size: 32px; /* tamaño de letra mayor */
+	letter-spacing: 0.2px;
+}
+
+.hero {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1 1 auto;
+}
+
+.hero-image {
+	width: 480px;
+	max-width: 54vw;
+	height: 200px;
+	object-fit: cover;
+	display: block;
+	border: 6px solid #fff;
+}
+
+/* Contenido principal con tipografía compacta */
+.ddc-content {
+	margin-top: 18px;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #424242;
+}
+
+.intro {
+	max-width: 860px;
+	margin-top: 12px;
+}
+
+.intro p {
+	color: #555;
+	font-size: 13px;
+	margin-bottom: 12px;
+}
+
+/* Secciones (CuadroX) estilizadas como bloques simples */
+.ddc-content section {
+	padding: 6px 2px;
+}
+
+.ddc-content h2 {
+	font-size: 26px;
+	color: #2f465a;
+	margin: 10px 0 12px 0;
+	font-weight: 800;
+}
+
+.ddc-content h3 {
+	font-size: 14px;
+	margin: 10px 0 6px 0;
+	font-weight: 700;
+}
+
+.ddc-content h4 {
+	font-size: 13px;
+	margin: 8px 0 4px 0;
+	font-weight: 600;
+}
+
+ul {
+	list-style: none;
+	padding-left: 0;
+	margin: 0 0 10px 0;
+}
+
+li {
+	margin-bottom: 4px;
+	padding-left: 0;
+}
+
+li strong { color: #111; }
+
+a { color: #1565c0; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Separador fino entre secciones */
+.section-sep {
+	border: none;
+	height: 1px;
+	background: #e6e6e6;
+	margin: 18px 0;
+}
