@@ -1,8 +1,8 @@
 .base-page-style {
   position: relative;
   width: 100%;
-  min-height: 300px;
-  overflow: hidden;
+  overflow: visible;
+  min-height: 100vh;
 
   & .custom-shape-divider-bottom-1763161839 {
     position: absolute;
@@ -12,6 +12,7 @@
     overflow: hidden;
     line-height: 0;
     transform: rotate(180deg);
+    z-index: 1;
   }
 
   & .custom-shape-divider-bottom-1763161839 svg {
