@@ -1,0 +1,83 @@
+.cc-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.banner-title {
+  font-size: 3rem;
+  font-weight: 1400;
+  color: #004a92; /* azul sólido institucional */
+  margin-bottom: 10px;
+}
+
+.banner-description {
+  font-size: 1rem;
+  color: #333;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* BANNER GRANDE */
+.cc-banner {
+  width: 90%;
+  max-width: 1200px;
+  border-radius: 12px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+/* LISTADO */
+.cc-list {
+  width: 90%;
+  max-width: 900px;
+  margin-bottom: 120px;
+}
+
+/* Cada fila */
+.cc-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
+  align-items: center;
+  text-align: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+/* Íconos */
+.cc-icon {
+  width: 60px;
+  height: auto;
+}
+
+.cc-icon.left {
+  justify-self: start;
+}
+
+.cc-icon.right {
+  justify-self: end;
+}
+
+/* Texto */
+.cc-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #444;
+  line-height: 1.3;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .cc-row {
+    grid-template-columns: 50px 1fr 50px;
+  }
+
+  .cc-text {
+    font-size: 16px;
+  }
+
+  .cc-icon {
+    width: 40px;
+  }
+}

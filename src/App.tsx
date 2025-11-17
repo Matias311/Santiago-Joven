@@ -1,6 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import PersonasMayores from "./components/pages/PersonasMayores/PersonasMayores";
+import DeportesRecreacion from "./components/pages/deportesYRecreacion/deportesYRecreacion";
+import CentrosComunitarios from "./components/pages/centrosComunitarios/centrosComunitarios";
+import CCMatta from "./components/pages/centrosComunitarios/CCMatta";
+import CCCarol from "./components/pages/centrosComunitarios/CCCarol";
+import DesarrolloLocal from "./components/pages/Desarrollo/desarrollo";
 import ParticipacionCiudadana from "./components/pages/ParticipacionCiudadana/ParticipacionCiudadana";
 import DesarrolloSocial from "./components/pages/DesarrolloSocial/DesarrolloSocial";
 import Inicio from "./components/pages/inicio/inicio";
@@ -18,11 +23,25 @@ function App() {
       <Navbar />
       <Routes>
         {/* Aqui tienen que poner exactamente lo mismo, pero cambiando el elemento por el componente que les corresponda  */}
+        <Route path="/matta" element={<Base content={<CCMatta />} />} />
+        <Route path="/carol" element={<Base content={<CCCarol />} />} />
         <Route path="/" element={<Base content={<Inicio />} />} />
         <Route path="/agenda" element={<Base content={<Agenda />} />} />
         <Route path="/talleres" element={<Base content={<Talleres />} />} />
         <Route
-          path="/personas-mayores"
+          path="/desarrollo"
+          element={<Base content={<DesarrolloLocal />} />}
+        />
+        <Route
+          path="/centros-comunitarios"
+          element={<Base content={<CentrosComunitarios />} />}
+        />
+        <Route
+          path="/deportes-recreacion"
+          element={<Base content={<DeportesRecreacion />} />}
+        />
+        <Route
+          path="/pages/personasMayores"
           element={<Base content={<PersonasMayores />} />}
         />
         <Route
