@@ -6,6 +6,7 @@ import { faSquareFacebook } from "@fortawesome/free-brands-svg-icons/faSquareFac
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons/faCircleUser";
 import "../Navbar/Navbar.css";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons/faCaretDown";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
@@ -14,14 +15,20 @@ export default function Navbar() {
         <img src={logo} alt="Municipalidad de santiago" />
       </h1>
       <ul>
-        <li>Inicio</li>
+        <li>
+          <Link to="/inicio">Inicio</Link>
+        </li>
         {/* TODO: aqui se debe crear un componente de dropdown para agregar bien la funcionalidad */}
         <li>
           Servicios
           <FontAwesomeIcon icon={faCaretDown} />
         </li>
-        <li>Agenda</li>
-        <li>Talleres</li>
+        <li>
+          <Link to="/agenda">Agenda</Link>
+        </li>
+        <li>
+          <Link to="/talleres">Talleres</Link>
+        </li>
         {/* TODO: aqui se debe crear un componente de dropdown para agregar bien la funcionalidad */}
         <li>
           Conocenos
