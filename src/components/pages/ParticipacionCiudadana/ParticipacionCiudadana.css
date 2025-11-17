@@ -28,7 +28,9 @@
   align-items: center;
   min-width: 300px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .tarjeta:hover {
@@ -47,26 +49,17 @@
   font-size: 1.1rem;
   font-weight: 600;
   text-align: center;
-  color: #6080BF;
+  color: #6080bf;
 }
 
 .link-tarjeta {
   margin: 6px 0 15px;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #6080BF;
+  color: #6080bf;
 }
 
 /* Espacio antes del footer pa que no choque*/
 .espacio-footer {
   height: 150px;
-}
-
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  overflow-x: hidden;
 }
