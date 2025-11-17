@@ -3,7 +3,7 @@
   background-color: #ffffff;
 }
 
-.agenda h1 {
+.agenda .titulo {
   font-size: 3rem;
   color: #398bdd;
   font-weight: bold;
@@ -128,3 +128,4 @@
     display: none;
   }
 }
+

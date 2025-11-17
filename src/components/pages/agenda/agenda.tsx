@@ -5,18 +5,24 @@ import Planta2Img from "../../../assets/agenda/planta2.png";
 import "./agenda.css";
 export default function Agenda() {
   return (
-    <main>
-      <section className="agenda">
-        <h1>Agenda</h1>
-        <article className="evento">
+    <>
+      <div className="agenda">
+        <h2 className="titulo">Agenda</h2>
+        <div className="evento">
           <div className="evento-icono">
             <img src={AgendaImg} alt="icono agenda" />
           </div>
           <div className="evento-info">
             <h2>Evento de prueba</h2>
-            <p><strong>Fecha:</strong> 15-10-2025</p>
-            <p><strong>Hora:</strong> 10:00</p>
-            <p><strong>Lugar:</strong> Cerrillos</p>
+            <p>
+              <strong>Fecha:</strong> 15-10-2025
+            </p>
+            <p>
+              <strong>Hora:</strong> 10:00
+            </p>
+            <p>
+              <strong>Lugar:</strong> Cerrillos
+            </p>
           </div>
           <div className="planta-derecha">
             <img src={Planta1Img} alt="planta derecha" />
@@ -24,8 +30,9 @@ export default function Agenda() {
           <div className="planta-izquierda">
             <img src={Planta2Img} alt="planta izquierda" />
           </div>
-        </article>
-      </section>
-    </main>
+        </div>
+      </div>
+    </>
   );
 }
+

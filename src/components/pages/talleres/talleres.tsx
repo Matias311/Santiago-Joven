@@ -5,16 +5,22 @@ import "./talleres.css";
 
 export default function Talleres() {
   return (
-    <main>
-      <section className="talleres">
-        <h1>Talleres</h1>
+    <>
+      <div className="talleres">
+        <h2 className="titulo">Talleres</h2>
 
-        <article className="evento">
+        <div className="evento">
           <div className="evento-info">
             <h2>Evento de prueba</h2>
-            <p><strong>Fecha:</strong> 15-10-2025</p>
-            <p><strong>Hora:</strong> 10:00</p>
-            <p><strong>Lugar:</strong> Cerrillos</p>
+            <p>
+              <strong>Fecha:</strong> 15-10-2025
+            </p>
+            <p>
+              <strong>Hora:</strong> 10:00
+            </p>
+            <p>
+              <strong>Lugar:</strong> Cerrillos
+            </p>
           </div>
           <div className="evento-icono">
             <img src={TallerImg} alt="taller" />
@@ -25,8 +31,9 @@ export default function Talleres() {
           <div className="engranajes-abajo">
             <img src={Engranajes1Img} alt="engranajes izquierda" />
           </div>
-        </article>
-      </section>
-    </main>
+        </div>
+      </div>
+    </>
   );
 }
+
