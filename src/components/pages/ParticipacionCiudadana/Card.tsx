@@ -1,3 +1,4 @@
+import "./Card.css";
 type InfoItem = {
   id: number;
   img: string;
