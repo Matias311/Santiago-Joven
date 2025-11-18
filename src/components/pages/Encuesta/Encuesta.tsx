@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Encuesta.css";
 import wave from "../../../assets/wave-effect.jpg";
 
 interface OptionGeneratorProps {
@@ -62,7 +63,7 @@ export default function Encuesta() {
         }}
       >
         {/* TÍTULO Y SUBTÍTULO */}
-        <h1 className="title-encuesta">Encuesta</h1>
+        <h2 className="title-encuesta">Encuesta</h2>
         <h3 className="subtitle-encuesta">¿En qué consiste?</h3>
 
         <div id="Q1">
@@ -158,8 +159,8 @@ export default function Encuesta() {
         <button className="button-enviar">Enviar</button>
       </form>
 
-      {/* Imagen inferior */}
-      <img src={wave} className="wave.img" />
+      {/* Imagen inferior olas */}
+      <img src={wave} className="wave-img" />
     </section>
   );
 }

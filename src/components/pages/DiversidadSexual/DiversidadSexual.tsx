@@ -1,3 +1,4 @@
+import "./DiversidadSexual.css";
 import wave from "../../../assets/wave-effect.jpg";
 import ApoyoLaboralT from "../../../assets/DiversidadSexualImg/ApoyoLaboralTrans.jpg";
 import ProgramaSocialA from "../../../assets/DiversidadSexualImg/ProgramaSocialAcompanamiento.jpg";
@@ -5,37 +6,36 @@ import CentroAtencionF from "../../../assets/DiversidadSexualImg/CentroAtencionF
 
 export default function DiversidadSexual() {
   return (
-    <section className="main-section">
-      <h1 className="title">Diversidad Sexual</h1>
-
-      <section className="section-service-list">
-        <a href="">
-          <div className="service-container">
-            <img className="service-containerImg" src={ApoyoLaboralT} />
-            <h3 className="subtitle">Apoyo Laboral Trans</h3>
-            <p className="see-more">Ver más »</p>
+    <div>
+      <h2 className="titulo-pagina">Diversidad Sexual</h2>
+      <div className="grid-tarjetas">
+        {[
+          {
+            id: 1,
+            img: ApoyoLaboralT,
+            titulo: "Apoyo Laboral Trans",
+          },
+          {
+            id: 2,
+            img: ProgramaSocialA,
+            titulo: "Programa social de acompañamiento",
+          },
+          {
+            id: 3,
+            img: CentroAtencionF,
+            titulo:
+              "Programa de atención a personas LGTBIQ+ víctimas de violencia en contexto de pareja",
+          },
+        ].map((item) => (
+          <div className="tarjeta" key={item.id}>
+            <img src={item.img} alt={item.titulo} className="imagen-tarjeta" />
+            <h3 className="titulo-tarjeta">{item.titulo}</h3>
+            <p className="link-tarjeta">Ver más »</p>
           </div>
-        </a>
-
-        <a href="">
-          <div className="service-container">
-            <img className="service-containerImg" src={ProgramaSocialA} />
-            <h3 className="subtitle">Apoyo Laboral Trans</h3>
-            <p className="see-more">Ver más »</p>
-          </div>
-        </a>
-
-        <a href="">
-          <div className="service-container">
-            <img className="service-containerImg" src={CentroAtencionF} />
-            <h3 className="subtitle">Apoyo Laboral Trans</h3>
-            <p className="see-more">Ver más »</p>
-          </div>
-        </a>
-      </section>
-
-      {/* imagen wave diseño xd */}
-      <img src={wave} className="wave.img" />
-    </section>
+        ))}
+      </div>
+      {/* Imagen inferior olas */}
+      <img src={wave} className="wave-img" />
+    </div>
   );
 }
