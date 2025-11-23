@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
-import PersonasMayores from "./components/pages/PersonasMayores/PersonasMayores";
+import Discapacidad from "./components/pages/Discapacidad/Discapacidad";
+import Juventud from "./components/pages/Juventud/Juventud";
+import NinezAdolescencia from "./components/pages/Ninez-Adolescencia/NinezAdolescencia";
 import DeportesRecreacion from "./components/pages/deportesYRecreacion/deportesYRecreacion";
 import CentrosComunitarios from "./components/pages/centrosComunitarios/centrosComunitarios";
 import CCMatta from "./components/pages/centrosComunitarios/CCMatta";
@@ -19,8 +21,8 @@ import MujeresIgualdadGenero from "./components/pages/MujeresIgualdadGenero/Muje
 import ServiciosSociales from "./components/pages/ServiciosSociales/ServiciosSociales";
 import GestionYAdministracionComunitaria from "./components/pages/GestionYAdministracionComunitaria/GestionYAdministracionComunitaria";
 import DireccionDeDesarrolloComunitario from "./components/pages/DirecciónDeDesarrolloComunitario/DireccionDeDesarrolloComunitario";
-import Migrantes from "./components/pages/Migrantes/Migrantes";
 import PueblosOriginarios from "./components/pages/PueblosOriginarios/PueblosOriginarios";
+import Migrantes from "./components/pages/Migrantes/Migrantes";
 
 function App() {
   return (
@@ -56,8 +58,13 @@ function App() {
           element={<Base content={<DeportesRecreacion />} />}
         />
         <Route
-          path="/personas-mayores"
-          element={<Base content={<PersonasMayores />} />}
+          path="/discapacidad"
+          element={<Base content={<Discapacidad />} />}
+        />
+        <Route path="/juventud" element={<Base content={<Juventud />} />} />
+        <Route
+          path="/ninezAdolescencia"
+          element={<Base content={<NinezAdolescencia />} />}
         />
         <Route path="/migrantes" element={<Base content={<Migrantes />} />} />
         <Route
