@@ -1,37 +1,39 @@
 import React from "react";
 import "./Juventud.css";
+import { Card } from "../../Card";
 
 const Juventud: React.FC = () => {
   const cards = [
     {
-      title: "Participacion Juvenil",
+      id: 1,
       img: "src/assets/Juventud/J.1.jpg",
+      titulo: "Participacion Juvenil",
     },
     {
-      title: "Orientacion Social",
+      id: 2,
       img: "src/assets/Juventud/J.2.jpg",
+      titulo: "Orientacion Social",
     },
     {
-      title: "Trabajo Joven",
+      id: 3,
       img: "src/assets/Juventud/J.3.jpg",
+      titulo: "Trabajo Joven",
     },
     {
-      title: "STGO Joven",
+      id: 4,
       img: "src/assets/Juventud/J.4.jpg",
+      titulo: "STGO Joven",
     },
   ];
   return (
-    <div className="Juventud-container">
-      <h1>Juventud</h1>
-      <div className="cards-grid">
-        {cards.map((card, index) => (
-          <div className="card" key={index}>
-            <img src={card.img} alt={card.title} />
-            <h3>{card.title}</h3>
-          </div>
+    <>
+      <h2>Juventud</h2>
+      <div className="tarjetas-contenedor">
+        {cards.map((card) => (
+          <Card item={card} />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 

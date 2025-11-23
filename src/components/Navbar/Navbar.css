@@ -14,7 +14,7 @@ header {
     }
   }
 
-  & ul {
+  & nav {
     display: flex;
     gap: 2rem;
     max-width: 40%;
@@ -24,16 +24,22 @@ header {
     margin: 0rem 1rem;
     border: 0.1rem solid black;
     border-radius: 1rem;
-    & li {
-      font-size: 1.3rem;
+    & ul {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      align-items: center;
+      & li {
+        font-size: 1.3rem;
 
-      &:hover {
-        text-decoration: underline red;
-        cursor: pointer;
+        &:hover {
+          text-decoration: underline red;
+          cursor: pointer;
+        }
       }
-    }
 
-    flex: 1;
+      flex: 1;
+    }
   }
   & div {
     flex: 0;

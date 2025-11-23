@@ -1,59 +1,66 @@
 import React from "react";
 import "./NinezAdolescencia.css";
+import { Card } from "../../Card";
 
 const NinezAdolescencia: React.FC = () => {
   const cards = [
     {
-      title: "Desarrollo de Competencias Sociales",
+      id: 1,
       img: "src/assets/Ninez-adolecsencia/N.1.jpg",
+      titulo: "Desarrollo de Competencias Sociales",
     },
     {
-      title: "Fortalecimientos de la Parentalidad",
+      id: 2,
       img: "src/assets/Ninez-adolecsencia/N.2.jpg",
+      titulo: "Fortalecimientos de la Parentalidad",
     },
     {
-      title: "Centro de Atencion a la Familia",
+      id: 3,
       img: "src/assets/Ninez-adolecsencia/N.3.jpg",
+      titulo: "Centro de Atencion a la Familia",
     },
     {
-      title: "Programa Lazos ",
+      id: 4,
       img: "src/assets/Ninez-adolecsencia/N.4.jpg",
+      titulo: "Programa Lazos ",
     },
     {
-      title: "Oficinas Local de la Niñez (OLN)",
+      id: 5,
       img: "src/assets/Ninez-adolecsencia/N.5.jpg",
+      titulo: "Oficinas Local de la Niñez (OLN)",
     },
     {
-      title: "Prepara2",
+      id: 6,
       img: "src/assets/Ninez-adolecsencia/N.6.jpg",
+      titulo: "Prepara2",
     },
     {
-      title: "Senda Previene en la Comunidad",
+      id: 7,
       img: "src/assets/Ninez-adolecsencia/N.7.jpg",
+      titulo: "Senda Previene en la Comunidad",
     },
     {
-      title: "Polos de Cuidado Infantil",
+      id: 8,
       img: "src/assets/Ninez-adolecsencia/N.8.jpg",
+      titulo: "Polos de Cuidado Infantil",
     },
     {
-      title: "Talleres de Infancia",
+      id: 9,
       img: "src/assets/Ninez-adolecsencia/N.9.jpg",
+      titulo: "Talleres de Infancia",
     },
   ];
 
   return (
-    <div className="ninez-container">
-      <h1>Niñez y Adolescencia</h1>
+    <>
+      <h2>Niñez y Adolescencia</h2>
 
-      <div className="cards-grid">
-        {cards.map((card, index) => (
-          <div className="card" key={index}>
-            <img src={card.img} alt={card.title} />
-            <h3>{card.title}</h3>
-          </div>
+      <div className="tarjetas-contenedor">
+        {cards.map((card) => (
+          <Card item={card} />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 

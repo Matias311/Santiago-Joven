@@ -1,42 +1,44 @@
-// src/components/pages/Discapacidad/Discapacidad.tsx
 import React from "react";
 import "./Discapacidad.css";
+import { Card } from "../../Card";
 
 const Discapacidad: React.FC = () => {
   const cards = [
     {
-      title: "Banco de Prestamo de Ayuda Técnicas",
+      id: 1,
       img: "src/assets/Discapacidad/D.1.jpg",
+      titulo: "Banco de Prestamo de Ayuda Técnicas",
     },
     {
-      title: "Tecnologias de apoyo 3D",
+      id: 2,
       img: "src/assets/Discapacidad/D.2.jpg",
+      titulo: "Tecnologias de apoyo 3D",
     },
     {
-      title: "Linea Social Oficina de Discapacidad",
+      id: 3,
       img: "src/assets/Discapacidad/D.3.jpg",
+      titulo: "Linea Social Oficina de Discapacidad",
     },
     {
-      title: "Red local de Apoyos y Ciudados",
+      id: 4,
       img: "src/assets/Discapacidad/D.4.jpg",
+      titulo: "Red local de Apoyos y Ciudados",
     },
     {
-      title: "Sala Multisensorial de la Oficina de Discapacidad",
+      id: 5,
       img: "src/assets/Discapacidad/D.5.jpg",
+      titulo: "Sala Multisensorial de la Oficina de Discapacidad",
     },
   ];
   return (
-    <div className="discapacidad-container">
-      <h1>Discapacidad</h1>
-      <div className="cards-grid">
-        {cards.map((card, index) => (
-          <div className="card" key={index}>
-            <img src={card.img} alt={card.title} />
-            <h3>{card.title}</h3>
-          </div>
+    <>
+      <h2>Discapacidad</h2>
+      <div className="tarjetas-contenedor">
+        {cards.map((card) => (
+          <Card item={card} />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
