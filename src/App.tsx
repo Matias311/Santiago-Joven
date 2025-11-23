@@ -23,6 +23,7 @@ import GestionYAdministracionComunitaria from "./components/pages/GestionYAdmini
 import DireccionDeDesarrolloComunitario from "./components/pages/DirecciónDeDesarrolloComunitario/DireccionDeDesarrolloComunitario";
 import PueblosOriginarios from "./components/pages/PueblosOriginarios/PueblosOriginarios";
 import Migrantes from "./components/pages/Migrantes/Migrantes";
+import PersonasMayores from "./components/pages/PersonasMayores/PersonasMayores";
 
 function App() {
   return (
@@ -31,6 +32,10 @@ function App() {
       <Routes>
         {/* Aqui tienen que poner exactamente lo mismo, pero cambiando el elemento por el componente que les corresponda  */}
         <Route path="/" element={<Base content={<Inicio />} />} />
+        <Route
+          path="/personas-mayores"
+          element={<Base content={<PersonasMayores />} />}
+        />
         <Route path="/encuesta" element={<Base content={<Encuesta />} />} />
         <Route
           path="/diversidad-sexual"
