@@ -2,6 +2,7 @@ import "./DiversidadSexual.css";
 import ApoyoLaboralT from "../../../assets/DiversidadSexualImg/ApoyoLaboralTrans.jpg";
 import ProgramaSocialA from "../../../assets/DiversidadSexualImg/ProgramaSocialAcompanamiento.jpg";
 import CentroAtencionF from "../../../assets/DiversidadSexualImg/CentroAtencionFamilia.jpg";
+import { Card } from "../../Card";
 
 const cardInfo = [
   {
@@ -25,14 +26,10 @@ const cardInfo = [
 export default function DiversidadSexual() {
   return (
     <>
-      <h2 className="titulo-pagina">Diversidad Sexual</h2>
-      <div className="grid-tarjetas">
+      <h2>Diversidad Sexual</h2>
+      <div className="tarjetas-contenedor">
         {cardInfo.map((item) => (
-          <div className="tarjeta" key={item.id}>
-            <img src={item.img} alt={item.titulo} className="imagen-tarjeta" />
-            <h3 className="titulo-tarjeta">{item.titulo}</h3>
-            <p className="link-tarjeta">Ver más »</p>
-          </div>
+          <Card item={item} />
         ))}
       </div>
     </>

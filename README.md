@@ -56,9 +56,9 @@
 - personas mayores
 - migrantes
 - participación ciudadana
+- pueblos originarios
 
 ### Joshua:
 - encuesta
-- servicios sociales (de propdown servicios)
 - mujeres e igualdad de genero
 - diversidad sexual
