@@ -13,6 +13,9 @@ import Agenda from "./components/pages/agenda/agenda";
 import Talleres from "./components/pages/talleres/talleres";
 import { Base } from "./components/Base/Base";
 import Footer from "./components/Footer/Footer";
+import Encuesta from "./components/pages/Encuesta/Encuesta";
+import DiversidadSexual from "./components/pages/DiversidadSexual/DiversidadSexual";
+import MujeresIgualdadGenero from "./components/pages/MujeresIgualdadGenero/MujeresIgualdadGenero";
 import ServiciosSociales from "./components/pages/ServiciosSociales/ServiciosSociales";
 import GestionYAdministracionComunitaria from "./components/pages/GestionYAdministracionComunitaria/GestionYAdministracionComunitaria";
 import DireccionDeDesarrolloComunitario from "./components/pages/DirecciónDeDesarrolloComunitario/DireccionDeDesarrolloComunitario";
@@ -25,6 +28,16 @@ function App() {
       <Navbar />
       <Routes>
         {/* Aqui tienen que poner exactamente lo mismo, pero cambiando el elemento por el componente que les corresponda  */}
+        <Route path="/" element={<Base content={<Inicio />} />} />
+        <Route path="/encuesta" element={<Base content={<Encuesta />} />} />
+        <Route
+          path="/diversidad-sexual"
+          element={<Base content={<DiversidadSexual />} />}
+        />
+        <Route
+          path="/mujeres-igualdad-genero"
+          element={<Base content={<MujeresIgualdadGenero />} />}
+        />
         <Route path="/matta" element={<Base content={<CCMatta />} />} />
         <Route path="/carol" element={<Base content={<CCCarol />} />} />
         <Route path="/" element={<Base content={<Inicio />} />} />

@@ -7,7 +7,7 @@ import ley from "../../../assets/participacion-ciudadana/ley.png";
 import participativos from "../../../assets/participacion-ciudadana/participativos.png";
 import concursables from "../../../assets/participacion-ciudadana/concursables.png";
 import dirigencias from "../../../assets/participacion-ciudadana/dirigencias.png";
-import { Card } from "./Card";
+import { Card } from "../../Card";
 
 const informacionJSON = [
   {
