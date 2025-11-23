@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./Encuesta.css";
-import wave from "../../../assets/wave-effect.jpg";
 
 interface OptionGeneratorProps {
   quantity: number;
@@ -41,7 +40,7 @@ export default function Encuesta() {
 
   const handleRadioClickMuchosxd = (
     event: React.ChangeEvent<HTMLInputElement>,
-    setSelected: React.Dispatch<React.SetStateAction<number | null>>
+    setSelected: React.Dispatch<React.SetStateAction<number | null>>,
   ) => {
     const value = Number(event.target.value);
     setSelected(value);
@@ -158,9 +157,6 @@ export default function Encuesta() {
         {/* BOTÓN */}
         <button className="button-enviar">Enviar</button>
       </form>
-
-      {/* Imagen inferior olas */}
-      <img src={wave} className="wave-img" />
     </section>
   );
 }
