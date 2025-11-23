@@ -18,7 +18,10 @@ function App() {
         <Route path="/" element={<Home />} />
         {/* --------------------Partes Joshua xd (yo jiji)-------------------- */}
         <Route path="/encuesta" element={<Encuesta />} />
-        <Route path="/diversidad-sexual" element={<DiversidadSexual />} />
+        <Route
+          path="/diversidad-sexual"
+          element={<Base content={<DiversidadSexual />} />}
+        />
         <Route
           path="/mujeres-igualdad-genero"
           element={<MujeresIgualdadGenero />}
