@@ -1,0 +1,117 @@
+.matta-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 15px 120px;
+  text-align: center;
+}
+
+/* TITULO */
+.matta-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2f61b4;
+  margin-bottom: 10px;
+}
+
+/* DESCRIPCIÓN */
+.matta-desc {
+  font-size: 16px;
+  max-width: 700px;
+  margin: 0 auto 25px;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* IMAGEN PRINCIPAL */
+.matta-main-img {
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+/* GRID DE 2 COLUMNAS */
+.matta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 35px 25px;
+  margin-top: 20px;
+}
+
+/* Ítem horizontal (imagen + texto) */
+.matta-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 18px;
+  border-bottom: 1.5px solid #d3d3d3; /* línea gris */
+}
+
+/* Icono */
+.matta-item img {
+  width: 60px;
+  height: auto;
+}
+
+/* Texto */
+.matta-item p {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.4;
+  text-align: left;
+  max-width: 250px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .matta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .matta-item img {
+    width: 50px;
+  }
+}
+.servicios-wrapper {
+  max-width: 900px;
+  margin: 60px auto 140px;
+  padding: 0 20px;
+  line-height: 1.55;
+  color: #333;
+}
+
+.servicio-block {
+  padding: 25px 0;
+  border-bottom: 1px solid #d5d5d5;
+}
+
+.servicio-block:last-child {
+  border-bottom: none;
+}
+
+.servicio-block h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #2f61b4;
+}
+
+.servicio-block p {
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+.horario {
+  color: #555;
+  font-style: italic;
+}
+
+.subtitulo {
+  font-weight: 600;
+  margin-top: 10px;
+  color: #444;
+}
+
+@media (max-width: 768px) {
+  .servicios-wrapper {
+    margin-top: 40px;
+  }
+}

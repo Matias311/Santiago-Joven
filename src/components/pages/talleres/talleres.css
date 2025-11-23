@@ -1,0 +1,123 @@
+.talleres {
+  position: relative;
+  padding: 60px 40px;
+  background-color: #ffffff;
+}
+
+.talleres .titulo {
+  font-size: 2.8rem;
+  color: #398bdd;
+  font-weight: bold;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* Evento alineado como en la imagen */
+.talleres .evento {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.talleres .evento-info {
+  flex: 1;
+  text-align: center;
+}
+
+.talleres .evento-info h2 {
+  font-size: 3rem; /* antes era 1.6rem */
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.talleres .evento-info p {
+  font-size: 2rem; /* antes era 1rem */
+  color: #333;
+  margin: 8px 0;
+}
+
+/* Ícono del evento */
+.talleres .evento-icono img {
+  width: 480px;
+  height: auto;
+  transform: translateX(-120px);
+}
+
+/* Engranajes decorativos abajo pegados al lado derecho */
+.talleres .engranajes-abajo {
+  position: absolute;
+  bottom: 200px; /* altura en el cual esta el engranaje */
+  right: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.talleres .engranajes-abajo img {
+  width: 170px; /* ancho de los engranajes */
+  height: auto;
+  opacity: 0.7;
+  margin-top: -70px; /* separacion engranajes */
+}
+
+.talleres .engranajes-izquierda {
+  position: absolute;
+  bottom: 140px; /* ajusta según la altura deseada */
+  left: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.talleres .engranajes-izquierda img {
+  width: 100px;
+  height: auto;
+  opacity: 0.7;
+  margin-top: -70px; /* ← superposición para que se vean pegados */
+}
+
+.talleres .engranajes-izquierda img:first-child {
+  margin-top: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .talleres {
+    padding: 40px 20px;
+  }
+
+  .talleres h1 {
+    font-size: 2rem;
+    margin-bottom: 25px;
+  }
+
+  .talleres .evento {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .talleres .evento-info {
+    text-align: center;
+  }
+
+  .talleres .evento-info h2 {
+    font-size: 2rem;
+  }
+
+  .talleres .evento-info p {
+    font-size: 1.2rem;
+  }
+
+  .talleres .evento-icono img {
+    width: 300px;
+    transform: translateX(0);
+  }
+
+  .talleres .engranajes-abajo {
+    display: none;
+  }
+
+  .talleres .engranajes-izquierda {
+    display: none;
+  }
+}
+
