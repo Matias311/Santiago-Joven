@@ -1,5 +1,5 @@
-import { Card } from "../ParticipacionCiudadana/Card";
 import indigenas from "../../../assets/pueblosOriginarios/indigenas.png";
+import { Card } from "../../Card";
 import "./PueblosOriginarios.css";
 
 const informacionJSON = [

@@ -5,7 +5,7 @@ import atencionJuridica from "../../../assets/personas-mayores/atencion-juridica
 import centroDia from "../../../assets/personas-mayores/centro-dia.png";
 import cuidados from "../../../assets/personas-mayores/cuidado-comunitario.png";
 import talleres from "../../../assets/personas-mayores/talleres-formacion.png";
-import { Card } from "../ParticipacionCiudadana/Card";
+import { Card } from "../../Card";
 
 const informacionJSON = [
   {
