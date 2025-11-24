@@ -24,6 +24,8 @@ import DireccionDeDesarrolloComunitario from "./components/pages/DirecciónDeDes
 import PueblosOriginarios from "./components/pages/PueblosOriginarios/PueblosOriginarios";
 import Migrantes from "./components/pages/Migrantes/Migrantes";
 import PersonasMayores from "./components/pages/PersonasMayores/PersonasMayores";
+import Chatbot from "./components/Chatbot/Chatbot";
+import AccessibilityWidget from "./components/Accesibilidad/Accesibilidad";
 
 function App() {
   return (
@@ -97,6 +99,8 @@ function App() {
           element={<Base content={<PueblosOriginarios />} />}
         />
       </Routes>
+      <AccessibilityWidget targetSelector="#site-content" />
+      <Chatbot />
       <Footer />
     </BrowserRouter>
   );

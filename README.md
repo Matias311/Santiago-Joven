@@ -70,6 +70,8 @@
 - [x] Arreglar el dropdown del navbar para que quede a la derecha y agregarle las flores
 - [ ] Hacer el responsive de la pagina
 - [ ] Hacer que los iconos del navabar funcionen
+- [x] agregar chatbot
+- [ ] agregar boton de accesibilidad 
 
 ### Inicio
 - [x] eliminar margin botom de la imagen
