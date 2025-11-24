@@ -1,5 +1,5 @@
-import vinculacion from "../../../../public/migrantes/vinculacion-medio.png";
-import atencion from "../../../../public/migrantes/atencion-social.png";
+import vinculacion from "/migrantes/vinculacion-medio.png";
+import atencion from "/migrantes/atencion-social.png";
 import "./Migrantes.css";
 import { Card } from "../../Card";
 const informacionJSON = [

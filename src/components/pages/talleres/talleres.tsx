@@ -1,6 +1,6 @@
-import TallerImg from "../../../../public/talleres/taller.png";
-import Engranajes1Img from "../../../../public/talleres/engranajes1.png";
-import Engranajes2Img from "../../../../public/talleres/engranajes2.png";
+import TallerImg from "/talleres/taller.png";
+import Engranajes1Img from "/talleres/engranajes1.png";
+import Engranajes2Img from "/talleres/engranajes2.png";
 import "./talleres.css";
 
 export default function Talleres() {

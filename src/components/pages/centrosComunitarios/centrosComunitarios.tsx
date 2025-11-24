@@ -1,10 +1,10 @@
 import "./centrosComunitarios.css";
-import CentroComunitarioCarol from "../../../../public/CentroComunitarioCarol.png";
-import CentroComunitarioMatta from "../../../../public/CentroComunitarioMatta.png";
+import CentroComunitarioCarol from "/CentroComunitarioCarol.png";
+import CentroComunitarioMatta from "/CentroComunitarioMatta.png";
 
 export default function CentrosComunitarios() {
   return (
-    <div className="centros-container">
+    <div className="container">
       <h2>Centros Comunitarios</h2>
       <div className="contenedor-card-centros-comunitarios">
         <div className="centro-card">

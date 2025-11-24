@@ -6,27 +6,27 @@ const Discapacidad: React.FC = () => {
   const cards = [
     {
       id: 1,
-      img: "public/Discapacidad/D.1.jpg",
+      img: "/Discapacidad/D.1.jpg",
       titulo: "Banco de Prestamo de Ayuda Técnicas",
     },
     {
       id: 2,
-      img: "public/Discapacidad/D.2.jpg",
+      img: "/Discapacidad/D.2.jpg",
       titulo: "Tecnologias de apoyo 3D",
     },
     {
       id: 3,
-      img: "public/Discapacidad/D.3.jpg",
+      img: "/Discapacidad/D.3.jpg",
       titulo: "Linea Social Oficina de Discapacidad",
     },
     {
       id: 4,
-      img: "public/Discapacidad/D.4.jpg",
+      img: "/Discapacidad/D.4.jpg",
       titulo: "Red local de Apoyos y Ciudados",
     },
     {
       id: 5,
-      img: "public/Discapacidad/D.5.jpg",
+      img: "/Discapacidad/D.5.jpg",
       titulo: "Sala Multisensorial de la Oficina de Discapacidad",
     },
   ];

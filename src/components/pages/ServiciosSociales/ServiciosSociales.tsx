@@ -1,5 +1,5 @@
 import "../ServiciosSociales/ServiciosSociales.css";
-import imagen from "../../../../public/ServiciosSociales/IMAGENSS.png";
+import imagen from "/ServiciosSociales/IMAGENSS.png";
 
 export default function ServiciosSociales() {
   return (

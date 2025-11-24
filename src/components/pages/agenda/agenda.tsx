@@ -1,7 +1,7 @@
 // src/components/Agenda.tsx
-import AgendaImg from "../../../../public/agenda/agenda.png";
-import Planta1Img from "../../../../public/agenda/planta1.png";
-import Planta2Img from "../../../../public/agenda/planta2.png";
+import AgendaImg from "/agenda/agenda.png";
+import Planta1Img from "/agenda/planta1.png";
+import Planta2Img from "/agenda/planta2.png";
 import "./agenda.css";
 export default function Agenda() {
   return (

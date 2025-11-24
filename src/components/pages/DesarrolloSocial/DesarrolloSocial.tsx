@@ -1,5 +1,5 @@
 import "./DesarrolloSocial.css";
-import imagenPrincipal from "../../../../public/desarrollo-social/hero_desarrollo_social.png";
+import imagenPrincipal from "/desarrollo-social/hero_desarrollo_social.png";
 
 export default function DesarrolloSocial() {
   return (

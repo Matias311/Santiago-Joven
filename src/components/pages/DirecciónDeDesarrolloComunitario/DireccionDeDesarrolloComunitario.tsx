@@ -1,5 +1,5 @@
 import "../DirecciónDeDesarrolloComunitario/DireccionDeDesarrolloComunitario.css";
-import imagen from "../../../../public/DireccionDeDesarrolloComunitario/IMAGENDDDC.png";
+import imagen from "/DireccionDeDesarrolloComunitario/IMAGENDDDC.png";
 
 export default function DireccionDeDesarrolloComunitario() {
   return (
