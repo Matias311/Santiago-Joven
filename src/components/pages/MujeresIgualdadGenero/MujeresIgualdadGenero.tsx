@@ -1,15 +1,15 @@
 import "./MujeresIgualdadGenero.css";
-import AtencionIntegral from "../../../assets/MujeresIgualdadGenero/AtencionIntegral.jpg";
-import BienestarAutocuidado from "../../../assets/MujeresIgualdadGenero/BienestarAutocuidado.jpg";
-import BrigadaCuidados from "../../../assets/MujeresIgualdadGenero/BrigadaCuidados.jpg";
-import EscuelaEmprendedoras from "../../../assets/MujeresIgualdadGenero/EscuelaEmprendedoras.jpg";
-import EstudiosCapacitacionGenero from "../../../assets/MujeresIgualdadGenero/EstudiosCapacitacionGenero.jpg";
-import OrganizacionesMujeres from "../../../assets/MujeresIgualdadGenero/OrganizacionesMujeres.jpg";
-import Programa4a7 from "../../../assets/MujeresIgualdadGenero/Programa4a7.jpg";
-import ProgramaMujerDerechoSexRep from "../../../assets/MujeresIgualdadGenero/ProgramaMujerDerechoSexRep.jpg";
-import ProgramaNoViolenciaGenero from "../../../assets/MujeresIgualdadGenero/ProgramaNoViolenciaGenero.jpg";
-import ProgramaPrevencionViolencia from "../../../assets/MujeresIgualdadGenero/ProgramaPrevencionViolencia.jpg";
-import CentroMujerSantiago from "../../../assets/MujeresIgualdadGenero/CentroMujerSantiago.jpg";
+import AtencionIntegral from "../../../../public/MujeresIgualdadGenero/AtencionIntegral.jpg";
+import BienestarAutocuidado from "../../../../public/MujeresIgualdadGenero/BienestarAutocuidado.jpg";
+import BrigadaCuidados from "../../../../public/MujeresIgualdadGenero/BrigadaCuidados.jpg";
+import EscuelaEmprendedoras from "../../../../public/MujeresIgualdadGenero/EscuelaEmprendedoras.jpg";
+import EstudiosCapacitacionGenero from "../../../../public/MujeresIgualdadGenero/EstudiosCapacitacionGenero.jpg";
+import OrganizacionesMujeres from "../../../../public/MujeresIgualdadGenero/OrganizacionesMujeres.jpg";
+import Programa4a7 from "../../../../public/MujeresIgualdadGenero/Programa4a7.jpg";
+import ProgramaMujerDerechoSexRep from "../../../../public/MujeresIgualdadGenero/ProgramaMujerDerechoSexRep.jpg";
+import ProgramaNoViolenciaGenero from "../../../../public/MujeresIgualdadGenero/ProgramaNoViolenciaGenero.jpg";
+import ProgramaPrevencionViolencia from "../../../../public/MujeresIgualdadGenero/ProgramaPrevencionViolencia.jpg";
+import CentroMujerSantiago from "../../../../public/MujeresIgualdadGenero/CentroMujerSantiago.jpg";
 import { Card } from "../../Card";
 
 const infoCard = [

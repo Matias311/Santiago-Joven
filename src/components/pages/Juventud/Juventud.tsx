@@ -6,22 +6,22 @@ const Juventud: React.FC = () => {
   const cards = [
     {
       id: 1,
-      img: "src/assets/Juventud/J.1.jpg",
+      img: "public/Juventud/J.1.jpg",
       titulo: "Participacion Juvenil",
     },
     {
       id: 2,
-      img: "src/assets/Juventud/J.2.jpg",
+      img: "public/Juventud/J.2.jpg",
       titulo: "Orientacion Social",
     },
     {
       id: 3,
-      img: "src/assets/Juventud/J.3.jpg",
+      img: "public/Juventud/J.3.jpg",
       titulo: "Trabajo Joven",
     },
     {
       id: 4,
-      img: "src/assets/Juventud/J.4.jpg",
+      img: "public/Juventud/J.4.jpg",
       titulo: "STGO Joven",
     },
   ];

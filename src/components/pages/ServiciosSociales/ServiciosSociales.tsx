@@ -1,5 +1,5 @@
 import "../ServiciosSociales/ServiciosSociales.css";
-import imagen from "../../../assets/ServiciosSociales/IMAGENSS.png";
+import imagen from "../../../../public/ServiciosSociales/IMAGENSS.png";
 
 export default function ServiciosSociales() {
   return (
@@ -55,4 +55,3 @@ export default function ServiciosSociales() {
     </div>
   );
 }
-

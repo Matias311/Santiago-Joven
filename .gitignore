@@ -99,3 +99,4 @@ $RECYCLE.BIN/
 *.lnk
 
 .env
+.vercel

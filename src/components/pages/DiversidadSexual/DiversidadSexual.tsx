@@ -1,7 +1,7 @@
 import "./DiversidadSexual.css";
-import ApoyoLaboralT from "../../../assets/DiversidadSexualImg/ApoyoLaboralTrans.jpg";
-import ProgramaSocialA from "../../../assets/DiversidadSexualImg/ProgramaSocialAcompanamiento.jpg";
-import CentroAtencionF from "../../../assets/DiversidadSexualImg/CentroAtencionFamilia.jpg";
+import ApoyoLaboralT from "../../../../public/DiversidadSexualImg/ApoyoLaboralTrans.jpg";
+import ProgramaSocialA from "../../../../public/DiversidadSexualImg/ProgramaSocialAcompanamiento.jpg";
+import CentroAtencionF from "../../../../public/DiversidadSexualImg/CentroAtencionFamilia.jpg";
 import { Card } from "../../Card";
 
 const cardInfo = [

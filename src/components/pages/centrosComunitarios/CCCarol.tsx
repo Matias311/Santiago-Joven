@@ -1,13 +1,13 @@
 import "./CCCarol.css";
 
-import lista1 from "../../../assets/listaC1.png";
-import lista2 from "../../../assets/listaC2.png";
-import lista3 from "../../../assets/listaC3.png";
-import lista4 from "../../../assets/listaC4.png";
-import lista5 from "../../../assets/listaC5.png";
-import lista6 from "../../../assets/listaC6.png";
+import lista1 from "../../../../public/listaC1.png";
+import lista2 from "../../../../public/listaC2.png";
+import lista3 from "../../../../public/listaC3.png";
+import lista4 from "../../../../public/listaC4.png";
+import lista5 from "../../../../public/listaC5.png";
+import lista6 from "../../../../public/listaC6.png";
 
-import CCCarolBanner from "../../../assets/CCCarolBanner.png";
+import CCCarolBanner from "../../../../public/CCCarolBanner.png";
 
 export default function CCCarol() {
   return (

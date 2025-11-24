@@ -1,10 +1,10 @@
 import "./PersonasMayores.css";
-import lavanderia from "../../../assets/personas-mayores/lavanderia-comunitaria.png";
-import comunidadOrganizacion from "../../../assets/personas-mayores/comunidad-organizacion.png";
-import atencionJuridica from "../../../assets/personas-mayores/atencion-juridica.png";
-import centroDia from "../../../assets/personas-mayores/centro-dia.png";
-import cuidados from "../../../assets/personas-mayores/cuidado-comunitario.png";
-import talleres from "../../../assets/personas-mayores/talleres-formacion.png";
+import lavanderia from "../../../../public/personas-mayores/lavanderia-comunitaria.png";
+import comunidadOrganizacion from "../../../../public/personas-mayores/comunidad-organizacion.png";
+import atencionJuridica from "../../../../public/personas-mayores/atencion-juridica.png";
+import centroDia from "../../../../public/personas-mayores/centro-dia.png";
+import cuidados from "../../../../public/personas-mayores/cuidado-comunitario.png";
+import talleres from "../../../../public/personas-mayores/talleres-formacion.png";
 import { Card } from "../../Card";
 
 const informacionJSON = [

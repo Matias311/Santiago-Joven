@@ -1,12 +1,12 @@
 import "./ParticipacionCiudadana.css";
-import comunitarias from "../../../assets/participacion-ciudadana/comunitarias.png";
-import juridica from "../../../assets/participacion-ciudadana/juridica.png";
-import antecedentes from "../../../assets/participacion-ciudadana/antecedentes.png";
-import transporte from "../../../assets/participacion-ciudadana/transporte.png";
-import ley from "../../../assets/participacion-ciudadana/ley.png";
-import participativos from "../../../assets/participacion-ciudadana/participativos.png";
-import concursables from "../../../assets/participacion-ciudadana/concursables.png";
-import dirigencias from "../../../assets/participacion-ciudadana/dirigencias.png";
+import comunitarias from "../../../../public/participacion-ciudadana/comunitarias.png";
+import juridica from "../../../../public/participacion-ciudadana/juridica.png";
+import antecedentes from "../../../../public/participacion-ciudadana/antecedentes.png";
+import transporte from "../../../../public/participacion-ciudadana/transporte.png";
+import ley from "../../../../public/participacion-ciudadana/ley.png";
+import participativos from "../../../../public/participacion-ciudadana/participativos.png";
+import concursables from "../../../../public/participacion-ciudadana/concursables.png";
+import dirigencias from "../../../../public/participacion-ciudadana/dirigencias.png";
 import { Card } from "../../Card";
 
 const informacionJSON = [

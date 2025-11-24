@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import logo from "../../assets/logo.png";
+import logo from "../../../public/logo.png";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons/faInstagram";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons/faYoutube";
 import { faSquareFacebook } from "@fortawesome/free-brands-svg-icons/faSquareFacebook";

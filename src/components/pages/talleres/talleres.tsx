@@ -1,6 +1,6 @@
-import TallerImg from "../../../assets/talleres/taller.png";
-import Engranajes1Img from "../../../assets/talleres/engranajes1.png";
-import Engranajes2Img from "../../../assets/talleres/engranajes2.png";
+import TallerImg from "../../../../public/talleres/taller.png";
+import Engranajes1Img from "../../../../public/talleres/engranajes1.png";
+import Engranajes2Img from "../../../../public/talleres/engranajes2.png";
 import "./talleres.css";
 
 export default function Talleres() {
@@ -36,4 +36,3 @@ export default function Talleres() {
     </>
   );
 }
-

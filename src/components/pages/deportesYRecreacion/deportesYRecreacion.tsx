@@ -1,5 +1,5 @@
 import "./deportesYRecreacion.css";
-import Deporte from "../../../assets/Deporte.png";
+import Deporte from "../../../../public/Deporte.png";
 
 export default function DeportesRecreacion() {
   return (

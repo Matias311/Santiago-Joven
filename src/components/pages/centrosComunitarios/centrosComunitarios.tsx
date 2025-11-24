@@ -1,6 +1,6 @@
 import "./centrosComunitarios.css";
-import CentroComunitarioCarol from "../../../assets/CentroComunitarioCarol.png";
-import CentroComunitarioMatta from "../../../assets/CentroComunitarioMatta.png";
+import CentroComunitarioCarol from "../../../../public/CentroComunitarioCarol.png";
+import CentroComunitarioMatta from "../../../../public/CentroComunitarioMatta.png";
 
 export default function CentrosComunitarios() {
   return (

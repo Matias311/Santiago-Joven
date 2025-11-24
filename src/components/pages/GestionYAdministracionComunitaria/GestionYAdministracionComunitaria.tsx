@@ -1,5 +1,5 @@
 import "../GestionYAdministracionComunitaria/GestionYAdministracionComunitaria.css";
-import imagen from "../../../assets/DireccionDeDesarrolloComunitario/IMAGENDDDC.png";
+import imagen from "../../../../public/DireccionDeDesarrolloComunitario/IMAGENDDDC.png";
 
 export default function GestionYAdministracionComunitaria() {
   return (
@@ -52,4 +52,3 @@ export default function GestionYAdministracionComunitaria() {
     </div>
   );
 }
-

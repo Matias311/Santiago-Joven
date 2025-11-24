@@ -1,4 +1,4 @@
-import indigenas from "../../../assets/pueblosOriginarios/indigenas.png";
+import indigenas from "../../../../public/pueblosOriginarios/indigenas.png";
 import { Card } from "../../Card";
 import "./PueblosOriginarios.css";
 

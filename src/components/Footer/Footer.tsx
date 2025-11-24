@@ -1,5 +1,5 @@
 import { faRegistered } from "@fortawesome/free-regular-svg-icons/faRegistered";
-import logo from "../../assets/logo_footer.png";
+import logo from "../../../public/logo_footer.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../Footer/Footer.css";
 import { Link } from "react-router-dom";

@@ -1,5 +1,5 @@
 import "./Desarrollo.css";
-import Desarrollo from "../../../assets/Desarrollo.png";
+import Desarrollo from "../../../../public/Desarrollo.png";
 
 export default function DesarrolloLocal() {
   return (

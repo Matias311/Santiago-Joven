@@ -1,4 +1,4 @@
-import municipalidadImg from "../../../assets/inicio/municipalidad-centro.png";
+import municipalidadImg from "../../../../public/inicio/municipalidad-centro.png";
 import "./inicio.css";
 
 export default function StgoJoven() {

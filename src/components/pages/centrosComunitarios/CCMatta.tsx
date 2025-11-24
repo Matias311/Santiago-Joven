@@ -1,13 +1,13 @@
 import "./CCMatta.css";
 
-import lista1 from "../../../assets/lista1.png";
-import lista2 from "../../../assets/lista2.png";
-import lista3 from "../../../assets/lista3.png";
-import lista4 from "../../../assets/lista4.png";
-import lista5 from "../../../assets/lista5.png";
-import lista6 from "../../../assets/lista6.png";
+import lista1 from "../../../../public/lista1.png";
+import lista2 from "../../../../public/lista2.png";
+import lista3 from "../../../../public/lista3.png";
+import lista4 from "../../../../public/lista4.png";
+import lista5 from "../../../../public/lista5.png";
+import lista6 from "../../../../public/lista6.png";
 
-import MattaImg from "../../../assets/CentroComunitarioMattaBanner.png";
+import MattaImg from "../../../../public/CentroComunitarioMattaBanner.png";
 
 export default function CentroComunitarioMatta() {
   return (
