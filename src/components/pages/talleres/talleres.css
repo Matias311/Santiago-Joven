@@ -1,6 +1,7 @@
 .talleres {
   position: relative;
   padding: 60px 40px;
+  width: 100%;
   background-color: #ffffff;
 }
 
@@ -120,4 +121,3 @@
     display: none;
   }
 }
-

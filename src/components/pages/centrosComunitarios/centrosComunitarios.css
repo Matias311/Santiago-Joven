@@ -1,22 +1,32 @@
 .centros-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   gap: 40px;
   margin: 40px auto;
   width: 100%;
   margin-bottom: 210px;
 }
 
+.contenedor-card-centros-comunitarios {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+}
+
 .centro-card {
   text-align: center;
   width: 45%;
   max-width: 700px;
+  border: 1px solid #c2c2c2;
+  border-radius: 55px;
 }
 
 .centro-img {
   width: 100%;
-  border-radius: 16px;
   object-fit: cover;
 }
 

@@ -5,10 +5,12 @@ export default function DesarrolloLocal() {
   return (
     <div className="des-page">
       <div className="banner">
-        <div className="banner-text">
-          <h1>Desarrollo Económico Local</h1>
+        <h2 className="title-desarrollo-economico">
+          Desarrollo Económico Local
+        </h2>
+        <div className="hero">
+          <img src={Desarrollo} alt="Banner" className="hero-image" />
         </div>
-        <img src={Desarrollo} alt="Banner" className="banner-img" />
       </div>
 
       <section className="content">

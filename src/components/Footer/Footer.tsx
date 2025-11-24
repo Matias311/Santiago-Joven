@@ -2,6 +2,7 @@ import { faRegistered } from "@fortawesome/free-regular-svg-icons/faRegistered";
 import logo from "../../assets/logo_footer.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../Footer/Footer.css";
+import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <footer>
@@ -18,7 +19,8 @@ export default function Footer() {
             Todos los derechos reservados
           </p>
           <p>
-            Participa en la <a href="#">encuesta</a> para mejorar la pagina.
+            Participa en la <Link to="/encuesta">encuesta</Link> para mejorar la
+            pagina.
           </p>
         </div>
       </div>

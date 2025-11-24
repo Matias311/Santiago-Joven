@@ -1,7 +1,7 @@
 .matta-wrapper {
   max-width: 900px;
   margin: 0 auto;
-  padding: 30px 15px 120px;
+  padding: 20px 15px 0px;
   text-align: center;
 }
 
@@ -72,8 +72,8 @@
 }
 .servicios-wrapper {
   max-width: 900px;
-  margin: 60px auto 140px;
-  padding: 0 20px;
+  margin-bottom: 6rem;
+  padding-bottom: 3rem;
   line-height: 1.55;
   color: #333;
 }
