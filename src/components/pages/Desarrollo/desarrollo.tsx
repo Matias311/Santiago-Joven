@@ -1,4 +1,4 @@
-import "./Desarrollo.css";
+import "./desarrollo.css";
 import Desarrollo from "../../../../public/Desarrollo.png";
 
 export default function DesarrolloLocal() {
