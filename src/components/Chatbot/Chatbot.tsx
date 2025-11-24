@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, type JSX } from "react";
 import OpenAI from "openai";
-import "./chatbot.css";
+import "./Chatbot.css";
 
 type Message = {
   sender: "bot" | "user";
