@@ -19,6 +19,7 @@ import { faPersonCane } from "@fortawesome/free-solid-svg-icons/faPersonCane";
 import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons/faIndianRupeeSign";
 import { faBellConcierge } from "@fortawesome/free-solid-svg-icons/faBellConcierge";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons/faLocationDot";
+import { faPersonDress } from "@fortawesome/free-solid-svg-icons/faPersonDress";
 
 const serviciosSection = [
   {
@@ -70,6 +71,11 @@ const serviciosSection = [
     label: "Servicios Sociales",
     to: "/servicios-sociales",
     icon: <FontAwesomeIcon icon={faBellConcierge} />,
+  },
+  {
+    label: "Mujeres e Igualdad de Genero",
+    to: "/mujeres-igualdad-genero",
+    icon: <FontAwesomeIcon icon={faPersonDress} />,
   },
 ];
 

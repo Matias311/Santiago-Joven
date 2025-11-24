@@ -32,7 +32,7 @@ export default function Dropdown({ label, icon, items }: DropdownProps) {
         <ul className="dropdown-menu">
           {items.map((item, i) => (
             <li key={i}>
-              <Link to={item.to}>
+              <Link to={item.to} className="link-dropdown">
                 {item.icon && <span className="item-icon">{item.icon}</span>}
                 {item.label}
               </Link>

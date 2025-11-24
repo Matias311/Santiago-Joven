@@ -1,21 +1,25 @@
 import "./deportesYRecreacion.css";
 import Deporte from "../../../assets/Deporte.png";
-import DeporteSmall from "../../../assets/DeporteSmall.png";
 
 export default function DeportesRecreacion() {
   return (
     <main className="deportes-wrapper">
       <section className="deportes-header">
         <div className="deportes-title">
-          <h1>
+          <h2>
             Deportes y<br />
             Recreación
-          </h1>
+          </h2>
         </div>
-        <picture>
-          <source srcSet={DeporteSmall} media="(max-width: 768px)" />
-          <img src={Deporte} alt="Deportes y Recreación" />
-        </picture>
+        <div className="caja-imagen-deportes">
+          <picture className="imagen-wrapper">
+            <img
+              src={Deporte}
+              alt="Deportes y Recreación"
+              className="imagen-principal"
+            />
+          </picture>
+        </div>
       </section>
       <div className="deportes-content">
         <br></br>

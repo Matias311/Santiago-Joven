@@ -1,6 +1,6 @@
 /* Contenedor principal */
 .gestion-y-administracion-comunitaria-container {
-  max-width: 1300px;
+  width: 100%;
   padding: 2rem 0rem;
   min-height: 100vh;
   position: relative;
