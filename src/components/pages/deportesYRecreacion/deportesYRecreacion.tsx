@@ -1,26 +1,30 @@
 import "./deportesYRecreacion.css";
 import Deporte from "../../../assets/Deporte.png";
-import DeporteSmall from "../../../assets/DeporteSmall.png";
 
 export default function DeportesRecreacion() {
   return (
     <main className="deportes-wrapper">
       <section className="deportes-header">
         <div className="deportes-title">
-          <h1>
+          <h2>
             Deportes y<br />
             Recreación
-          </h1>
+          </h2>
         </div>
-        <picture>
-          <source srcSet={DeporteSmall} media="(max-width: 768px)" />
-          <img src={Deporte} alt="Deportes y Recreación" />
-        </picture>
+        <div className="caja-imagen-deportes">
+          <picture className="imagen-wrapper">
+            <img
+              src={Deporte}
+              alt="Deportes y Recreación"
+              className="imagen-principal"
+            />
+          </picture>
+        </div>
       </section>
       <div className="deportes-content">
         <br></br>
+        <h2>La Subdirección de Deportes y Recreación.</h2> a través de sus
         <p>
-          <h2>La Subdirección de Deportes y Recreación.</h2> a través de sus
           seis (6) Programas: 1. Deporte Comunitario, 2. Desarrollo Deportivo
           Territorial, 3. Infraestructura Deportiva Comunitaria, 4. Santiago Te
           Mueve, 5. Deporte para todes y 6. Piscinas municipales, además de las
@@ -40,9 +44,7 @@ export default function DeportesRecreacion() {
           para la práctica deportiva, porque reconoce al DEPORTE como un pilar
           fundamental del buen vivir.
         </p>
-
         <h2>Servicios, productos y actividades.</h2>
-
         <ol>
           <li>
             <strong>Talleres deportivos presenciales y online.</strong>
@@ -129,27 +131,22 @@ export default function DeportesRecreacion() {
             </p>
           </li>
         </ol>
-
         <h2>Canales de Comunicación y difusión.</h2>
-
         <p>
           <strong>Dirección</strong>
           <br />
           Av. Rondizzoni Esq. Luis Cousiño, Interior del Parque O’Higgins
         </p>
-
         <p>
           <strong>Teléfonos</strong>
           <br />
           223867394 / 223867395 / 223867396
         </p>
-
         <p>
           <strong>Correo electrónico</strong>
           <br />
           deportes@munistgo.cl
         </p>
-
         <p>
           <strong>Instagram</strong>
           <br />

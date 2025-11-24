@@ -1,27 +1,30 @@
 .servicios-sociales {
-  max-width: 1300px;
-  padding: 2rem 0rem;
-  min-height: 100vh;
-  position: relative;
-  padding-bottom: auto;
+  padding: 30px 0px;
+  width: 100%;
+  color: #333;
 }
 
 .ss-header {
+  position: relative;
   display: flex;
+  gap: 36px;
   align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-  margin-bottom: 40px;
+  padding-top: 28px; /* espacio para el título lateral */
+  margin-bottom: 28px;
 }
 
 .ss-title {
-  background: #2f465a;
-  color: #d1e3ff;
-  padding: 45px 55px;
-  border-radius: 0 40px 40px 0;
-  box-shadow: 0 10px 26px rgba(47, 70, 90, 0.15);
-  flex: 1;
-  max-width: 400px;
+  position: relative;
+  flex: 0 0 320px; /* ancho fijo aproximado */
+  background: #2f465a; /* color oscuro */
+  color: #ffffff; /* texto blanco */
+  padding: 34px 40px; /* caja más grande */
+  font-weight: 800;
+  line-height: 1.02;
+  text-align: left;
+  font-size: 32px; /* tamaño de letra mayor */
+  letter-spacing: 0.2px;
+  border-radius: 0rem 3rem 3rem 0rem;
 }
 
 .ss-title h2 {
@@ -35,7 +38,7 @@
 .ss-hero {
   flex: 1;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .ss-hero img {
@@ -49,7 +52,8 @@
 
 .ss-content {
   max-width: 950px;
-  margin: 0 auto;
+  margin: 3rem 0rem 5rem 3rem;
+  padding-bottom: 5rem;
 }
 
 .ss-content h2 {
@@ -110,4 +114,3 @@
     font-size: 24px;
   }
 }
-

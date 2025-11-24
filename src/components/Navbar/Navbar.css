@@ -25,15 +25,15 @@ header {
     border: 0.1rem solid black;
     border-radius: 1rem;
     & ul {
+      margin-bottom: 0rem;
       display: flex;
       gap: 2rem;
       justify-content: center;
       align-items: center;
       & li {
         font-size: 1.3rem;
-
         &:hover {
-          text-decoration: underline red;
+          text-decoration: underline #0066cc;
           cursor: pointer;
         }
       }

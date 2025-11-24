@@ -6,7 +6,7 @@ interface Props {
 }
 export const Base: React.FC<Props> = ({ content }) => {
   return (
-    <section className="base-page-style">
+    <section className="base-page-style" id="site-content">
       <div className="custom-shape-divider-bottom-1763161839">
         <svg
           data-name="Layer 1"
