@@ -8,6 +8,13 @@ interface OptionGeneratorProps {
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+/*
+ *@component
+ * Este componente se encarga de cargar ...
+ *  funciona con
+ *
+ *
+ * **/
 function OptionGenerator({
   quantity,
   answerName,
