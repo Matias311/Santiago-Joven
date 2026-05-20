@@ -30,12 +30,31 @@
 ```
 
 ## Integrantes:
--
--
--
--
--
--
+- Dario Jara: 
+    - proyeccion joven
+    - detalle del programa
+- Luis Castro: 
+    - Pagina Principal
+    - Pop up logica de encuesta
+    - chatbot
+    - accesibilidad 
+- Guillermo Farias: 
+    - Login (logica + diseño)
+    - asesorias
+    - Ayuda al equipo
+- Joshua Espinoza 
+    - Pagina de administrador 
+    - conexion comunitaria
+- Hernan Sotelo: 
+    - Nuestro programas
+    - Pagina de detalle de programa
+- Felipe Sanchez: 
+    - Diseño de figma 
+    - pagina principal css
+    - ayuda general pal diseño responsive
+- Matias Arias: 
+    - Backend  
+    - arquitectura del proyecto
 
  ## Documentacion 
 - Arquitectura:
