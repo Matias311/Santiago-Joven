@@ -3,6 +3,7 @@
 ## Requisitos tecnicos para uso
 - NodeJS
 - Git 
+- Docker
 
 > [!IMPORTANT]
 > Para utilizar iconos tienen que copiarlos de aqui: <https://fontawesome.com/search?ic=free-collection> 
@@ -16,18 +17,15 @@
 ```bash
     cd santiago-joven
 ```
-- Instalar dependencias
+- Crear archivo `.env` y agregar la key de openai
 ```bash
-    npm install
+OPENAI_API_KEY=
 ```
-- Crear archivo .env en la carpeta `frontend/.env` y agregar la key de open ai
+- Ejecutar con docker
 ```bash
-    VITE_OPENAI_API_KEY=
+docker compose up --build
 ```
-- Ejecutar la aplicacion
-```bash
-    npm run dev 
-```
+Y listo, el frontend estara en `http://localhost:3000` y el backend en `localhost:8080/api/v1`  
 
 ## Integrantes:
 - Dario Jara: 
