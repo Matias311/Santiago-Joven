@@ -21,6 +21,7 @@ import GestionYAdministracionComunitaria from "./components/pages/GestionYAdmini
 import DireccionDeDesarrolloComunitario from "./components/pages/DirecciónDeDesarrolloComunitario/DireccionDeDesarrolloComunitario";
 import Migrantes from "./components/pages/Migrantes/Migrantes";
 import PueblosOriginarios from "./components/pages/PueblosOriginarios/PueblosOriginarios";
+import ConexionComunitaria from "./components/pages/ConexionComunitaria/ConexionComunitaria";
 
 function App() {
   return (
@@ -83,6 +84,10 @@ function App() {
         <Route
           path="/pueblos-originarios"
           element={<Base content={<PueblosOriginarios />} />}
+        />
+        <Route
+          path="/conexion-comunitaria"
+          element={<Base content={<ConexionComunitaria />} />}
         />
       </Routes>
       <Footer />
