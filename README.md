@@ -53,10 +53,12 @@ Y listo, el frontend estara en `http://localhost:3000` y el backend en `localhos
 - Matias Arias: 
     - Backend  
     - arquitectura del proyecto
+    - DevOps (Test, despliegue, calidad de codigo, CI/CD, etc)
 
  ## Documentacion 
-- Arquitectura:
-- Modelo de datos:
-- API:
-- Decisiones tecnicas:
-- Bitacora
+- Arquitectura: `docs/arquitectura.md`
+- Stack tecnologico: `docs/stack-tecnologico.md`
+- Modelo de datos: `docs/modelo-datos.md`
+- API: `docs/api.md`
+- Decisiones tecnicas: `docs/decisiones-tecnicas.md`
+- Bitacora: `docs/bitacora/`
