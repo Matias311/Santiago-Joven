@@ -1,0 +1,115 @@
+/* ============================================
+   SLIDER
+   ============================================ */
+.contenedor-slider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.flecha-slider {
+  background: transparent;
+  border: transparent;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s, transform 0.2s;
+  text-decoration: none
+  
+}
+
+.flecha-slider:hover {
+  background: transparent;
+  transform: scale(1.08);
+  border: transparent;
+}
+
+.slider-activo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.slider-activo .carta-universal {
+  width: 100%;
+  background: var(--blanco);
+  border: 1px solid rgba(32,197,141,0.18);
+  border-radius: var(--radio-grande);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(32,197,141,0.12);
+}
+
+.slider-activo .icono {
+  font-size: 2rem;
+  width: 4rem;
+  height: 4rem;
+  background: rgba(32,197,141,0.14);
+  color: var(--verde);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+
+.slider-activo .carta-universal h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--verde-oscuro);
+  margin-bottom: 0.8rem;
+  text-transform: capitalize;
+}
+
+.slider-activo .carta-universal p {
+  font-size: 0.92rem;
+  color: var(--gris-texto);
+  line-height: 1.6;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+/* Programas específicos */
+.programa-lazos.carta-universal {
+  background: #f5fcf3;
+  border: 1px solid rgba(32,197,141,0.18);
+  box-shadow: 0 18px 40px rgba(32,197,141,0.10);
+}
+
+.programa-lazos .icono {
+  background: rgba(32,197,141,0.14);
+  color: var(--verde);
+}
+
+.programa-lazos h3 { color: var(--verde-oscuro); }
+
+.programa-lazos .btn-inscribase {
+  background: linear-gradient(135deg, #14b92a, #69a84f);
+}
+
+.programa-senda.carta-universal {
+  background: #fff6ed;
+  border: 1px solid rgba(245,158,11,0.18);
+  box-shadow: 0 18px 40px rgba(245,158,11,0.08);
+}
+
+.programa-senda .icono {
+  background: rgba(245,158,11,0.12);
+  color: #c2410b;
+}
+
+.programa-senda h3 { color: #9a3412; }
+
+.programa-senda .btn-inscribase {
+  background: linear-gradient(135deg, #c2410b, #f59e0b);
+}

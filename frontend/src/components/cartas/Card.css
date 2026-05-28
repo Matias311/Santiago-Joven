@@ -1,0 +1,121 @@
+/* ============================================
+   CARTA UNIVERSAL
+   ============================================ */
+
+/* Cartas en fondo blanco */
+.contenedor-flex .carta-universal,
+.grupo-cartas .carta-universal {
+  background: var(--blanco);
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radio);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  color: #1e293b;
+  box-shadow: var(--sombra);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.contenedor-flex .carta-universal:hover,
+.grupo-cartas .carta-universal:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+}
+
+.contenedor-flex .icono,
+.grupo-cartas .icono {
+  font-size: 1.4rem;
+  width: 2.8rem;
+  height: 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8f4ff;
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+}
+
+.contenedor-flex .carta-universal h3,
+.grupo-cartas .carta-universal h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--azul-oscuro);
+  margin-bottom: 0.4rem;
+  text-transform: capitalize;
+}
+
+.contenedor-flex .carta-universal p,
+.grupo-cartas .carta-universal p {
+  font-size: 0.88rem;
+  color: var(--gris-texto);
+  line-height: 1.5;
+}
+
+/* Cartas del hero */
+.carta-seccion {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.carta-seccion .carta-universal {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: var(--radio);
+  padding: 1.4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--blanco);
+  backdrop-filter: blur(8px);
+  transition: background 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.carta-seccion .carta-universal:hover {
+  background: rgba(255,255,255,0.22);
+  transform: translateY(-3px);
+}
+
+.carta-seccion .icono {
+  font-size: 1.6rem;
+  margin-bottom: 0.6rem;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.carta-seccion .carta-universal h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: var(--blanco);
+}
+
+/* Botones */
+.btn-inscribase {
+  background: linear-gradient(135deg, #4f772c, #69a84f);
+  color: var(--blanco);
+  border: none;
+  padding: 0.75rem 1.8rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-inscribase:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 119, 44, 0.3);
+}

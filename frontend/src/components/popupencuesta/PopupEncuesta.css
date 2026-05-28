@@ -1,0 +1,82 @@
+/* ============================================
+   POPUP ENCUESTA
+   ============================================ */
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup-contenedor {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.popup-cerrar {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: #94a3b8;
+  cursor: pointer;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+
+.popup-cerrar:hover {
+  color: #475569;
+}
+
+.popup-icono {
+  font-size: 4rem;
+  color: #D08370;
+  display: block;
+  margin-bottom: 1.2rem;
+}
+
+.popup-contenedor h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #8B6355;
+  margin-bottom: 0.8rem;
+}
+
+.popup-contenedor p {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.6;
+  max-width: 300px;
+  margin: 0 auto 2rem;
+}
+
+.popup-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0.85rem 2.5rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.popup-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
