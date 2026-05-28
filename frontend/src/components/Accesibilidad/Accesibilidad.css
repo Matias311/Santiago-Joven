@@ -1,7 +1,7 @@
 .accessibility-container {
   position: fixed;
   top: 7rem;
-  right: 1rem;
+  left: 1rem;
   z-index: 9999;
 }
 
