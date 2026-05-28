@@ -1,5 +1,5 @@
 import "./Card.css";
-import type { CartaItem } from '../types/typeCard';
+import type { CartaItem } from '../types/CartaItem';
 
 /**
  * Componente de tarjeta universal reutilizable.

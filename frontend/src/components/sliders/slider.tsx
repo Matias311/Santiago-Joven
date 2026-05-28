@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./slider.css";
 import Card from "../cartas/Card";
-import type { CartaItem } from '../types/typeCard';
+import type { CartaItem } from '../types/CartaItem';
 
 /**
  * Props del componente Slider.

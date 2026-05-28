@@ -81,35 +81,3 @@ export interface Info {
     email: string;
   };
 }
-
-/**
- * Props del componente `Card`.
- * Define las propiedades de personalización visual y contenido de una tarjeta.
- * Importar desde `types` en `Card.tsx` con `import type { Props } from '../types'`.
- */
-export interface Props {
-  /** Nombre del ícono de Material Symbols (e.g. `"school"`, `"rocket"`). */
-  icono?: string;
-  /** Color CSS del ícono. */
-  iconoColor?: string;
-  /** Tamaño CSS del ícono (e.g. `"48px"`). */
-  iconoTamaño?: string;
-  /** Color o gradiente CSS del fondo del contenedor del ícono. */
-  iconoFondo?: string;
-  /** Color o gradiente CSS del fondo del botón. */
-  botoncolor?: string;
-  /** Color CSS del título. */
-  tituloColor?: string;
-  /** Valor CSS de `box-shadow` para la tarjeta. */
-  sliderSombra?: string;
-  /** Texto principal de la tarjeta. Requerido. */
-  titulo: string;
-  /** Texto secundario debajo del título. */
-  subtitulo?: string;
-  /** Descripción o cuerpo de texto de la tarjeta. */
-  descripcion?: string;
-  /** Texto del botón de acción. Si no se pasa, el botón no se renderiza. */
-  boton?: string;
-  /** Clase CSS adicional para el contenedor raíz de la tarjeta. */
-  clase?: string;
-}
