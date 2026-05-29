@@ -21,7 +21,7 @@ import GestionYAdministracionComunitaria from "./components/pages/GestionYAdmini
 import DireccionDeDesarrolloComunitario from "./components/pages/DirecciónDeDesarrolloComunitario/DireccionDeDesarrolloComunitario";
 import Migrantes from "./components/pages/Migrantes/Migrantes";
 import PueblosOriginarios from "./components/pages/PueblosOriginarios/PueblosOriginarios";
-import ConexionComunitaria from "./components/pages/ConexionComunitaria/ConexionComunitaria";
+import ConexionComunitaria from "../frontend/src/components/pages/ConexionComunitaria/ConexionComunitaria";
 
 function App() {
   return (

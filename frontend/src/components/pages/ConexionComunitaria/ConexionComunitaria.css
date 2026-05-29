@@ -633,7 +633,7 @@
   }
 
   .card_img {
-    aspect-ratio: 2 / 1; /* Relación de aspecto fluida solicitada */
+    aspect-ratio: 2 / 1;
     height: auto;
   }
 
@@ -655,7 +655,7 @@
   }
 }
 
-/* ----- MEDIA QUERIES: DESKTOP (Desde 1024px) ----- */
+/* ----- MEDIA QUERIES: DESKTOP ----- */
 @media (min-width: 1024px) {
   .welcome {
     padding: 80px 20px;
@@ -666,7 +666,7 @@
   }
 
   .card_img {
-    aspect-ratio: 2 / 1; /* Relación de aspecto fluida solicitada */
+    aspect-ratio: 2 / 1;
     height: auto;
   }
 

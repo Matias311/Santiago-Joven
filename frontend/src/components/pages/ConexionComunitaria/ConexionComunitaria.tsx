@@ -10,29 +10,8 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
 import "./ConexionComunitaria.css";
-
-interface CardData {
-  img: string;
-  icon: string; // Para que acepte imagenes
-  title: string;
-  description: string;
-  date: string;
-  lugar: string;
-  cupos_disponibles: number;
-  cupos: number;
-  btn: string;
-  btnClass: "participar" | "cerrado" | "cancelado" | "lleno";
-}
-
-interface CalendarEvent {
-  id: number;
-  categoria: "Ferias" | "Talleres" | "Cursos" | "Campañas";
-  tagClass: "ferias" | "talleres" | "cursos" | "campañas";
-  title: string;
-  lugar: string;
-  date: string;
-  btnStatus: "proximamente" | "expirado";
-}
+import Card, { type CardData } from "./Card.tsx";
+import CalendarCard, { type CalendarEvent } from "./CalendarCard.tsx";
 
 interface ModalProps {
   card: CardData;
@@ -113,48 +92,6 @@ function Modal({ card, isLoggedIn, onClose, onLoginRequest }: ModalProps) {
     </div>
   );
 }
-function Card({ data, onClick }: { data: CardData; onClick: () => void }) {
-  return (
-    <div className="card" onClick={onClick}>
-      <img src={data.img} className="card_img" alt={data.title} />
-      <div className="card_body">
-        <div className="card_header">
-          <span className="card_icon">
-            <img src={data.icon} alt="icono" className="card-header-icon" />
-          </span>
-          <span className="card_title">{data.title}</span>
-        </div>
-        <p className="card_description">{data.description}</p>
-        <div className="card_footer">
-          <span className="card_date">{data.date}</span>
-          <button
-            className={`card_btn ${data.btnClass}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-          >
-            {data.btn}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CalendarCard({ event }: { event: CalendarEvent }) {
-  return (
-    <div className="calendar-item">
-      <span className={`item-tag ${event.tagClass}`}>{event.categoria}</span>
-      <h3>{event.title}</h3>
-      <p className="item-location">{event.lugar}</p>
-      <span className="item-date">{event.date}</span>
-      <span className={`event-status ${event.btnStatus}`}>
-        {event.btnStatus === "proximamente" ? "Proximamente" : "Expirado"}
-      </span>
-    </div>
-  );
-}
 
 export default function ConexionComunitaria() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -217,7 +154,7 @@ export default function ConexionComunitaria() {
           Conocegente nueva y desarrolla tus talentos
         </p>
         <div className="page-icon">
-          <img src={conexion} className="diversity" alt="logo conexion" />
+          <img src={conexion} className="conexion" alt="logo conexion" />
           <span>Conexión</span>
         </div>
       </div>
