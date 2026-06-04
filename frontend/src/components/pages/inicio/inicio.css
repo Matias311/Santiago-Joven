@@ -208,6 +208,37 @@ body {
   background: linear-gradient(135deg, #22c55e, #16a34a);
 }
 
+.dark #programas .slider-activo .carta-universal {
+  background: #0f172a;
+  border-color: rgba(148, 163, 184, 0.16);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.dark #programas .slider-activo .icono {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--verde);
+}
+
+.dark #programas .slider-activo .programa-lazos h3 {
+  color: var(--blanco);
+}
+
+.dark #programas .slider-activo .programa-senda h3 {
+  color: var(--blanco);
+}
+
+.dark #programas .slider-activo .btn-inscribase {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.dark #programas .programa-lazos .btn-inscribase {
+  background: linear-gradient(135deg, rgba(20, 185, 42, 0.9), rgba(105, 168, 79, 0.9));
+}
+
+.dark #programas .programa-senda .btn-inscribase {
+  background: linear-gradient(135deg, rgba(194, 65, 11, 0.9), rgba(245, 159, 11, 0.9));
+}
+
 /* SALUD MENTAL */
 .salud-mental-bienestar .seccion-encabezado {
   background: none;
@@ -574,18 +605,197 @@ body {
   margin-left: calc(-50vw + 50%);
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .hero-section { padding: 2rem 1.5rem 0; }
-  .carta-seccion { grid-template-columns: repeat(2, 1fr); }
-  .contenido-principal { padding: 2rem 1.5rem; }
-  .salud-mental-bienestar .grupo-cartas { grid-template-columns: 1fr; }
-  .conexion-comunitaria .contenedor-flex { grid-template-columns: 1fr; }
-  .contacto-layout { grid-template-columns: 1fr; }
+.dark body {
+  background: #020617;
+  color: var(--text-primary);
 }
 
-@media (max-width: 480px) {
-  .carta-seccion { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
-  .hero-section h1 { font-size: 1.8rem; }
-  .contenedor-flex { grid-template-columns: 1fr; }
+.dark .pagina-principal {
+  background: linear-gradient(135deg, #081828 0%, #0b2d2c 60%, #0f361f 100%);
+}
+
+.dark .contenido-principal {
+  background: #050b18;
+}
+
+.dark .seccion-encabezado p,
+.dark .salud-mental-bienestar .seccion-encabezado p,
+.dark .tu-opinion-cuenta .formulario-footer span,
+.dark .info-ubicacion p,
+.dark .ubicacion-item p,
+.dark .sin-actividades {
+  color: var(--text-secondary);
+}
+
+.dark .accion-joven .carta-universal,
+.dark .grupo-cartas .carta-universal,
+.dark .conexion-comunitaria .lista-conexion li,
+.dark .slider-activo .carta-universal,
+.dark .programa-lazos.carta-universal,
+.dark .programa-senda.carta-universal,
+.dark .formulario-opinion input,
+.dark .formulario-opinion textarea,
+.dark .formulario-contacto input,
+.dark .formulario-contacto textarea {
+  background: #0f172a;
+  border-color: rgba(148, 163, 184, 0.16);
+  color: var(--text-primary);
+}
+
+.dark .accion-joven .carta-universal,
+.dark .grupo-cartas .carta-universal {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+}
+
+.dark .accion-joven .icono,
+.dark .slider-activo .icono,
+.dark .programa-lazos .icono,
+.dark .programa-senda .icono {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dark .accion-joven .icono {
+  color: var(--naranja);
+}
+
+.dark .seccion-informativa h2,
+.dark #apoyo h2,
+.dark #proyeccion h2,
+.dark #salud h2,
+.dark #calendario h2,
+.dark #opinion h2,
+.dark .grupo-cartas h3,
+.dark .lista-conexion h3,
+.dark .formulario-contacto h3,
+.dark .ubicacion-item span {
+  color: var(--blanco);
+}
+
+.dark #programas .seccion-encabezado {
+  background: #0e1723;
+}
+
+.dark #programas .seccion-encabezado p {
+  color: var(--text-secondary);
+}
+
+.dark #programas .slider-activo .icono {
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.dark .programa-lazos.carta-universal {
+  background: #09180d;
+}
+
+.dark .programa-senda.carta-universal {
+  background: #211306;
+}
+
+.dark .salud-mental-bienestar .carta-universal {
+  border-color: rgba(56, 189, 248, 0.16);
+}
+
+.dark .salud-mental-bienestar .icono {
+  background: rgba(14, 165, 233, 0.14);
+  color: #38bdf8;
+}
+
+.dark .conexion-comunitaria .lista-conexion li {
+  border-color: rgba(148, 163, 184, 0.16);
+}
+
+.dark .filtro-eventos {
+  background: #111827;
+  border-color: rgba(148, 163, 184, 0.22);
+  color: var(--text-primary);
+}
+
+.dark .formulario-opinion input:focus,
+.dark .formulario-opinion textarea:focus,
+.dark .formulario-contacto input:focus,
+.dark .formulario-contacto textarea:focus {
+  border-color: var(--accent);
+}
+
+.dark .btn-enviar-opinion,
+.dark .btn-enviar-contacto {
+  box-shadow: 0 6px 20px rgba(96, 165, 250, 0.18);
+}
+
+.dark .btn-enviar-opinion:hover,
+.dark .btn-enviar-contacto:hover {
+  background: var(--accent);
+}
+
+.dark .fondo-gris {
+  background: #07121e;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  /* Hero */
+  .inicio-section {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+    margin-top: -130px;
+    padding-top: 15rem;
+    min-height: auto;
+    text-align: center;
+  }
+
+  .contenedor-flex {
+    grid-template-columns: 1fr;
+  }
+  .inicio-texto h1 {
+    font-size: 1.8rem;
+  }
+
+  .inicio-texto {
+    max-width: 100%;
+  }
+
+  .carta-seccion {
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem;
+    width: 100%;
+  }
+
+  /* Navbar */
+  .navbar {
+    padding: 0.8rem 1.5rem;
+  }
+
+  .fila-inferior {
+    gap: 1rem;
+    font-size: 0.82rem;
+    flex-wrap: wrap;
+  }
+
+  /* Contenido principal */
+  .contenido-principal {
+    padding: 2rem 1.5rem;
+  }
+
+  /* Salud mental */
+  .salud-mental-bienestar .grupo-cartas {
+    grid-template-columns: 1fr;
+  }
+
+  /* Conexión */
+  .conexion-comunitaria .contenedor-flex {
+    grid-template-columns: 1fr;
+  }
+
+  /* Contacto */
+  .contacto-layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* Fondo gris */
+  .fondo-gris {
+    width: 100%;
+    margin-left: 0;
+    padding: 1.5rem;
+  }
 }

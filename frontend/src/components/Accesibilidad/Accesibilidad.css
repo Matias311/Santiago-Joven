@@ -71,3 +71,22 @@
 #site-content.readable-font {
   font-family: Arial, Helvetica, sans-serif !important;
 }
+
+.accessibility-panel {
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.accessibility-panel li:hover {
+  color: var(--accent);
+}
+
+.dark .accessibility-panel {
+  background: var(--surface-alt);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+}
+
+.dark .accessibility-btn {
+  background: var(--accent);
+}

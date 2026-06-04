@@ -45,3 +45,16 @@
     }
   }
 }
+
+.dark .dropdown-menu {
+  background: #0b1120;
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+.dark .dropdown-menu .link-dropdown {
+  color: var(--text-primary);
+}
+
+.dark .dropdown-btn:hover {
+  text-decoration-color: var(--accent);
+}

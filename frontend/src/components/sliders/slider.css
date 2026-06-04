@@ -113,3 +113,49 @@
 .programa-senda .btn-inscribase {
   background: linear-gradient(135deg, #c2410b, #f59e0b);
 }
+
+.dark .slider-activo .carta-universal,
+.dark .programa-lazos.carta-universal,
+.dark .programa-senda.carta-universal {
+  background: #0d1324;
+  border-color: rgba(148, 163, 184, 0.16);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+.dark .slider-activo .icono,
+.dark .programa-lazos .icono,
+.dark .programa-senda .icono {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dark .slider-activo .carta-universal h3,
+.dark .programa-lazos h3,
+.dark .programa-senda h3 {
+  color: var(--blanco);
+}
+
+.dark .programa-lazos .icono {
+  background: rgba(16, 185, 129, 0.10);
+}
+
+.dark .programa-senda .icono {
+  background: rgba(245, 158, 11, 0.10);
+}
+
+.dark .programa-lazos .btn-inscribase,
+.dark .programa-senda .btn-inscribase {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.dark .programa-lazos .btn-inscribase {
+  background: linear-gradient(135deg, rgba(20, 185, 42, 0.9), rgba(105, 168, 79, 0.9));
+}
+
+.dark .programa-senda .btn-inscribase {
+  background: linear-gradient(135deg, rgba(194, 65, 11, 0.9), rgba(245, 159, 11, 0.9));
+}
+
+.dark .programa-lazos .icono,
+.dark .programa-senda .icono {
+  color: var(--blanco);
+}

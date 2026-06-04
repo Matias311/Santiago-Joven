@@ -1,9 +1,12 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../Navbar/Navbar.css";
 
-export default function Navbar() {
-  const [modoOscuro, setModoOscuro] = useState(false);
+type NavbarProps = {
+  modoOscuro: boolean;
+  onToggleModo: () => void;
+};
+
+export default function Navbar({ modoOscuro, onToggleModo }: NavbarProps) {
 
   return (
     <header className="navbar">
@@ -18,7 +21,8 @@ export default function Navbar() {
           <button
             type="button"
             className={`boton-modo-oscuro ${modoOscuro ? 'oscuro' : 'claro'}`}
-            onClick={() => setModoOscuro(!modoOscuro)}
+            onClick={onToggleModo}
+            aria-label={modoOscuro ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
           >
             <span className="material-symbols-outlined">
               {modoOscuro ? 'dark_mode' : 'light_mode'}
