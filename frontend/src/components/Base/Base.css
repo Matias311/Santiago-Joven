@@ -1,3 +1,13 @@
+/* =============================================================
+  ARCHIVO: src/components/Base/Base.css
+  PROPÓSITO: Estilos base de la página y formas decorativas
+
+  SECCIONES:
+  1. Wrappers a nivel de página
+  2. Formas decorativas / Rellenos de SVG
+  3. Uso de tema / Sobrescrituras de modo oscuro
+  ============================================================= */
+
 .base-page-style {
   position: relative;
   width: 100%;
@@ -25,4 +35,8 @@
   & .custom-shape-divider-bottom-1763161839 .shape-fill {
     fill: #4c4c4c;
   }
+}
+
+.dark .custom-shape-divider-bottom-1763161839 .shape-fill {
+  fill: #94a3b8;
 }
