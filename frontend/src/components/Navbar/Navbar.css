@@ -1,5 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
+/* =============================================================
+  ARCHIVO: src/components/Navbar/Navbar.css
+  PROPÓSITO: Barra de navegación principal y sus estados
+
+  SECCIONES:
+  1. Imports / Fuentes
+  2. Layout de la navbar y branding (.navbar, .fila-*)
+  3. Botones y controles (.boton-modo-oscuro)
+  4. Sobrescrituras de modo oscuro (agrupadas)
+  5. Reglas responsive
+  ============================================================= */
+
 .navbar {
   border-radius: 0 0 25px 25px;
   background: var(--navbar-bg);

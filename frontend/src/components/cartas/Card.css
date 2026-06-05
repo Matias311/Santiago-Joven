@@ -1,6 +1,17 @@
+/* =============================================================
+  ARCHIVO: src/components/cartas/Card.css
+  PROPÓSITO: Estilos para las cartas reutilizables en distintas secciones
+
+  SECCIONES:
+  1. Estilos por defecto de cartas (.carta-universal)
+  2. Cartas de hero / sección (.carta-seccion)
+  3. Botones y utilidades (.btn-inscribase)
+  4. Sobrescrituras de modo oscuro (agrupadas al final)
+  ============================================================= */
+
 /* ============================================
-   CARTA UNIVERSAL
-   ============================================ */
+  CARTA UNIVERSAL
+  ============================================ */
 
 /* Cartas en fondo blanco */
 .contenedor-flex .carta-universal,
@@ -137,6 +148,16 @@
 .dark .contenedor-flex .icono,
 .dark .grupo-cartas .icono {
   background: #111a2d;
+}
+
+.dark .contenedor-flex .carta-universal h3,
+.dark .grupo-cartas .carta-universal h3 {
+  color: #f1f5f9;
+}
+
+.dark .contenedor-flex .carta-universal p,
+.dark .grupo-cartas .carta-universal p {
+  color: #cbd5e1;
 }
 
 .dark .carta-seccion .carta-universal {

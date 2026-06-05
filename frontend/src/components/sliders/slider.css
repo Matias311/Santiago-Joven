@@ -1,6 +1,18 @@
+/* =============================================================
+  ARCHIVO: src/components/sliders/slider.css
+  PROPÓSITO: Estilos del componente Slider (tarjetas rotatorias)
+
+  SECCIONES:
+  1. Layout / Contenedor
+  2. Estilos de tarjeta (.carta-universal)
+  3. Modificadores por programa (.programa-*)
+  4. Sobrescrituras de modo oscuro (agrupadas)
+  5. Responsive / Utilidades
+  ============================================================= */
+
 /* ============================================
-   SLIDER
-   ============================================ */
+  SLIDER
+  ============================================ */
 .contenedor-slider {
   display: flex;
   align-items: center;
@@ -132,6 +144,12 @@
 .dark .programa-lazos h3,
 .dark .programa-senda h3 {
   color: var(--blanco);
+}
+
+.dark .slider-activo .carta-universal p,
+.dark .programa-lazos.carta-universal p,
+.dark .programa-senda.carta-universal p {
+  color: var(--card-text-dark);
 }
 
 .dark .programa-lazos .icono {

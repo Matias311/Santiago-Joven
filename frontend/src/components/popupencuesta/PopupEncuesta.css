@@ -1,6 +1,18 @@
+/* =============================================================
+  ARCHIVO: src/components/popupencuesta/PopupEncuesta.css
+  PROPÓSITO: Estilos del modal de encuestas
+
+  SECCIONES:
+  1. Overlay / Contenedor
+  2. Tipografía / Contenido
+  3. Botones / Acciones
+  4. Uso de variables de tema (tokens de color)
+  5. Sobrescrituras de modo oscuro (usa variables)
+  ============================================================= */
+
 /* ============================================
-   POPUP ENCUESTA
-   ============================================ */
+  POPUP ENCUESTA
+  ============================================ */
 
 .popup-overlay {
   position: fixed;
