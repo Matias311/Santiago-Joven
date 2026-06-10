@@ -3,6 +3,7 @@
 ## Requisitos tecnicos para uso
 - NodeJS
 - Git 
+- Docker
 
 > [!IMPORTANT]
 > Para utilizar iconos tienen que copiarlos de aqui: <https://fontawesome.com/search?ic=free-collection> 
@@ -16,49 +17,48 @@
 ```bash
     cd santiago-joven
 ```
-- Instalar dependencias
+- Crear archivo `.env` y agregar la key de openai
 ```bash
-    npm install
+OPENAI_API_KEY=
 ```
-- Ejecutar la aplicacion
+- Ejecutar con docker
 ```bash
-    npm run dev 
+docker compose up --build
 ```
+Y listo, el frontend estara en `http://localhost:3000` y el backend en `localhost:8080/api/v1`  
 
-## Partes de cada person
-### Lucho:
-- inicio
-- agenda
-- talleres
+## Integrantes:
+- Dario Jara: 
+    - proyeccion joven
+    - detalle del programa
+- Luis Castro: 
+    - Pagina Principal
+    - Pop up logica de encuesta
+    - chatbot
+    - accesibilidad 
+- Guillermo Farias: 
+    - Login (logica + diseño)
+    - asesorias
+    - Ayuda al equipo
+- Joshua Espinoza 
+    - Pagina de administrador 
+    - conexion comunitaria
+- Hernan Sotelo: 
+    - Nuestro programas
+    - Pagina de detalle de programa
+- Felipe Sanchez: 
+    - Diseño de figma 
+    - pagina principal css
+    - ayuda general pal diseño responsive
+- Matias Arias: 
+    - Backend  
+    - arquitectura del proyecto
+    - DevOps (Test, despliegue, calidad de codigo, CI/CD, etc)
 
-### Pipe:
-- dirección de desarrollo comunitario
-- gestión y administración comunitaria
-- servicios sociales
-
-### Guille
-- participación ciudadana
-- desarrollo - social
-- PPT de presentacion
-
-### Dario:
-- deportes y recreacion
-- centros comunitarios
-- deportes y recreacion (servicios)
-- desarrollo económico local
-
-### Nano:
-- niñez y adolescencia
-- discapacidad
-- juventud
-
-### Matias:
-- personas mayores
-- migrantes
-- participación ciudadana
-- pueblos originarios
-
-### Joshua:
-- encuesta
-- mujeres e igualdad de genero
-- diversidad sexual
+ ## Documentacion 
+- Arquitectura: `docs/arquitectura.md`
+- Stack tecnologico: `docs/stack-tecnologico.md`
+- Modelo de datos: `docs/modelo-datos.md`
+- API: `docs/api.md`
+- Decisiones tecnicas: `docs/decisiones-tecnicas.md`
+- Bitacora: `docs/bitacora/`
