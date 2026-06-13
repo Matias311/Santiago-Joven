@@ -1,0 +1,312 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap");
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Propiedades de texto */
+textarea,
+button,
+input {
+  font-family: "Outfit", sans-serif;
+  flex-shrink: 0;
+}
+
+.modal_edit_content p,
+.modal_edit_content h2 {
+  font-family: "Outfit", sans-serif !important;
+  font-weight: bold;
+  color: black !important;
+}
+
+/* Estilo boton editar */
+
+.card_edit_btn {
+  display: block;
+  background-color: #b3d4fd;
+  color: #6f89fa;
+  border: none;
+  width: 6rem;
+  height: 2rem;
+  border-radius: 5rem;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  font-family: "Outfit", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.editable-calendar-wrapper .card_edit_btn {
+  background-color: #bcd6ff;
+  color: #3b76e1;
+  width: 6rem;
+  height: 2rem;
+  border-radius: 5rem;
+  margin: 12px auto 20px auto;
+}
+
+@media (pointer: fine) {
+  .card_edit_btn:hover {
+    background-color: #0077ff;
+    color: white;
+  }
+}
+
+.card_edit_btn:active {
+  animation: click 0.5s ease-in-out;
+}
+
+/* animacion cuando haces click en los botones correspondientes a admin */
+@keyframes click {
+  0% {
+    background-color: #0077ff;
+    color: white;
+  }
+  50% {
+    background-color: #b3d4fd;
+  }
+  100% {
+    background-color: #0077ff;
+    color: white;
+  }
+}
+
+.modal_edit_overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+/* Estilo ventana flotante */
+
+.modal_edit_content {
+  background: #f8fafc;
+  padding: 2rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 500px;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.modal_edit_content textarea,
+.modal_edit_content input {
+  color: #222222 !important;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  border: none;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+  font-size: 1rem;
+  resize: none;
+  outline: none;
+}
+
+.form_btn {
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  width: 50%;
+  height: 1.5rem;
+}
+
+#save_btn {
+  background-color: #0077ff;
+}
+
+#add_btn {
+  background-color: #0077ff;
+}
+
+#delete_btn {
+  background-color: #ff6666;
+}
+
+#cancel_btn {
+  background-color: #878787;
+}
+
+/* ESTILO SELECTOR DE ICONO Y COLOR */
+
+.icon_grid,
+.color_grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.icon_btn {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.color_btn {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.icon_picker,
+.color_picker {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+/* ESTILO MODAL EDITABLELISTITEM */
+.form_section_picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.radio_option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.radio_option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* SOLUCION PARA ICONO RENDERIZANDOSE AUNQUE NO EXISTIERA EN LA CARD O SLIDER */
+.icono:empty,
+.icono:has(:empty) {
+  display: none !important;
+}
+
+/* ESTILO PARA CALENDARIO */
+
+.calendar_container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.2rem;
+}
+
+.modal_calendar_select {
+  font-family: "Outfit", sans-serif;
+  color: #333333;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  border: none;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+  outline: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.modal_edit_content .form_btn {
+  width: 100%;
+  height: 2.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.editable-calendar-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 340px;
+}
+
+.calendar-item {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  width: 100%;
+  min-height: 190px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+}
+
+.item-tag {
+  align-self: flex-start;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 6px 20px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  text-transform: capitalize;
+}
+
+.item-tag {
+  background-color: #bcd6ff;
+  color: #3b76e1;
+}
+
+.calendar-item h3 {
+  font-size: 1.35rem;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+  text-align: left;
+}
+
+.item-location {
+  color: #555555;
+  text-decoration: underline;
+  font-size: 0.85rem;
+  margin: 0 0 auto 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.calendar-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.item-date {
+  font-size: 0.85rem;
+  color: #333333;
+}
+
+.eventProps-status {
+  margin-top: auto;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 0.8rem;
+  width: max-content !important;
+}
+.eventProps-status.proximamente,
+.eventProps-status.en-proceso {
+  background-color: #e3ffd9;
+  color: #4ca629;
+}
+
+.eventProps-status.expirado {
+  background-color: #ffe0e0;
+  color: #c73c3c;
+}

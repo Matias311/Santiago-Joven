@@ -1,6 +1,7 @@
 export interface CardData {
   img: string;
   icon: string;
+  iconColor: string;
   title: string;
   description: string;
   date: string;
@@ -24,7 +25,12 @@ export default function Card({
       <div className="card_body">
         <div className="card_header">
           <span className="card_icon">
-            <img src={data.icon} alt="icono" className="card-header-icon" />
+            <span
+              style={{ color: data.iconColor }}
+              className="card-header-icon material-symbols-outlined"
+            >
+              {data.icon}
+            </span>
           </span>
           <span className="card_title">{data.title}</span>
         </div>

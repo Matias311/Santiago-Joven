@@ -1,8 +1,17 @@
 import "./inicio.css";
 import Card from "../../cartas/Card";
-import Slider from "../../sliders/slider";
+import EditableSlider from "../../sliders/EditableSlider";
 import type { CartaItem } from "../../types/CartaItem";
 import type { ConexionItem } from "../../types/ConexionItem";
+import EditableCard from "../../cartas/EditableCard";
+import EditableListItem from "../../cartas/EditableListItem";
+import React, { useState } from "react";
+import { type CalendarEvent } from "../../cartas/CalendarCard";
+import EditableCalendarCard from "../../cartas/EditableCalendarCard";
+import type { Survey } from "../../cartas/SurveyCard";
+import EditableSurveyCard from "../../cartas/EditableSurveyCard";
+/* LAS TEMPLATES DE LAS CARD PARA QUE AGREGUE LAS CARD NUEVAS */
+import { templates } from "../../types/cardTemplate";
 
 const asesorias: CartaItem[] = [
   {
@@ -78,6 +87,10 @@ const accion: CartaItem[] = [
     descripcion:
       "Participa en campañas de reforestación, visitas a hogares de ancianos, colectas de alimentos y más. Conecta con otros jóvenes que, como tú, quieren dejar una huella positiva.",
     boton: "¡Quiero ser voluntario!",
+    botoncolor: "",
+    icono: "",
+    iconoFondo: "",
+    tituloColor: "inherit",
   },
 ];
 
@@ -183,7 +196,190 @@ const encabezado: CartaItem[] = [
   },
 ];
 
+const eventosCalendario: CalendarEvent[] = [
+  {
+    id: 1,
+    categoria: "Ferias",
+    tagClass: "ferias",
+    title: "Feria Vocacional 2026",
+    detail: "Ver más detalles",
+    date: "2026-11-15",
+  },
+  {
+    id: 2,
+    categoria: "Talleres",
+    tagClass: "talleres",
+    title: "Taller Vocacional 2026",
+    detail: "Ver más detalles",
+    date: "2026-01-10",
+  },
+  {
+    id: 3,
+    categoria: "Campañas",
+    tagClass: "campañas",
+    title: "Campaña Vocacional 2026",
+    detail: "Ver más detalles",
+    date: "2026-05-30",
+  },
+];
+
+const encuesta: Survey[] = [
+  {
+    id: 101,
+    title: "Encuesta Vacacional 2026",
+    desde: "2026-12-10",
+    hasta: "2026-11-15",
+    url: "https://media1.tenor.com/m/RLthQ6DcOSQAAAAd/cat-dog-roblox-dance-el-gato-y-papu-perro-bailando.gif",
+  },
+  {
+    id: 102,
+    title: "Encuesta medio ambiente",
+    desde: "2026-01-10",
+    hasta: "2026-03-05",
+    url: "https://media1.tenor.com/m/RLthQ6DcOSQAAAAd/cat-dog-roblox-dance-el-gato-y-papu-perro-bailando.gif",
+  },
+  {
+    id: 103,
+    title: "Encuesta opinion",
+    desde: "2026-05-30",
+    hasta: "2026-06-11",
+    url: "https://media1.tenor.com/m/RLthQ6DcOSQAAAAd/cat-dog-roblox-dance-el-gato-y-papu-perro-bailando.gif",
+  },
+];
+
 export default function Inicio() {
+  {
+    /* Acá debería de ir el auth de si es admin o no, pero mientras pongo esto */
+  }
+  const [isAdmin, setIsAdmin] = useState(true);
+
+  {
+    /* -- Convierte las listas en estados para que puedan ser editables -- */
+  }
+
+  {
+    /* listas que usan el elemento Card normal */
+  }
+  const [asesoriasState, setAsesoriasState] = useState<CartaItem[]>(asesorias);
+  const [preuniversitarioState, setPreuniversitarioState] =
+    useState<CartaItem[]>(preuniversitario);
+  const [saludState, setSaludState] = useState<CartaItem[]>(salud);
+
+  {
+    /* listas que usan el elemento List */
+  }
+  const [actividadesState, setActividadesState] =
+    useState<ConexionItem[]>(actividades);
+  const [talleresState, setTalleresState] = useState<ConexionItem[]>(talleres);
+
+  {
+    /* listas que usan el elemento Slider */
+  }
+  const [accionState, setAccionState] = useState<CartaItem[]>(accion);
+  const [programasState, setProgramasState] = useState<CartaItem[]>(programas);
+  const [cursosState, setCursosState] = useState<CartaItem[]>(cursos);
+
+  {
+    /* listas que usan el elemento Calendar */
+  }
+  const [calendarioState, setCalendarioState] =
+    useState<CalendarEvent[]>(eventosCalendario);
+  const [filtro, setFiltro] = useState<string>("Todos");
+
+  {
+    /* listas que usan el elemento Survey */
+  }
+  const [encuestaState, setEncuestaState] = useState<Survey[]>(encuesta);
+
+  const eventosFiltrados = calendarioState.filter(
+    (evt) =>
+      filtro === "Todos" ||
+      evt.categoria.toLowerCase() === filtro.toLowerCase().replace(/s$/, "s"),
+  );
+
+  {
+    /** Actualizar carta */
+  }
+  const updateItem = <Carta,>(
+    list: Carta[],
+    setList: React.Dispatch<React.SetStateAction<Carta[]>>,
+    index: number,
+    updated: Carta,
+  ) => {
+    const updatedList = [...list];
+
+    updatedList[index] = updated;
+
+    setList(updatedList);
+  };
+
+  {
+    /** Eliminar carta */
+  }
+  const deleteItem = <Carta,>(
+    list: Carta[],
+    setList: React.Dispatch<React.SetStateAction<Carta[]>>,
+    index: number,
+  ) => {
+    const updatedList = list.filter((_, i) => i !== index);
+
+    setList(updatedList);
+  };
+
+  {
+    /** Añadir carta */
+  }
+  const addCard = <T,>(
+    state: T[],
+    setState: React.Dispatch<React.SetStateAction<T[]>>,
+    template?: T,
+  ) => {
+    const base: any =
+      state.length > 0
+        ? { ...state[state.length - 1] }
+        : template
+          ? { ...template }
+          : null;
+
+    if (!base) return;
+
+    const ignorar = [
+      "icono",
+      "iconoColor",
+      "iconoFondo",
+      "sliderSombra",
+      "tituloColor",
+      "botoncolor",
+    ];
+
+    Object.keys(base).forEach((key) => {
+      if (
+        !ignorar.includes(key) &&
+        typeof base[key] === "string" &&
+        base[key].trim() !== ""
+      ) {
+        base[key] = "Insertar datos";
+      }
+    });
+
+    if ("id" in base) {
+      base.id = Date.now();
+    }
+
+    if ("title" in base) {
+      base.title = `Nueva carta ${state.length + 1}`;
+    }
+
+    if ("titulo" in base) {
+      base.titulo = `Nueva carta ${state.length + 1}`;
+    }
+
+    if ("texto" in base) {
+      base.texto = `Nuevo elemento ${state.length + 1}`;
+    }
+
+    setState([...state, base]);
+  };
   return (
     <>
       {/* encabezado de la pagina principal */}
@@ -208,6 +404,14 @@ export default function Inicio() {
 
       {/* contenido principal */}
       <main className="contenido-principal">
+        <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <input
+            type="checkbox"
+            checked={isAdmin}
+            onChange={(e) => setIsAdmin(e.target.checked)}
+          />
+          Modo administrador
+        </label>
         {/* apoyo joven */}
         <section id="apoyo" className="seccion-informativa">
           <div className="seccion-encabezado">
@@ -224,31 +428,105 @@ export default function Inicio() {
             </p>
           </div>
           <div className="grupo-cartas">
-            <h3>Asesoría</h3>
+            <div className="titulo-con-btnAdd">
+              <h3>Asesoría</h3>
+              {isAdmin && (
+                <button
+                  className="card_edit_btn"
+                  onClick={() =>
+                    addCard(
+                      asesoriasState,
+                      setAsesoriasState,
+                      templates.asesorias,
+                    )
+                  }
+                >
+                  Agregar
+                </button>
+              )}
+            </div>
             <div className="contenedor-flex">
-              {asesorias.map((carta) => (
-                <Card
-                  key={carta.titulo}
-                  icono={carta.icono}
-                  iconoColor={carta.iconoColor}
-                  iconoTamaño={carta.iconoTamaño}
-                  titulo={carta.titulo}
-                  descripcion={carta.descripcion}
+              {asesoriasState.map((carta, index) => (
+                <EditableCard
+                  key={index}
+                  cardProps={{
+                    icono: carta.icono,
+                    iconoColor: carta.iconoColor,
+                    iconoTamaño: carta.iconoTamaño,
+                    titulo: carta.titulo,
+                    descripcion: carta.descripcion,
+                  }}
+                  isAdmin={isAdmin}
+                  onSave={(updated) =>
+                    updateItem(
+                      asesoriasState,
+                      setAsesoriasState,
+                      index,
+                      updated,
+                    )
+                  }
+                  onDelete={() =>
+                    deleteItem(asesoriasState, setAsesoriasState, index)
+                  }
+                  onAdd={(newCard) =>
+                    setAsesoriasState([...asesoriasState, { ...newCard }])
+                  }
                 />
               ))}
             </div>
           </div>
           <div className="grupo-cartas">
-            <h3>Preuniversitario</h3>
+            <div className="titulo-con-btnAdd">
+              <h3>Preuniversitario</h3>
+              {isAdmin && (
+                <button
+                  className="card_edit_btn"
+                  onClick={() =>
+                    addCard(
+                      preuniversitarioState,
+                      setPreuniversitarioState,
+                      templates.preuniversitario,
+                    )
+                  }
+                >
+                  Agregar
+                </button>
+              )}
+            </div>
             <div className="contenedor-flex">
-              {preuniversitario.map((carta) => (
-                <Card
-                  key={carta.titulo}
-                  icono={carta.icono}
-                  iconoColor={carta.iconoColor}
-                  iconoTamaño={carta.iconoTamaño}
-                  titulo={carta.titulo}
-                  descripcion={carta.descripcion}
+              {preuniversitarioState.map((carta, index) => (
+                <EditableCard
+                  key={index}
+                  cardProps={{
+                    icono: carta.icono,
+                    iconoColor: carta.iconoColor,
+                    iconoTamaño: carta.iconoTamaño,
+                    titulo: carta.titulo,
+                    descripcion: carta.descripcion,
+                  }}
+                  isAdmin={isAdmin}
+                  onSave={(updated) =>
+                    updateItem(
+                      preuniversitarioState,
+                      setPreuniversitarioState,
+                      index,
+                      updated,
+                    )
+                  }
+                  onDelete={() =>
+                    deleteItem(
+                      preuniversitarioState,
+                      setPreuniversitarioState,
+                      index,
+                    )
+                  }
+                  onAdd={() =>
+                    addCard(
+                      preuniversitarioState,
+                      setPreuniversitarioState,
+                      templates.preuniversitario,
+                    )
+                  }
                 />
               ))}
             </div>
@@ -273,7 +551,25 @@ export default function Inicio() {
           <h3 style={{ textAlign: "center", fontSize: "1.4rem" }}>
             Cursos Destacados
           </h3>
-          <Slider cartas={cursos} />
+          {isAdmin && (
+            <button
+              className="card_edit_btn"
+              onClick={() =>
+                addCard(cursosState, setCursosState, templates.cursos)
+              }
+            >
+              Agregar
+            </button>
+          )}
+          <EditableSlider
+            cartas={cursosState}
+            isAdmin={isAdmin}
+            onSave={(updated, index) =>
+              updateItem(cursosState, setCursosState, index, updated)
+            }
+            onDelete={(index) => deleteItem(cursosState, setCursosState, index)}
+            onAdd={() => addCard(cursosState, setCursosState, templates.cursos)}
+          />
         </section>
 
         {/* accion joven */}
@@ -291,15 +587,31 @@ export default function Inicio() {
                 ¡Tu energía puede cambiar las cosas! Súmate a nuestras
                 iniciativas sociales y proyectos de voluntariado.
               </p>
+
+              {isAdmin && (
+                <button
+                  className="card_edit_btn"
+                  onClick={() =>
+                    addCard(accionState, setAccionState, templates.accion)
+                  }
+                >
+                  Agregar
+                </button>
+              )}
             </div>
-            {accion.map((carta) => (
-              <Card
-                key={carta.titulo}
-                titulo={carta.titulo}
-                descripcion={carta.descripcion}
-                boton={carta.boton}
-              />
-            ))}
+            <EditableSlider
+              cartas={accionState}
+              isAdmin={isAdmin}
+              onSave={(updated, index) =>
+                updateItem(accionState, setAccionState, index, updated)
+              }
+              onDelete={(index) =>
+                deleteItem(accionState, setAccionState, index)
+              }
+              onAdd={() =>
+                addCard(accionState, setAccionState, templates.accion)
+              }
+            />
           </section>
         </div>
 
@@ -317,8 +629,34 @@ export default function Inicio() {
               Conoce los programas insertos en la Oficina de la Juventud para
               apoyarte.
             </p>
+            {isAdmin && (
+              <button
+                className="card_edit_btn"
+                onClick={() =>
+                  addCard(
+                    programasState,
+                    setProgramasState,
+                    templates.programas,
+                  )
+                }
+              >
+                Agregar
+              </button>
+            )}
           </div>
-          <Slider cartas={programas} />
+          <EditableSlider
+            cartas={programasState}
+            isAdmin={isAdmin}
+            onSave={(updated, index) =>
+              updateItem(programasState, setProgramasState, index, updated)
+            }
+            onDelete={(index) =>
+              deleteItem(programasState, setProgramasState, index)
+            }
+            onAdd={() =>
+              addCard(programasState, setProgramasState, templates.programas)
+            }
+          />
         </section>
 
         {/* salud mental */}
@@ -339,17 +677,37 @@ export default function Inicio() {
                 Tu bienestar emocional es prioridad. No estás solo/a. Aquí
                 encontrarás canales de ayuda inmediata y profesional.
               </p>
+              {isAdmin && (
+                <button
+                  className="card_edit_btn"
+                  onClick={() =>
+                    addCard(saludState, setSaludState, templates.salud)
+                  }
+                >
+                  Agregar
+                </button>
+              )}
             </div>
             <div className="grupo-cartas">
-              {salud.map((carta) => (
-                <Card
-                  key={carta.titulo}
-                  icono={carta.icono}
-                  iconoColor={carta.iconoColor}
-                  iconoTamaño={carta.iconoTamaño}
-                  titulo={carta.titulo}
-                  subtitulo={carta.subtitulo}
-                  descripcion={carta.descripcion}
+              {saludState.map((carta, index) => (
+                <EditableCard
+                  key={index}
+                  cardProps={{
+                    icono: carta.icono,
+                    iconoColor: carta.iconoColor,
+                    iconoTamaño: carta.iconoTamaño,
+                    titulo: carta.titulo,
+                    subtitulo: carta.subtitulo,
+                    descripcion: carta.descripcion,
+                  }}
+                  isAdmin={isAdmin}
+                  onSave={(updated) =>
+                    updateItem(saludState, setSaludState, index, updated)
+                  }
+                  onDelete={() => deleteItem(saludState, setSaludState, index)}
+                  onAdd={() =>
+                    addCard(saludState, setSaludState, templates.salud)
+                  }
                 />
               ))}
             </div>
@@ -376,28 +734,135 @@ export default function Inicio() {
           </div>
           <div className="contenedor-flex">
             <div className="lista-conexion">
-              <h3>Actividades</h3>
+              <div className="btn-con-btnAdd">
+                <div className="titulo-con-btnAdd">
+                  <h3>Actividades</h3>
+                  {isAdmin && (
+                    <button
+                      className="card_edit_btn"
+                      onClick={() =>
+                        addCard(
+                          actividadesState,
+                          setActividadesState,
+                          templates.actividades,
+                        )
+                      }
+                    >
+                      Agregar
+                    </button>
+                  )}
+                </div>
+              </div>
               <ul>
-                {actividades.map((item) => (
-                  <li key={item.texto}>
-                    <span className="material-symbols-outlined">
-                      {item.icono}
-                    </span>
-                    {item.texto}
-                  </li>
+                {actividadesState.map((item, index) => (
+                  <EditableListItem
+                    key={`${item.texto}-${index}`}
+                    item={item}
+                    isAdmin={isAdmin}
+                    onSave={(updated, seccion) => {
+                      if (seccion === "actividades") {
+                        updateItem(
+                          actividadesState,
+                          setActividadesState,
+                          index,
+                          updated,
+                        );
+                      } else {
+                        setActividadesState(
+                          actividadesState.filter((_, i) => i !== index),
+                        );
+
+                        setTalleresState((prev) => [...prev, updated]);
+                      }
+                    }}
+                    onDelete={() =>
+                      deleteItem(actividadesState, setActividadesState, index)
+                    }
+                    onAdd={(newItem, seccion) => {
+                      const state =
+                        seccion === "actividades"
+                          ? actividadesState
+                          : talleresState;
+
+                      const setState =
+                        seccion === "actividades"
+                          ? setActividadesState
+                          : setTalleresState;
+
+                      const template =
+                        seccion === "actividades"
+                          ? templates.actividades
+                          : templates.talleres;
+
+                      if (state.length === 0) {
+                        addCard(state, setState, template);
+                      } else {
+                        setState([...state, { ...newItem }]);
+                      }
+                    }}
+                  />
                 ))}
               </ul>
             </div>
             <div className="lista-conexion">
-              <h3>Talleres</h3>
+              <div className="titulo-con-btnAdd">
+                <h3>Talleres</h3>
+                {isAdmin && (
+                  <button
+                    className="card_edit_btn"
+                    onClick={() =>
+                      addCard(
+                        talleresState,
+                        setTalleresState,
+                        templates.talleres,
+                      )
+                    }
+                  >
+                    Agregar
+                  </button>
+                )}
+              </div>
+
               <ul>
-                {talleres.map((item) => (
-                  <li key={item.texto}>
-                    <span className="material-symbols-outlined">
-                      {item.icono}
-                    </span>
-                    {item.texto}
-                  </li>
+                {talleresState.map((item, index) => (
+                  <EditableListItem
+                    key={`${item.texto}-${index}`}
+                    item={item}
+                    isAdmin={isAdmin}
+                    onSave={(updated) =>
+                      updateItem(
+                        talleresState,
+                        setTalleresState,
+                        index,
+                        updated,
+                      )
+                    }
+                    onDelete={() =>
+                      deleteItem(talleresState, setTalleresState, index)
+                    }
+                    onAdd={(newItem, seccion) => {
+                      const state =
+                        seccion === "actividades"
+                          ? actividadesState
+                          : talleresState;
+
+                      const setState =
+                        seccion === "actividades"
+                          ? setActividadesState
+                          : setTalleresState;
+
+                      const template =
+                        seccion === "actividades"
+                          ? templates.actividades
+                          : templates.talleres;
+
+                      if (state.length === 0) {
+                        addCard(state, setState, template);
+                      } else {
+                        setState([...state, { ...newItem }]);
+                      }
+                    }}
+                  />
                 ))}
               </ul>
             </div>
@@ -406,10 +871,7 @@ export default function Inicio() {
 
         {/* calendario */}
         <div className="fondo-gris">
-          <section
-            id="calendario"
-            className="calendario-eventos seccion-informativa"
-          >
+          <section id="calendario" className="seccion-informativa">
             <div className="seccion-encabezado">
               <span
                 className="material-symbols-outlined seccion-icono"
@@ -417,28 +879,69 @@ export default function Inicio() {
               >
                 calendar_month
               </span>
-              <h2>Calendario de Actividades</h2>
+              <h2>
+                Calendario de Actividades{" "}
+                {isAdmin && (
+                  <button
+                    className="card_edit_btn"
+                    onClick={() =>
+                      addCard(
+                        calendarioState,
+                        setCalendarioState,
+                        templates.calendario,
+                      )
+                    }
+                  >
+                    Agregar
+                  </button>
+                )}
+              </h2>
               <p>
                 Revisa nuestros próximos eventos. ¡Filtra por categoría y no te
                 pierdas nada!
               </p>
             </div>
-            <div className="calendario-contenido">
-              <button className="filtro-eventos">Todos</button>
-              <button className="filtro-eventos">Ferias</button>
-              <button className="filtro-eventos">Talleres</button>
-              <button className="filtro-eventos">Cursos</button>
-              <button className="filtro-eventos">Campañas</button>
+
+            <div className="calendario-filtros-contenedor">
+              {["Todos", "Ferias", "Talleres", "Cursos", "Campañas"].map(
+                (cat) => (
+                  <button
+                    key={cat}
+                    className={`filtro-eventos ${filtro === cat ? "activo" : ""}`}
+                    onClick={() => setFiltro(cat)}
+                  >
+                    {cat}
+                  </button>
+                ),
+              )}
             </div>
-            <div className="sin-actividades">
-              <span
-                className="material-symbols-outlined seccion-icono"
-                style={{ color: "#AFB0B1", fontSize: "160px" }}
-              >
-                schedule
-              </span>
-              <p>No hay actividades programadas en esta categoría.</p>
-            </div>
+
+            {eventosFiltrados.length === 0 ? (
+              <div className="sin-actividades">
+                <p>No hay actividades programadas en esta categoría.</p>
+              </div>
+            ) : (
+              <div className="contenedor-flex grilla-actividades">
+                {eventosFiltrados.map((evento, index) => (
+                  <EditableCalendarCard
+                    key={evento.id || index}
+                    eventProps={evento}
+                    isAdmin={isAdmin}
+                    onSave={(updated) => {
+                      const newCalendarCard = [...calendarioState];
+                      newCalendarCard[index] = updated;
+                      setCalendarioState(newCalendarCard);
+                    }}
+                    onDelete={() => {
+                      const newCalendarCard = calendarioState.filter(
+                        (_, i) => i !== index,
+                      );
+                      setCalendarioState(newCalendarCard);
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </section>
         </div>
 
@@ -454,22 +957,76 @@ export default function Inicio() {
             >
               calendar_month
             </span>
-            <h2>Tu contribución cuenta</h2>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              <h2>Tu contribución cuenta</h2>
+            </div>
+
             <p>
               Ayúdanos a mejorar los programas comunales. Estas encuestas son
               anónimas y nos sirve para generar estadísticas y nuevas
               soluciones.
             </p>
+            {isAdmin && (
+              <button
+                className="card_edit_btn"
+                onClick={() =>
+                  addCard(encuestaState, setEncuestaState, templates.encuesta)
+                }
+              >
+                Agregar
+              </button>
+            )}
           </div>
-          <div className="sin-encuestas">
-            <span
-              className="material-symbols-outlined seccion-icono"
-              style={{ color: "#AFB0B1", fontSize: "160px" }}
-            >
-              schedule
-            </span>
-            <p>no hay Encuestas recientes.</p>
-          </div>
+          {encuestaState.length === 0 ? (
+            <div className="sin-encuestas">
+              <span
+                className="material-symbols-outlined seccion-icono"
+                style={{ color: "#AFB0B1", fontSize: "160px" }}
+              >
+                schedule
+              </span>
+              <p>No hay encuestas recientes.</p>
+            </div>
+          ) : (
+            <div className="contenedor-flex grilla-actividades">
+              {encuestaState.map((evento, index) => (
+                <EditableSurveyCard
+                  key={evento.id}
+                  eventProps={evento}
+                  isAdmin={isAdmin}
+                  onSave={(updated) =>
+                    updateItem(encuestaState, setEncuestaState, index, updated)
+                  }
+                  onDelete={() =>
+                    deleteItem(encuestaState, setEncuestaState, index)
+                  }
+                  onAdd={(newSurvey) =>
+                    encuestaState.length === 0
+                      ? addCard(
+                          encuestaState,
+                          setEncuestaState,
+                          templates.encuesta,
+                        )
+                      : setEncuestaState([
+                          ...encuestaState,
+                          {
+                            ...newSurvey,
+                            id: Date.now(),
+                          },
+                        ])
+                  }
+                />
+              ))}
+            </div>
+          )}
         </section>
 
         {/* tu opinion cuenta */}

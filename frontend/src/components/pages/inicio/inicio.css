@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap");
 
 :root {
   --verde: #20c58d;
@@ -15,7 +15,12 @@
 }
 
 .pagina-principal {
-  background: linear-gradient(135deg, var(--azul) 0%, #1a9e73 60%, var(--verde) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--azul) 0%,
+    #1a9e73 60%,
+    var(--verde) 100%
+  );
 }
 
 * {
@@ -25,7 +30,7 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background: #f0f4f8;
   color: #1e293b;
   overflow-x: hidden;
@@ -33,7 +38,12 @@ body {
 
 /* HERO SECTION */
 .inicio-section {
-  background: linear-gradient(135deg, var(--azul) 0%, #1a9e73 60%, var(--verde) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--azul) 0%,
+    #1a9e73 60%,
+    var(--verde) 100%
+  );
   min-height: 400px;
   padding: 7rem 3rem;
   color: var(--blanco);
@@ -59,7 +69,13 @@ body {
 
 /* CONTENIDO PRINCIPAL */
 .contenido-principal {
-  background: linear-gradient(to bottom, #E3F5E1 0%, #ffffff 10%, #ffffff 93%, #E3F5E1 100%);
+  background: linear-gradient(
+    to bottom,
+    #e3f5e1 0%,
+    #ffffff 10%,
+    #ffffff 93%,
+    #e3f5e1 100%
+  );
   margin-top: 0rem;
   padding: 3rem 3rem 2rem;
 }
@@ -82,18 +98,28 @@ body {
 }
 
 .seccion-informativa h2 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.8rem;
   font-weight: 800;
   color: var(--azul-oscuro);
   margin-bottom: 0.5rem;
 }
 
-#apoyo h2 { color: var(--azul-oscuro); }
-#proyeccion h2 { color: var(--verde-oscuro); }
-#salud h2 { color: var(--azul); }
-#calendario h2 { color: var(--verde-oscuro); }
-#opinion h2 { color: #c2614a; }
+#apoyo h2 {
+  color: var(--azul-oscuro);
+}
+#proyeccion h2 {
+  color: var(--verde-oscuro);
+}
+#salud h2 {
+  color: var(--azul);
+}
+#calendario h2 {
+  color: var(--verde-oscuro);
+}
+#opinion h2 {
+  color: #c2614a;
+}
 
 .seccion-encabezado p {
   color: var(--gris-texto);
@@ -104,10 +130,12 @@ body {
 }
 
 /* GRUPOS DE CARTAS */
-.grupo-cartas { margin-bottom: 2.5rem; }
+.grupo-cartas {
+  margin-bottom: 2.5rem;
+}
 
 .grupo-cartas h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -139,7 +167,9 @@ body {
   font-size: 2.2rem;
 }
 
-.accion-joven .seccion-encabezado p { color: var(--gris-texto); }
+.accion-joven .seccion-encabezado p {
+  color: var(--gris-texto);
+}
 
 .accion-joven .carta-universal {
   background: var(--blanco);
@@ -157,7 +187,7 @@ body {
 
 .accion-joven .carta-universal h3 {
   color: var(--azul-oscuro);
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.3rem;
   font-weight: 800;
   margin-bottom: 0.5rem;
@@ -174,11 +204,6 @@ body {
   color: var(--naranja);
 }
 
-.accion-joven .btn-inscribase {
-  background: linear-gradient(135deg, #f59e0b, #fbbf24);
-  box-shadow: 0 6px 20px rgba(245,158,11,0.3);
-}
-
 /* NUESTROS PROGRAMAS */
 #programas .seccion-encabezado {
   border-radius: var(--radio-grande);
@@ -186,9 +211,15 @@ body {
   margin-bottom: 1.5rem;
 }
 
-#programas .seccion-encabezado .seccion-icono { color: var(--verde); }
-#programas .seccion-encabezado h2 { color: var(--verde-oscuro); }
-#programas .seccion-encabezado p { color: #000000; }
+#programas .seccion-encabezado .seccion-icono {
+  color: var(--verde);
+}
+#programas .seccion-encabezado h2 {
+  color: var(--verde-oscuro);
+}
+#programas .seccion-encabezado p {
+  color: #000000;
+}
 
 #programas .slider-activo .carta-universal {
   background: #ffffff;
@@ -201,8 +232,12 @@ body {
   color: var(--verde);
 }
 
-#programas .slider-activo .programa-lazos h3 { color: var(--verde-oscuro); }
-#programas .slider-activo .programa-senda h3 { color: #ea580c; }
+#programas .slider-activo .programa-lazos h3 {
+  color: var(--verde-oscuro);
+}
+#programas .slider-activo .programa-senda h3 {
+  color: #ea580c;
+}
 
 #programas .slider-activo .btn-inscribase {
   background: linear-gradient(135deg, #22c55e, #16a34a);
@@ -262,7 +297,9 @@ body {
   flex-direction: column;
   align-items: flex-start;
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .salud-mental-bienestar .carta-universal:hover {
@@ -271,7 +308,7 @@ body {
 }
 
 .salud-mental-bienestar .carta-universal h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.1rem;
   font-weight: 800;
   color: #0f172a;
@@ -304,13 +341,28 @@ body {
   border-radius: 999px;
 }
 
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(1) { border-top-color: #38bdf8; }
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(2) { border-top-color: #f97316; }
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(3) { border-top-color: #22c55e; }
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(1) {
+  border-top-color: #38bdf8;
+}
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(2) {
+  border-top-color: #f97316;
+}
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(3) {
+  border-top-color: #22c55e;
+}
 
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(1) .icono { background: #dbeafe; color: #2563eb; }
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(2) .icono { background: #fee2e2; color: #dc2626; }
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(3) .icono { background: #dcfce7; color: #15803d; }
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(1) .icono {
+  background: #dbeafe;
+  color: #2563eb;
+}
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(2) .icono {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(3) .icono {
+  background: #dcfce7;
+  color: #15803d;
+}
 
 /* CONEXIÓN COMUNITARIA */
 .conexion-comunitaria .contenedor-flex {
@@ -319,7 +371,7 @@ body {
 }
 
 .lista-conexion h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -347,6 +399,10 @@ body {
   gap: 0.5rem;
 }
 
+.lista-conexion button {
+  margin: 0;
+}
+
 /* CALENDARIO */
 .calendario-contenido {
   display: flex;
@@ -366,7 +422,7 @@ body {
   color: #475569;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .filtro-eventos:hover,
@@ -391,7 +447,13 @@ body {
   height: auto;
 }
 
-.sin-actividades p { font-size: 0.9rem; }
+.sin-actividades p {
+  font-size: 0.9rem;
+}
+
+.calendario-filtros-contenedor {
+  margin-bottom: 2rem;
+}
 
 /* TU OPINION CUENTA */
 .tu-opinion-cuenta .formulario-opinion {
@@ -413,14 +475,16 @@ body {
   border-radius: 10px;
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
 }
 
 .formulario-opinion input:focus,
-.formulario-opinion textarea:focus { border-color: var(--azul); }
+.formulario-opinion textarea:focus {
+  border-color: var(--azul);
+}
 
 .formulario-opinion textarea {
   height: 150px;
@@ -448,8 +512,10 @@ body {
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
-  font-family: 'Inter', sans-serif;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+  font-family: "Inter", sans-serif;
   white-space: nowrap;
 }
 
@@ -467,7 +533,9 @@ body {
   padding: 2rem 0;
 }
 
-.tu-contribucion .seccion-encabezado { margin-top: 3rem; }
+.tu-contribucion .seccion-encabezado {
+  margin-top: 3rem;
+}
 
 /* CONTACTO Y UBICACION */
 .contacto-layout {
@@ -484,7 +552,7 @@ body {
 }
 
 .formulario-contacto h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -503,14 +571,16 @@ body {
   border-radius: 10px;
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
 }
 
 .formulario-contacto input:focus,
-.formulario-contacto textarea:focus { border-color: var(--azul); }
+.formulario-contacto textarea:focus {
+  border-color: var(--azul);
+}
 
 .formulario-contacto textarea {
   height: 150px;
@@ -528,12 +598,12 @@ body {
   cursor: pointer;
   width: fit-content;
   transition: transform 0.2s;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .btn-enviar-contacto:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59,130,246,0.3);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
 }
 
 .info-ubicacion {
@@ -543,7 +613,7 @@ body {
 }
 
 .info-ubicacion h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -558,7 +628,9 @@ body {
   gap: 0.5rem;
 }
 
-.ubicacion-item span { font-size: 2rem; }
+.ubicacion-item span {
+  font-size: 2rem;
+}
 
 .ubicacion-item p {
   font-size: 0.92rem;
@@ -568,24 +640,50 @@ body {
 
 /* FONDO GRIS */
 .fondo-gris {
-  background: #F8FAFC;
+  background: #f8fafc;
   padding: 2rem;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
 }
 
+/* DIRECCION PARA CONTENEDOR DE TITULO DE CADA SECCION DE CARDS */
+.titulo-con-btnAdd {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .hero-section { padding: 2rem 1.5rem 0; }
-  .carta-seccion { grid-template-columns: repeat(2, 1fr); }
-  .contenido-principal { padding: 2rem 1.5rem; }
-  .salud-mental-bienestar .grupo-cartas { grid-template-columns: 1fr; }
-  .conexion-comunitaria .contenedor-flex { grid-template-columns: 1fr; }
-  .contacto-layout { grid-template-columns: 1fr; }
+  .hero-section {
+    padding: 2rem 1.5rem 0;
+  }
+  .carta-seccion {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .contenido-principal {
+    padding: 2rem 1.5rem;
+  }
+  .salud-mental-bienestar .grupo-cartas {
+    grid-template-columns: 1fr;
+  }
+  .conexion-comunitaria .contenedor-flex {
+    grid-template-columns: 1fr;
+  }
+  .contacto-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 480px) {
-  .carta-seccion { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
-  .hero-section h1 { font-size: 1.8rem; }
-  .contenedor-flex { grid-template-columns: 1fr; }
+  .carta-seccion {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  .hero-section h1 {
+    font-size: 1.8rem;
+  }
+  .contenedor-flex {
+    grid-template-columns: 1fr;
+  }
 }
