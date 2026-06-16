@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Inicio from "./components/pages/inicio/inicio";
+import Asesoria from "./components/pages/Asesorias/Asesoria";
 import { Base } from "./components/Base/Base";
 import Footer from "./components/Footer/Footer";
 import AccessibilityWidget from "./components/Accesibilidad/Accesibilidad";
@@ -100,7 +101,9 @@ function App() {
         para agregar nuevas rutas siguiendo el patrón Base + contenido
       */}
       <Routes>
-        <Route path="/" element={<Base content={<Inicio />} />} />
+        {/* Aqui tienen que poner exactamente lo mismo, pero cambiando el elemento por el componente que les corresponda  */}
+        <Route path="/" element={<Base content={<Inicio />} />} /> {/* esto de aca no se borra */}
+        <Route path="/asesoria" element={<Base content={<Asesoria />} />} />
       </Routes>
       
       {/* 
