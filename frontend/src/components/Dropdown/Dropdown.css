@@ -1,3 +1,14 @@
+/* =============================================================
+  ARCHIVO: src/components/Dropdown/Dropdown.css
+  PROPÓSITO: Estilos para dropdowns reutilizables
+
+  SECCIONES:
+  1. Trigger (.dropdown-btn)
+  2. Menú (.dropdown-menu)
+  3. Estados de ítems
+  4. Sobrescrituras de modo oscuro
+  ============================================================= */
+
 .dropdown {
   position: relative;
 
@@ -44,4 +55,17 @@
       }
     }
   }
+}
+
+.dark .dropdown-menu {
+  background: #0b1120;
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+.dark .dropdown-menu .link-dropdown {
+  color: var(--text-primary);
+}
+
+.dark .dropdown-btn:hover {
+  text-decoration-color: var(--accent);
 }
