@@ -116,7 +116,7 @@
   position: absolute;
   width: 28px;
   height: 28px;
-  background-color: #ffffff;
+  background-color: #1a1a1a;
   border-radius: 50%;
   left: 4px;
   top: 50%;
@@ -127,9 +127,19 @@
 }
 
 .boton-modo-oscuro > * {
-  position: relative;
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 2;
-  transition: margin-left 0.3s ease;
+  transition: left 0.3s ease;
+  font-size: 18px;        
+  color: #ce9d19;         
 }
 
 .boton-modo-oscuro.oscuro {
@@ -140,6 +150,12 @@
 
 .boton-modo-oscuro.oscuro::before {
   left: calc(100% - 32px);
+  background-color: #ffffff;
+}
+
+.boton-modo-oscuro.oscuro > * {
+  left: calc(100% - 32px);
+  color: #7ec8e3;
 }
 
 @media (max-width: 768px) {

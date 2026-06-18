@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./PopupEncuesta.css";
+import FadeContent from "../DisenoPopUpEncuesta/disenoPopUp";
 
 /**
  * Props del componente PopupEncuesta.
@@ -43,6 +44,7 @@ export default function PopupEncuesta({ hayEncuestas }: Props) {
 
   return (
     <div className="popup-overlay">
+      <FadeContent duration={1000} blur={true} initialOpacity={0}>
       <div className="popup-contenedor">
         <button className="popup-cerrar" onClick={() => setVisible(false)}>✕</button>
         <span className="material-symbols-outlined popup-icono">content_paste</span>
@@ -52,6 +54,7 @@ export default function PopupEncuesta({ hayEncuestas }: Props) {
           Ir a las encuestas
         </a>
       </div>
+      </FadeContent>
     </div>
   );
 }
