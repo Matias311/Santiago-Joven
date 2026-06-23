@@ -4,12 +4,15 @@ import InfoCard from "../../cartas/InfoCard";
 import type { CartaItem } from "../../types/CartaItem";
 import { useState, useEffect, useRef } from "react";
 
+// Íconos y títulos que aparecen en el encabezado como accesos directos
 const headerIconos: CartaItem[] = [
   { icono: "handshake", iconoColor: "#E3E3E3", iconoTamaño: "2.5rem", titulo: "Asesorías" },
   { icono: "school",    iconoColor: "#E3E3E3", iconoTamaño: "2.5rem", titulo: "Pre Universitario" },
 ];
+// Anclas a las que redirige cada acceso directo del encabezado
 const anclas = ["#asesorias", "#preuniversitario"];
 
+// Íconos de Material Symbols usados en las tarjetas (pequeño = esquina, grande = decorativo)
 const IcoNetworkSmall = <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>work</span>;
 const IcoNetworkGrande = <span className="material-symbols-outlined" style={{ fontSize: "130px" }}>network_intel_node</span>;
 const IcoWorkSmall = <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>work</span>;
@@ -21,6 +24,7 @@ const IcoCalcGrande = <span className="material-symbols-outlined" style={{ fontS
 const IcoCsSmall = <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>auto_stories</span>;
 const IcoCsGrande = <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1", fontSize: "130px" }}>auto_stories</span>;
 
+// Contenido de las tarjetas de la sección "Asesorías"
 const cartasCapacitacion = [
   {
     colorAcento: "#78A75A",
@@ -46,6 +50,7 @@ const cartasCapacitacion = [
   },
 ];
 
+// Contenido de las tarjetas de la sección "Pre Universitario"
 const cartasPreuniversitario = [
   {
     colorAcento: "#D2954C",
@@ -82,16 +87,19 @@ const cartasPreuniversitario = [
   },
 ];
 
+// Componente slider: muestra una tarjeta a la vez y permite navegar entre ellas.
+// Avanza automáticamente cada 15 segundos.
 function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
-  const [actual, setActual] = useState(0);
-  const [direccion, setDireccion] = useState<"right" | "left">("right");
-  const [animando, setAnimando] = useState(false);
+  const [actual, setActual]       = useState(0);                          // Índice de la carta visible
+  const [direccion, setDireccion] = useState<"right" | "left">("right");  // Dirección de la animación
+  const [animando, setAnimando]   = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Cambia a la carta indicada, activa la animación y reinicia el temporizador
   const cambiar = (index: number, dir: "right" | "left") => {
     setDireccion(dir);
     setAnimando(false);
-    setTimeout(() => setAnimando(true), 10);
+    setTimeout(() => setAnimando(true), 10); // Pequeño delay para que la animación se reinicie
     setActual(index);
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
@@ -99,15 +107,16 @@ function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
     }, 15000);
   };
 
+  // Al montar el componente, inicia el avance automático
   useEffect(() => {
     setAnimando(true);
     timerRef.current = setTimeout(() => {
       cambiar(1 % cartas.length, "right");
     }, 15000);
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); }; // Limpia el timer al desmontar
   }, []);
 
-  const anterior = () => cambiar((actual - 1 + cartas.length) % cartas.length, "left");
+  const anterior  = () => cambiar((actual - 1 + cartas.length) % cartas.length, "left");
   const siguiente = () => cambiar((actual + 1) % cartas.length, "right");
 
   const carta = cartas[actual];
@@ -118,6 +127,8 @@ function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
         <button className="slider-flecha" onClick={anterior}>
           <span className="material-symbols-outlined">chevron_left</span>
         </button>
+
+        {/* Aplica la clase de animación según la dirección de navegación */}
         <div className={animando ? `slide-enter-${direccion}` : ""}>
           <InfoCard
             colorAcento={carta.colorAcento}
@@ -132,10 +143,13 @@ function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
             alClickBoton={() => {}} //TODO: Agregar funcionalidad:3
           />
         </div>
+
         <button className="slider-flecha" onClick={siguiente}>
           <span className="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
+
+      {/* Puntos de navegación: el activo toma el color de acento de la carta actual */}
       <div className="slider-dots">
         {cartas.map((_, i) => (
           <button
@@ -158,6 +172,8 @@ export default function Asesoria() {
           <h1>Asesorías y Preuniversitarios</h1>
           <p>Te acompañamos en tus trámites, estudios y beneficios. Encuentra aquí toda la asesoría que necesitas.</p>
         </div>
+
+        {/* Accesos directos a cada sección, renderizados como tarjetas clicables */}
         <div className="carta-seccion" style={{ gridTemplateColumns: "repeat(2, 1fr)" }}>
           {headerIconos.map((carta, index) => (
             <a key={carta.titulo} href={anclas[index]} className="asesoria-header-link">
