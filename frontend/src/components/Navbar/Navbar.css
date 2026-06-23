@@ -1,14 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
+/* =============================================================
+  ARCHIVO: src/components/Navbar/Navbar.css
+  PROPÓSITO: Barra de navegación principal y sus estados
+
+  SECCIONES:
+  1. Imports / Fuentes
+  2. Layout de la navbar y branding (.navbar, .fila-*)
+  3. Botones y controles (.boton-modo-oscuro)
+  4. Sobrescrituras de modo oscuro (agrupadas)
+  5. Reglas responsive
+  ============================================================= */
+
 .navbar {
   border-radius: 0 0 25px 25px;
-  background: transparent(25%);
+  background: var(--navbar-bg);
   padding: 2rem 3rem;
   position: sticky;
   top: 0;
   z-index: 100;
-  opacity: 90%;
+  opacity: 0.98;
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  border: 1px solid transparent;
 }
 
 .navbar::after {
@@ -92,9 +105,9 @@
   width: 76px;
   height: 36px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--navbar-border);
   border-radius: 999px;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.18);
   cursor: pointer;
   overflow: visible;
   color: rgba(255, 255, 255, 0.95);
@@ -109,6 +122,18 @@
 
 .boton-modo-oscuro:hover {
   background-color: rgba(255, 255, 255, 0.25);
+}
+
+.dark .navbar {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark .navbar::after {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dark .boton-modo-oscuro {
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 .boton-modo-oscuro::before {
