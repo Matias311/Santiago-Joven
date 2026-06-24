@@ -1,14 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
+/* =============================================================
+  ARCHIVO: src/components/Navbar/Navbar.css
+  PROPÓSITO: Barra de navegación principal y sus estados
+
+  SECCIONES:
+  1. Imports / Fuentes
+  2. Layout de la navbar y branding (.navbar, .fila-*)
+  3. Botones y controles (.boton-modo-oscuro)
+  4. Sobrescrituras de modo oscuro (agrupadas)
+  5. Reglas responsive
+  ============================================================= */
+
 .navbar {
   border-radius: 0 0 25px 25px;
-  background: transparent(25%);
+  background: var(--navbar-bg);
   padding: 2rem 3rem;
   position: sticky;
   top: 0;
   z-index: 100;
-  opacity: 90%;
+  opacity: 0.98;
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  border: 1px solid transparent;
 }
 
 .navbar::after {
@@ -59,9 +72,13 @@
   transition: color 0.2s;
 }
 
-.cuentas a:hover { color: #ffffff; }
+.cuentas a:hover {
+  color: #ffffff;
+}
 
-.nav-icon { font-size: 0.9rem; }
+.nav-icon {
+  font-size: 0.9rem;
+}
 
 .linea-separadora {
   border: none;
@@ -85,62 +102,86 @@
   white-space: nowrap;
 }
 
-.fila-inferior a:hover { color: #ffffff; }
+.fila-inferior a:hover {
+  color: #ffffff;
+}
+
+/* ==========================
+   BOTÓN MODO OSCURO
+========================== */
 
 .boton-modo-oscuro {
   position: relative;
   width: 76px;
   height: 36px;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--navbar-border);
   border-radius: 999px;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.18);
   cursor: pointer;
   overflow: visible;
-  color: rgba(255, 255, 255, 0.95);
-  font-size: 1.2rem;
-  font-weight: 700;
+
   display: flex;
   align-items: center;
   justify-content: flex-start;
+
   padding-left: 4px;
+
+  color: rgba(255,255,255,0.95);
+  font-size: 1.2rem;
+  font-weight: 700;
+
   transition: background-color 0.2s ease;
 }
 
 .boton-modo-oscuro:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255,255,255,0.25);
 }
+
+/* Círculo */
 
 .boton-modo-oscuro::before {
   content: '';
   position: absolute;
   width: 28px;
   height: 28px;
-  background-color: #1a1a1a;
+
+  background-color: #000000; /* Color del círculo en modo claro */
+
   border-radius: 50%;
   left: 4px;
   top: 50%;
   transform: translateY(-50%);
+
   transition: left 0.3s ease;
-  pointer-events: none;
   z-index: 1;
 }
 
+/* Ícono */
+
 .boton-modo-oscuro > * {
   position: absolute;
+
   left: 4px;
-  top: 50%;
+  top: 55%;
+
   transform: translateY(-50%);
+
   width: 28px;
   height: 28px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   z-index: 2;
+
   transition: left 0.3s ease;
-  font-size: 18px;        
-  color: #ce9d19;         
+
+  font-size: 18px;
+  color: #ce9d19;
 }
+
+/* Estado oscuro */
 
 .boton-modo-oscuro.oscuro {
   justify-content: flex-end;
@@ -150,7 +191,7 @@
 
 .boton-modo-oscuro.oscuro::before {
   left: calc(100% - 32px);
-  background-color: #ffffff;
+  background-color: #ffffff; /* Color del círculo en modo oscuro */
 }
 
 .boton-modo-oscuro.oscuro > * {
@@ -158,13 +199,48 @@
   color: #7ec8e3;
 }
 
+/* ==========================
+   MODO OSCURO GENERAL
+========================== */
+
+.dark .navbar {
+  border-color: rgba(255,255,255,0.12);
+}
+
+.dark .navbar::after {
+  background: rgba(255,255,255,0.08);
+}
+
+.dark .boton-modo-oscuro {
+  background-color: rgba(255,255,255,0.12);
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
 @media (max-width: 768px) {
-  .navbar { padding: 0.8rem 1.5rem; }
-  .fila-inferior { gap: 1rem; font-size: 0.82rem; }
+  .navbar {
+    padding: 0.8rem 1.5rem;
+  }
+
+  .fila-inferior {
+    gap: 1rem;
+    font-size: 0.82rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .navbar { padding: 0.8rem 1rem; }
-  .fila-superior { flex-direction: column; gap: 0.5rem; }
-  .fila-inferior { gap: 0.75rem; }
+  .navbar {
+    padding: 0.8rem 1rem;
+  }
+
+  .fila-superior {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .fila-inferior {
+    gap: 0.75rem;
+  }
 }
