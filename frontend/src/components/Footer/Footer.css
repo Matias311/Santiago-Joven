@@ -1,6 +1,18 @@
+/* =============================================================
+  ARCHIVO: src/components/Footer/Footer.css
+  PROPÓSITO: Footer global de la app
+
+  SECCIONES:
+  1. Contenedor del footer
+  2. Layout del contenido
+  3. Enlaces / imágenes
+  4. Sobrescrituras de modo oscuro
+  ============================================================= */
+
 footer {
   background-color: #4c4c4c;
   color: #ffffff;
+
   & .contenido {
     display: flex;
     background-color: #272727;
@@ -22,4 +34,13 @@ footer {
       }
     }
   }
+}
+
+.dark footer {
+  background-color: #111827;
+  color: #e2e8f0;
+}
+
+.dark footer .contenido {
+  background-color: #0f172a;
 }

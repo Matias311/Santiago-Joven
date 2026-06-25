@@ -1,6 +1,17 @@
+/* =============================================================
+  ARCHIVO: src/components/cartas/Card.css
+  PROPÓSITO: Estilos para las cartas reutilizables en distintas secciones
+
+  SECCIONES:
+  1. Estilos por defecto de cartas (.carta-universal)
+  2. Cartas de hero / sección (.carta-seccion)
+  3. Botones y utilidades (.btn-inscribase)
+  4. Sobrescrituras de modo oscuro (agrupadas al final)
+  ============================================================= */
+
 /* ============================================
-   CARTA UNIVERSAL
-   ============================================ */
+  CARTA UNIVERSAL
+  ============================================ */
 
 /* Cartas en fondo blanco */
 .contenedor-flex .carta-universal,
@@ -118,4 +129,46 @@
 .btn-inscribase:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(79, 119, 44, 0.3);
+}
+
+.dark .contenedor-flex .carta-universal,
+.dark .grupo-cartas .carta-universal {
+  background: #0f172a;
+  border-color: rgba(148, 163, 184, 0.16);
+  color: var(--text-primary);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+}
+
+.dark .contenedor-flex .carta-universal:hover,
+.dark .grupo-cartas .carta-universal:hover {
+  background: #111a2b;
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.65);
+}
+
+.dark .contenedor-flex .icono,
+.dark .grupo-cartas .icono {
+  background: #111a2d;
+}
+
+.dark .contenedor-flex .carta-universal h3,
+.dark .grupo-cartas .carta-universal h3 {
+  color: #f1f5f9;
+}
+
+.dark .contenedor-flex .carta-universal p,
+.dark .grupo-cartas .carta-universal p {
+  color: #cbd5e1;
+}
+
+.dark .carta-seccion .carta-universal {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.dark .carta-seccion .carta-universal:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.dark .carta-seccion .icono {
+  background: rgba(255, 255, 255, 0.08);
 }

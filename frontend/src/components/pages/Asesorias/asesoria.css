@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+
+/* Encabezado principal con degradado diagonal de azul a verde */
+.asesoria-header {
+  background: linear-gradient(135deg, var(--azul) 0%, #1a9e73 60%, var(--verde) 100%);
+  min-height: 400px;
+  padding: 7rem 3rem;
+  color: #ffffff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 2rem;
+  margin-top: -200px;    /* Se superpone sobre la sección anterior */
+  padding-top: 15rem;    /* Compensa el margen negativo para que el contenido no quede tapado */
+}
+
+.asesoria-header-texto {
+  max-width: 700px;
+}
+
+.asesoria-header-texto h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.asesoria-header-texto p {
+  font-size: 1rem;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.asesoria-header-link {
+  text-decoration: none;
+  display: block;
+  transition: transform 0.2s;
+}
+
+.asesoria-header-link:hover {
+  transform: translateY(-4px);
+}
+
+/* ── Slider ── */
+
+.slider-infocard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+/* Fila que contiene las flechas y la tarjeta activa */
+.slider-fila {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.slider-flecha {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem;
+  border-radius: 50%;
+  transition: color 0.2s, transform 0.2s;
+  flex-shrink: 0; /* Evita que las flechas se achiquen si la tarjeta ocupa mucho espacio */
+}
+
+.slider-flecha:hover {
+  color: #1e293b;
+  transform: scale(1.15);
+}
+
+.slider-flecha .material-symbols-outlined {
+  font-size: 2.2rem;
+}
+
+/* Puntos de navegación del slider */
+.slider-dots {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.slider-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: #cbd5e1;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  padding: 0;
+}
+
+/* Punto del slide activo: se agranda y cambia de color (el color lo aplica el componente) */
+.slider-dot.activo {
+  transform: scale(1.3);
+}
+
+/* ── Sobreescritura de fuente para InfoCard ── */
+/* Fuerza la fuente Poppins en todos los textos de la tarjeta */
+
+.ic-wrapper        { font-family: 'Poppins', sans-serif !important; }
+.ic-top-label      { font-family: 'Poppins', sans-serif; font-weight: 700; }
+.ic-section-title  { font-family: 'Poppins', sans-serif; font-weight: 700; }
+.ic-section-text   { font-family: 'Poppins', sans-serif; font-weight: 700; }
+.ic-cta-label      { font-family: 'Poppins', sans-serif; font-weight: 700; }
+.ic-button         { font-family: 'Poppins', sans-serif; font-weight: 600; }
+
+/* ── Animaciones del slider ── */
+/* La tarjeta entra deslizándose desde la derecha o izquierda según la dirección de navegación */
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.slide-enter-right { animation: slideInRight 0.3s ease forwards; }
+.slide-enter-left  { animation: slideInLeft  0.3s ease forwards; }
+
+/* ── Responsive (pantallas menores a 768px) ── */
+
+@media (max-width: 768px) {
+  .asesoria-header {
+    padding: 12rem 1.5rem 3rem;
+  }
+
+  .asesoria-header-texto h1 {
+    font-size: 1.9rem;
+  }
+
+  .slider-flecha .material-symbols-outlined {
+    font-size: 1.6rem;
+  }
+}

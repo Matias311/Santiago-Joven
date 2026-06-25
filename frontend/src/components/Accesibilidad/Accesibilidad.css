@@ -1,3 +1,14 @@
+/* =============================================================
+  ARCHIVO: src/components/Accesibilidad/Accesibilidad.css
+  PROPÓSITO: Panel de accesibilidad y utilidades (grayscale, contraste, fuentes)
+
+  SECCIONES:
+  1. Contenedor / Botones
+  2. Panel / Elementos de la lista
+  3. Clases utilitarias aplicadas a #site-content
+  4. Uso de tema y sobrescrituras de modo oscuro
+  ============================================================= */
+
 .accessibility-container {
   position: fixed;
   top: 9rem;
@@ -70,4 +81,23 @@
 
 #site-content.readable-font {
   font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.accessibility-panel {
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.accessibility-panel li:hover {
+  color: var(--accent);
+}
+
+.dark .accessibility-panel {
+  background: var(--surface-alt);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+}
+
+.dark .accessibility-btn {
+  background: var(--accent);
 }
