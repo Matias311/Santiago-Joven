@@ -1,0 +1,197 @@
+/* =============================================================
+   ARCHIVO: proyeccioncard1.css
+   PROPOSITO: Estilos exclusivos de ProyeccionCard1 (tema azul).
+              Solo clases con prefijo "pc1-".
+
+   SECCIONES:
+   1. Carta contenedor
+   2. Header (icono de esquina + titulos)
+   3. Grilla central (bullets + icono FontAwesome)
+   4. Footer y boton
+   5. Responsive
+   ============================================================= */
+
+/* ══════════════════════════════════════════════════════════════
+   1. CARTA CONTENEDOR
+   ══════════════════════════════════════════════════════════════ */
+.pc1-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px 44px 28px;
+  box-shadow:
+    0 0 48px rgba(31, 117, 179, 0.18),
+    0 4px 20px rgba(31, 117, 179, 0.1);
+  border: 1.5px solid rgba(31, 117, 179, 0.12);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2. HEADER
+   Icono en esquina superior izquierda, titulo y subtitulo
+   centrados. padding lateral deja espacio al icono.
+   ══════════════════════════════════════════════════════════════ */
+.pc1-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.pc1-corner-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pc1-titles {
+  padding: 0 52px;
+}
+
+.pc1-title {
+  font-family: "Nunito", "Outfit", sans-serif;
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.pc1-subtitle {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1f75b3;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. GRILLA CENTRAL
+   3 columnas: bullet izq | icono central (2 filas) | bullet der
+
+   Posiciones explicitas por clase para que sea facil
+   reubicar un bullet sin tocar el HTML.
+   ══════════════════════════════════════════════════════════════ */
+.pc1-grid {
+  display: grid;
+  grid-template-columns: 1fr 160px 1fr;
+  grid-template-rows: auto auto;
+  gap: 20px 24px;
+  align-items: center;
+  min-height: 240px;
+  margin-bottom: 8px;
+}
+
+.pc1-bullet {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: #1a1a2e;
+  text-align: center;
+}
+
+.pc1-bullet--tl {
+  grid-column: 1;
+  grid-row: 1;
+}
+.pc1-bullet--tr {
+  grid-column: 3;
+  grid-row: 1;
+}
+.pc1-bullet--bl {
+  grid-column: 1;
+  grid-row: 2;
+}
+.pc1-bullet--br {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.pc1-center {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Icono FontAwesome hexagon-nodes */
+.pc1-hex-icon {
+  font-size: 100px;
+  color: #1ba2e6;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4. FOOTER Y BOTON
+   Sin contenedor con fondo — solo el boton centrado.
+   El color de fondo viene como prop inline (botoncolor).
+   ══════════════════════════════════════════════════════════════ */
+.pc1-footer {
+  text-align: center;
+  margin-top: 28px;
+}
+
+.pc1-btn {
+  display: inline-block;
+  padding: 13px 42px;
+  border: none;
+  border-radius: 999px;
+  font-family: "Nunito", "Outfit", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+  /* Sin background heredado ni box externo */
+  box-shadow: none;
+}
+
+.pc1-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5. RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .pc1-card {
+    padding: 28px 28px 24px;
+  }
+  .pc1-grid {
+    grid-template-columns: 1fr 120px 1fr;
+    min-height: 200px;
+  }
+  .pc1-hex-icon {
+    font-size: 80px;
+  }
+}
+
+@media (max-width: 640px) {
+  .pc1-card {
+    padding: 24px 20px 20px;
+  }
+  .pc1-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: unset;
+    min-height: unset;
+    gap: 12px;
+  }
+  .pc1-bullet--tl,
+  .pc1-bullet--tr,
+  .pc1-bullet--bl,
+  .pc1-bullet--br,
+  .pc1-center {
+    grid-column: 1;
+    grid-row: unset;
+  }
+  .pc1-titles {
+    padding: 0 48px;
+  }
+}

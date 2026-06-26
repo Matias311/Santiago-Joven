@@ -1,0 +1,140 @@
+/* =============================================================
+   ARCHIVO: proyeccioncard2.css
+   PROPOSITO: Estilos exclusivos de ProyeccionCard2 (tema naranja).
+              Solo clases con prefijo "pc2-".
+
+   SECCIONES:
+   1. Carta contenedor
+   2. Header (icono de esquina + titulo)
+   3. Cuerpo (descripcion)
+   4. Footer y boton
+   5. Responsive
+   ============================================================= */
+
+/* ══════════════════════════════════════════════════════════════
+   1. CARTA CONTENEDOR
+   Fondo blanco, sombra naranja/ambar, borde naranja sutil.
+   ══════════════════════════════════════════════════════════════ */
+.pc2-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px 44px 28px;
+  box-shadow:
+    0 0 48px rgba(245, 166, 35, 0.22),
+    0 4px 20px rgba(245, 166, 35, 0.12);
+  border: 1.5px solid rgba(245, 166, 35, 0.2);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.pc2-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(245, 166, 35, 0.28),
+    0 4px 16px rgba(245, 166, 35, 0.15);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2. HEADER
+   Icono en esquina superior izquierda, titulo centrado.
+   El padding lateral de pc2-title deja espacio al icono.
+   ══════════════════════════════════════════════════════════════ */
+.pc2-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Circulo con gradiente que contiene el Material Symbol */
+.pc2-corner-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pc2-title {
+  font-family: "Nunito", "Outfit", sans-serif;
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.3;
+  padding: 0 52px; /* espacio para el icono de esquina */
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. CUERPO
+   Texto descriptivo centrado con line-height generoso.
+   ══════════════════════════════════════════════════════════════ */
+.pc2-body {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #1a1a2e;
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto;
+  flex: 1; /* empuja el footer hacia abajo cuando las cartas tienen distinta altura */
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4. FOOTER Y BOTON
+   El color de fondo viene como prop "botoncolor" (style inline).
+   ══════════════════════════════════════════════════════════════ */
+.pc2-footer {
+  text-align: center;
+  margin-top: 28px;
+}
+
+.pc2-btn {
+  display: inline-block;
+  padding: 13px 42px;
+  border: none;
+  border-radius: 999px;
+  font-family: "Nunito", "Outfit", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: none;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+
+.pc2-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5. RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .pc2-card {
+    padding: 28px 28px 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .pc2-card {
+    padding: 24px 20px 20px;
+  }
+
+  /* En movil el icono de esquina pasa a flujo normal */
+  .pc2-corner-icon {
+    position: static;
+    margin: 0 auto 10px;
+  }
+
+  .pc2-title {
+    padding: 0;
+  }
+}

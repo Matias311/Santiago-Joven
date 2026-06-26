@@ -1,0 +1,620 @@
+/* =============================================================
+  ARCHIVO: proyeccion.css
+  PROPOSITO: Estilos exclusivos de la pagina Proyeccion y Accion Joven.
+             Solo afectan clases con prefijo "proj-".
+
+  NOTA: Los estilos de las tarjetas estan en sus propios archivos:
+        - proyeccioncard1.css  (tema azul)
+        - proyeccioncard2.css  (tema naranja)
+
+  SECCIONES:
+  1.  Variables CSS locales
+  2.  Pagina raiz (.proj-page)
+  3.  Hero (.proj-hero)
+       3a. Blobs / fondos decorativos animados
+       3b. Contenido del hero
+       3c. Eyebrow (etiqueta superior)
+       3d. Titulo y subtitulo
+       3e. Tabs de navegacion
+  4.  Secciones de contenido (.proj-section)
+       4a. Variante azul (.proj-section--blue)
+       4b. Variante naranja (.proj-section--orange)
+       4c. Encabezados de seccion
+       4d. Icono pulsante de seccion
+  5.  Grid de cartas (.proj-cards-grid)
+  6.  Separador entre secciones (.proj-section-divider)
+  7.  Seccion de contacto (.proj-contacto)
+       7a. Grid de columnas
+       7b. Formulario
+       7c. Informacion de ubicacion
+       7d. Mapa embebido
+  8.  Botones (.proj-btn)
+  9.  Keyframes / Animaciones
+  10. Responsive (tablets y movil)
+  11. Modo oscuro (.dark)
+  ============================================================= */
+
+/* ══════════════════════════════════════════════════════════════
+   1. VARIABLES CSS LOCALES
+   ══════════════════════════════════════════════════════════════ */
+.proj-page {
+  --proj-azul: #1f75b3;
+  --proj-azul-glow: rgba(31, 117, 179, 0.22);
+  --proj-naranja: #f5a623;
+  --proj-naranja-glow: rgba(245, 166, 35, 0.22);
+  --proj-texto: #1a1a2e;
+  --proj-texto-suave: #555b6e;
+  --proj-blanco: #ffffff;
+  --proj-radio: 20px;
+  --proj-radio-sm: 12px;
+  --proj-fuente-titulo: "Nunito", "Outfit", sans-serif;
+  --proj-fuente-cuerpo: "DM Sans", "Inter", sans-serif;
+  --proj-gap-grid: 1.5rem;
+  --proj-px: 64px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2. PAGINA RAIZ
+   ══════════════════════════════════════════════════════════════ */
+.proj-page {
+  width: 100%;
+  font-family: var(--proj-fuente-cuerpo);
+  color: var(--proj-texto);
+}
+
+.proj-page * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. HERO
+   ══════════════════════════════════════════════════════════════ */
+.proj-hero {
+  position: relative;
+  width: 100%;
+  min-height: 480px;
+  padding: 80px var(--proj-px) 100px;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #4f8ef7 0%, #38d9a9 60%, #4f8ef7 100%);
+  background-size: 200% 200%;
+  /* ANIMACION: El fondo se mueve suavemente en loop de 8 segundos */
+  animation: proj-hero-gradient 8s ease-in-out infinite;
+}
+
+/* ── 3a. Blobs decorativos animados ──────────────────────────
+   Circulos difuminados que flotan detras del contenido.
+   ANIMACION: proj-float los mueve arriba/abajo lentamente.
+   ─────────────────────────────────────────────────────────── */
+.proj-hero__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.proj-hero__blob--1 {
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.5);
+  top: -100px;
+  left: -80px;
+  animation: proj-float 6s ease-in-out infinite;
+}
+
+.proj-hero__blob--2 {
+  width: 320px;
+  height: 320px;
+  background: rgba(255, 255, 255, 0.4);
+  bottom: -60px;
+  right: -60px;
+  animation: proj-float 8s ease-in-out 2s infinite;
+}
+
+/* ── 3b. Contenido del hero ── */
+.proj-hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ── 3c. Eyebrow ── */
+.proj-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  backdrop-filter: blur(4px);
+}
+
+/* ── 3d. Titulo y subtitulo ── */
+.proj-hero__title {
+  font-family: var(--proj-fuente-titulo);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  color: var(--proj-blanco);
+  line-height: 1.1;
+  margin-bottom: 18px;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+}
+
+.proj-hero__subtitle {
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto 44px;
+}
+
+/* ── 3e. Tabs de navegacion ── */
+.proj-hero__tabs {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.proj-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 36px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--proj-radio);
+  color: var(--proj-blanco);
+  cursor: pointer;
+  font-family: var(--proj-fuente-titulo);
+  font-size: 0;
+  min-width: 120px;
+  transition:
+    background 0.22s,
+    transform 0.22s,
+    border-color 0.22s;
+  backdrop-filter: blur(8px);
+}
+
+.proj-tab:hover {
+  background: rgba(255, 255, 255, 0.26);
+  transform: translateY(-3px);
+}
+
+/* INTERACCION: La tab activa tiene fondo mas solido */
+.proj-tab--active {
+  background: rgba(255, 255, 255, 0.32);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+.proj-tab__icon {
+  font-size: 2rem !important;
+}
+
+.proj-tab__label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--proj-blanco);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4. SECCIONES DE CONTENIDO
+   ══════════════════════════════════════════════════════════════ */
+.proj-section {
+  width: 100%;
+  padding: 72px var(--proj-px) 80px;
+  text-align: center;
+}
+
+.proj-section__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── 4a. Variante azul ── */
+.proj-section--blue {
+  background: radial-gradient(
+    ellipse at center,
+    var(--proj-azul-glow) 0%,
+    #f5f7fa 68%
+  );
+}
+
+/* ── 4b. Variante naranja ── */
+.proj-section--orange {
+  background: radial-gradient(
+    ellipse at center,
+    var(--proj-naranja-glow) 0%,
+    #fff9f0 68%
+  );
+}
+
+/* ── 4c. Encabezados de seccion ── */
+.proj-section__header {
+  margin-bottom: 48px;
+}
+
+.proj-section__icon {
+  font-size: 3rem !important;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.proj-section__title {
+  font-family: var(--proj-fuente-titulo);
+  font-size: clamp(1.4rem, 2.8vw, 2.1rem);
+  font-weight: 900;
+  color: var(--proj-texto);
+  margin-bottom: 12px;
+}
+
+.proj-section__subtitle {
+  font-size: 1rem;
+  color: var(--proj-texto-suave);
+  line-height: 1.65;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.proj-section__subtitle--link {
+  color: var(--proj-azul);
+  text-underline-offset: 4px;
+}
+
+/* ── 4d. Icono pulsante (seccion Accion Joven) ───────────────
+   ANIMACION: El icono "late" para llamar la atencion del usuario.
+   ─────────────────────────────────────────────────────────── */
+.proj-section__icon--pulse {
+  animation: proj-pulse 2.2s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5. CARRUSEL
+   Las cartas se muestran de a una a traves de ProyeccionCarrusel.
+   Los estilos del carrusel estan en proyeccioncarrusel.css.
+   Esta seccion queda vacia intencionalmente para futuras
+   necesidades de layout de la pagina.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════
+   6. SEPARADOR ENTRE SECCIONES
+   ══════════════════════════════════════════════════════════════ */
+.proj-section-divider {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7. SECCION DE CONTACTO
+   ══════════════════════════════════════════════════════════════ */
+.proj-contacto {
+  background: #f0f5f0;
+  padding-top: 80px;
+}
+
+.proj-contacto__pin {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+/* ── 7a. Grid de columnas (formulario | informacion) ── */
+.proj-contacto__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  text-align: left;
+  margin-bottom: 56px;
+}
+
+.proj-contacto__col-title {
+  font-family: var(--proj-fuente-titulo);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--proj-texto);
+  margin-bottom: 20px;
+}
+
+/* ── 7b. Formulario ── */
+.proj-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--proj-texto-suave);
+  margin-bottom: 5px;
+  margin-top: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.proj-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #d4dce6;
+  border-radius: var(--proj-radio-sm);
+  font-size: 0.92rem;
+  font-family: var(--proj-fuente-cuerpo);
+  background: var(--proj-blanco);
+  color: var(--proj-texto);
+  outline: none;
+  /* INTERACCION: El borde cambia a azul al hacer foco */
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.proj-input:focus {
+  border-color: var(--proj-azul);
+  box-shadow: 0 0 0 3px rgba(31, 117, 179, 0.12);
+}
+
+.proj-textarea {
+  min-height: 120px;
+  resize: vertical;
+  margin-bottom: 20px;
+}
+
+/* ── 7c. Informacion de ubicacion ── */
+.proj-contacto__info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 4px;
+}
+
+.proj-contacto__info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.proj-contacto__info-icon {
+  font-size: 1.4rem !important;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.proj-contacto__info-item p {
+  font-size: 0.93rem;
+  line-height: 1.65;
+  color: var(--proj-texto);
+}
+
+.proj-contacto__email {
+  color: var(--proj-azul);
+  font-size: 0.93rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.proj-contacto__email:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+/* ── 7d. Mapa embebido ── */
+.proj-contacto__map-row {
+  width: 100%;
+  border-radius: var(--proj-radio);
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.proj-contacto__map {
+  width: 100%;
+  height: 320px;
+  border: none;
+  display: block;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   8. BOTONES
+   ══════════════════════════════════════════════════════════════ */
+.proj-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 32px;
+  border: none;
+  border-radius: 999px;
+  font-family: var(--proj-fuente-titulo);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.proj-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+.proj-btn--blue {
+  background: var(--proj-azul);
+  color: var(--proj-blanco);
+  box-shadow: 0 4px 16px rgba(31, 117, 179, 0.3);
+}
+
+.proj-btn--blue:hover {
+  box-shadow: 0 8px 24px rgba(31, 117, 179, 0.4);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   9. KEYFRAMES / ANIMACIONES
+   ══════════════════════════════════════════════════════════════ */
+
+/* Anima el background-position del gradiente del hero */
+@keyframes proj-hero-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Movimiento vertical suave para los blobs decorativos */
+@keyframes proj-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}
+
+/* Efecto de latido para el icono de Accion Joven */
+@keyframes proj-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.14);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   10. RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+
+/* Tablets (menor o igual a 900px) */
+@media (max-width: 900px) {
+  .proj-page {
+    --proj-px: 32px;
+  }
+
+  .proj-contacto__grid {
+    gap: 40px;
+  }
+}
+
+/* Movil (menor o igual a 640px) */
+@media (max-width: 640px) {
+  .proj-page {
+    --proj-px: 20px;
+  }
+
+  .proj-hero {
+    padding: 56px var(--proj-px) 72px;
+    min-height: 400px;
+  }
+
+  .proj-hero__blob--1 {
+    width: 220px;
+    height: 220px;
+  }
+
+  .proj-hero__blob--2 {
+    width: 180px;
+    height: 180px;
+  }
+
+  .proj-hero__tabs {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .proj-tab {
+    width: 100%;
+    max-width: 260px;
+    flex-direction: row;
+    justify-content: center;
+    padding: 14px 24px;
+    gap: 12px;
+  }
+
+  .proj-hero__blob {
+    display: none;
+  }
+
+  .proj-contacto__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .proj-contacto__map {
+    height: 260px;
+  }
+
+  .proj-section {
+    padding: 48px var(--proj-px) 56px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   11. MODO OSCURO
+   Se aplica con la clase .dark en el body/html.
+   ══════════════════════════════════════════════════════════════ */
+.dark .proj-page {
+  --proj-texto: #f1f5f9;
+  --proj-texto-suave: #94a3b8;
+}
+
+.dark .proj-section--blue {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(31, 117, 179, 0.2) 0%,
+    #0f172a 68%
+  );
+}
+
+.dark .proj-section--orange {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(245, 166, 35, 0.18) 0%,
+    #1a1000 68%
+  );
+}
+
+.dark .proj-contacto {
+  background: #0a1628;
+}
+
+.dark .proj-input {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+.dark .proj-input:focus {
+  border-color: var(--proj-azul);
+  box-shadow: 0 0 0 3px rgba(31, 117, 179, 0.25);
+}
+
+.dark .proj-input::placeholder {
+  color: #64748b;
+}
+
+.dark .proj-contacto__col-title {
+  color: #f1f5f9;
+}
+
+.dark .proj-contacto__info-item p {
+  color: #cbd5e1;
+}
+
+.dark .proj-section-divider {
+  background: linear-gradient(to right, transparent, #334155, transparent);
+}

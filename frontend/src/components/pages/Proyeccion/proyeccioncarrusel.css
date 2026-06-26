@@ -1,0 +1,89 @@
+/* =============================================================
+   ARCHIVO: proyeccioncarrusel.css
+   PROPOSITO: Estilos del carrusel generico. Solo prefijo "pcarr-".
+
+   SECCIONES:
+   1. Wrapper y viewport
+   2. Slides (solo el activo es visible)
+   3. Dots de paginacion
+   ============================================================= */
+
+/* ══════════════════════════════════════════════════════════════
+   1. WRAPPER Y VIEWPORT
+   El viewport tiene overflow hidden para ocultar slides inactivos.
+   La transicion de opacidad suaviza el cambio entre cartas.
+   ══════════════════════════════════════════════════════════════ */
+.pcarr-wrapper {
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.pcarr-viewport {
+  position: relative;
+  width: 100%;
+  /* La altura se adapta al contenido del slide activo */
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2. SLIDES
+   Los inactivos estan ocultos con display:none para que no
+   ocupen espacio ni reciban foco de teclado.
+   El activo hace fade-in con la animacion pcarr-fadein.
+   ══════════════════════════════════════════════════════════════ */
+.pcarr-slide {
+  display: none;
+  width: 100%;
+}
+
+.pcarr-slide--active {
+  display: block;
+  animation: pcarr-fadein 0.3s ease;
+}
+
+@keyframes pcarr-fadein {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3. DOTS DE PAGINACION
+   El color activo cambia segun el tema (blue u orange).
+   ══════════════════════════════════════════════════════════════ */
+.pcarr-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.pcarr-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: #ccc;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+
+/* Dot activo azul */
+.pcarr-dot--blue.pcarr-dot--active {
+  background: #1f75b3;
+  transform: scale(1.35);
+}
+
+/* Dot activo naranja */
+.pcarr-dot--orange.pcarr-dot--active {
+  background: #f5a623;
+  transform: scale(1.35);
+}
