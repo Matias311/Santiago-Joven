@@ -24,6 +24,7 @@
   background: transparent;
   border: transparent;
   width: 38px;
+  max-width: 100%;
   height: 38px;
   cursor: pointer;
   font-size: 1.1rem;
@@ -50,6 +51,7 @@
 
 .slider-activo .carta-universal {
   width: 100%;
+  max-width: 100%;
   background: var(--blanco);
   border: 1px solid rgba(32,197,141,0.18);
   border-radius: var(--radio-grande);
@@ -64,6 +66,7 @@
 .slider-activo .icono {
   font-size: 2rem;
   width: 4rem;
+  max-width: 100%;
   height: 4rem;
   background: rgba(32,197,141,0.14);
   color: var(--verde);
@@ -87,7 +90,7 @@
   font-size: 0.92rem;
   color: var(--gris-texto);
   line-height: 1.6;
-  max-width: 540px;
+  max-width: 100%;
   margin: 0 auto;
 }
 

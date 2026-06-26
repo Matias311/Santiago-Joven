@@ -86,6 +86,8 @@ body {
    Encabezado principal de la landing page con fondo degradado.
    ============================================================= */
 .inicio-section {
+  width: 100%;
+  padding-inline: 3rem;
   background: linear-gradient(135deg, var(--azul) 0%, #1a9e73 60%, var(--verde) 100%);
   min-height: 400px;
   padding: 7rem 3rem;
@@ -115,6 +117,7 @@ body {
    Contenedor principal de la página con secciones blancas y verdes.
    ============================================================= */
 .contenido-principal {
+  width: 100%;
   background: var(--bg-content);
   margin-top: 0rem;
   padding: 3rem 3rem 2rem;

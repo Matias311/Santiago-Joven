@@ -11,20 +11,47 @@
 
 .accessibility-container {
   position: fixed;
-  top: 9rem;
+  top: 10rem;
   left: 1rem;
   z-index: 9999;
+  transition: top 0.2s ease;
 }
 
 .accessibility-btn {
   background: #404fbf;
   color: white;
   font-size: 2rem;
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: 0.5rem;
   border: none;
   cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+  .accessibility-container {
+    top: 11.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .accessibility-container {
+    top: 13rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .accessibility-container {
+    top: 14.5rem;
+    left: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .accessibility-container {
+    top: 8rem;
+    left: 0.875rem;
+  }
 }
 
 .accessibility-panel {
