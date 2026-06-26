@@ -969,6 +969,7 @@ body {
     gap: 1rem;
     font-size: 0.82rem;
     flex-wrap: wrap;
+    justify-content: center;
   }
 
   /* Contenido principal */

@@ -1,8 +1,3 @@
-/**
- * @fileoverview Componente de barra de navegación principal.
- * Incluye el logo, enlaces de navegación, acceso a cuenta y toggle de modo oscuro.
- */
-
 import { Link } from "react-router-dom";
 import "../Navbar/Navbar.css";
 
