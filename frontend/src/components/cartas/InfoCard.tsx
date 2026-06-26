@@ -1,8 +1,7 @@
 import React from "react";
 import "./InfoCard.css";
 
-// Tipos
-
+// Define qué datos puede recibir la tarjeta. El "?" indica que son opcionales.
 interface PropsTarjeta {
   etiquetaSuperior?: string;
   colorAcento?:      string;
@@ -16,17 +15,17 @@ interface PropsTarjeta {
   iconoMetodologia?: React.ReactNode;
   etiquetaCTA?:      string;
   textBoton?:        string;
-  alClickBoton?:     () => void;
+  alClickBoton?:     () => void;      // Función que se ejecuta al hacer clic en el botón
 }
 
+// Datos que necesita cada sección interna (ícono, título y texto)
 interface PropsSeccion {
   icono:  React.ReactNode;
   titulo: string;
   texto:  string;
 }
 
-// Iconos por defecto
-
+// Íconos SVG por defecto, usados si no se proporcionan íconos personalizados
 const IconoInfo: React.FC = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
     strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -59,8 +58,7 @@ const IconoFlujo: React.FC = () => (
   </svg>
 );
 
-// Subcomponente: Sección
-
+// Bloque reutilizable que muestra un ícono, título y texto. Se usa tres veces.
 const Seccion: React.FC<PropsSeccion> = ({ icono, titulo, texto }) => (
   <div className="ic-section">
     <div className="ic-section-header">
@@ -71,8 +69,7 @@ const Seccion: React.FC<PropsSeccion> = ({ icono, titulo, texto }) => (
   </div>
 );
 
-// Componente principal
-
+// Componente principal. Si no se pasan datos, usa los valores por defecto indicados con "=".
 const InfoCard: React.FC<PropsTarjeta> = ({
   etiquetaSuperior        = "Título de la carta",
   colorAcento             = "#4caf6e",
@@ -89,9 +86,10 @@ const InfoCard: React.FC<PropsTarjeta> = ({
   alClickBoton,
 }) => {
 
+  // El color de acento se pasa al CSS como variable para usarlo dinámicamente en los estilos
   const variablesCSS = {
     "--accent":      colorAcento,
-    "--accent-fade": colorAcento + "40",
+    "--accent-fade": colorAcento + "40", // Versión semitransparente del color
   } as React.CSSProperties;
 
   return (
@@ -103,6 +101,7 @@ const InfoCard: React.FC<PropsTarjeta> = ({
 
         <div className="ic-fade-right" />
 
+        {/* Solo se renderiza si fue proporcionado */}
         {iconoSuperiorDerecho && (
           <div className="ic-top-right-icon">{iconoSuperiorDerecho}</div>
         )}
@@ -111,6 +110,7 @@ const InfoCard: React.FC<PropsTarjeta> = ({
           <div className="ic-big-icon">{iconoGrande}</div>
         )}
 
+        {/* Si no se pasa un ícono personalizado, se usa el ícono por defecto con ?? */}
         <div className="ic-sections">
           <Seccion
             icono={iconoDefinicion  ?? <IconoInfo />}

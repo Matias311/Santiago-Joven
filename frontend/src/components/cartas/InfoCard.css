@@ -1,7 +1,7 @@
-/* Fuente de iconos */
+/* Fuente de iconos de Google */
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
 
-/* Contenedor principal */
+/* Contenedor principal que apila verticalmente la etiqueta y la tarjeta */
 .ic-wrapper {
   display: flex;
   flex-direction: column;
@@ -12,30 +12,28 @@
   font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Etiqueta superior */
 .ic-top-label {
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent); /* Usa el color de acento definido desde el componente */
   margin: 0;
   letter-spacing: 0.01em;
 }
 
-/* Tarjeta */
 .ic-card {
-  position: relative;
+  position: relative; /* Necesario para posicionar elementos hijos con "absolute" */
   width: 100%;
   background: #ffffff;
   border-radius: 20px;
-  box-shadow: 0 8px 40px var(--accent-fade);
+  box-shadow: 0 8px 40px var(--accent-fade); /* Sombra con el color semitransparente */
   padding: 36px 32px 28px 32px;
-  overflow: hidden;
+  overflow: hidden; /* Oculta lo que se salga de los bordes redondeados */
   box-sizing: border-box;
 }
 
-/* Degradado */
+/* Degradado decorativo que cubre el lado derecho de la tarjeta */
 .ic-fade-right {
-  pointer-events: none;
+  pointer-events: none; /* No bloquea clics aunque esté encima */
   position: absolute;
   top: 0;
   right: 0;
@@ -46,7 +44,7 @@
   border-radius: 0 20px 20px 0;
 }
 
-/* Icono pequeño */
+/* Ícono pequeño fijo en la esquina superior derecha */
 .ic-top-right-icon {
   position: absolute;
   top: 20px;
@@ -65,12 +63,12 @@
   height: 100%;
 }
 
-/* Icono grande */
+/* Ícono grande centrado verticalmente en el lado derecho */
 .ic-big-icon {
   position: absolute;
   right: 28px;
   top: 50%;
-  transform: translateY(-60%);
+  transform: translateY(-60%); /* Ajuste visual para que quede bien centrado */
   width: 130px;
   height: 130px;
   color: var(--accent);
@@ -88,14 +86,14 @@
   object-fit: contain;
 }
 
-/* Secciones :V */
+/* Contenedor de las tres secciones de texto */
 .ic-sections {
   position: relative;
-  z-index: 2;
+  z-index: 2; /* Se pone sobre el degradado */
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding-right: 145px;
+  padding-right: 145px; /* Espacio para no tapar el ícono grande */
 }
 
 .ic-section {
@@ -114,7 +112,7 @@
   color: var(--accent);
   width: 20px;
   height: 20px;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Evita que el ícono se achique si el texto es largo */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -139,10 +137,10 @@
   line-height: 1.6;
   color: #222222;
   margin: 0;
-  padding-left: 28px;
+  padding-left: 28px; /* Sangría para alinear el texto bajo el título, no bajo el ícono */
 }
 
-/* Llamada a la acción (CTA(Call to Arms como dicen los papus Albion))  */
+/* Sección inferior con el texto de invitación y el botón */
 .ic-cta {
   position: relative;
   z-index: 2;
@@ -160,7 +158,6 @@
   margin: 0;
 }
 
-/* Botón */
 .ic-button {
   background-color: var(--accent);
   color: #ffffff;
@@ -171,14 +168,16 @@
   font-weight: 700;
   cursor: pointer;
   letter-spacing: 0.02em;
-  transition: filter 0.18s ease, transform 0.15s ease;
+  transition: filter 0.18s ease, transform 0.15s ease; /* Animación suave al pasar el mouse */
 }
 
+/* Efecto al pasar el mouse: se aclara y sube levemente */
 .ic-button:hover {
   filter: brightness(1.1);
   transform: translateY(-1px);
 }
 
+/* Efecto al hacer clic: se oscurece y vuelve a su posición */
 .ic-button:active {
   filter: brightness(0.95);
   transform: translateY(0);
