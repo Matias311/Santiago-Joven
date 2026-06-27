@@ -11,6 +11,7 @@ services:
     env_file:
       - .env
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       URL_DB: ${URL_DB}
       DB_USER: ${DB_USER}
@@ -44,6 +45,7 @@ services:
     env_file:
       - .env
     environment:
+      SPRING_PROFILES_ACTIVE: test
       OPENAI_API_KEY: ${OPENAI_API_KEY}
     volumes:
       - ./backend/src:/app/src
@@ -70,7 +72,11 @@ services:
     env_file:
       - .env
     environment:
+      SPRING_PROFILES_ACTIVE: prod
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+      URL_DB: ${URL_DB}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "8080:8080"
 
