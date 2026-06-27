@@ -13,6 +13,7 @@
     - **Spring Boot 4.0.6** - Ultima version estable de Spring Boot para Java 21
     - **SpringAI 2.0.0-M6** - Para poder trabajar con modelos de IA y poder centralizar y agregar seguridad extra al chatbot
     - **Lombok** - Para eliminar el codigo repetido y poder trabajar de manera eficiente en la creacion de las clases
+    - **Spring Validation (spring-boot-starter-validation)** - Validacion automatica de DTOs en los controladores via anotaciones jakarta.validation
     - **JPA - Hibernate** - ORM 
 
 ## Base de datos:
