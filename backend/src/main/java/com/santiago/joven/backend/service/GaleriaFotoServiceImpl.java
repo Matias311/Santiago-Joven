@@ -4,7 +4,6 @@ import com.santiago.joven.backend.dto.GaleriaFotoRequest;
 import com.santiago.joven.backend.dto.GaleriaFotoResponse;
 import com.santiago.joven.backend.dto.GaleriaFotoUpdate;
 import com.santiago.joven.backend.mapper.GaleriaFotoMapper;
-import com.santiago.joven.backend.model.entity.GaleriaFoto;
 import com.santiago.joven.backend.repository.GaleriaFotoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -25,15 +24,14 @@ public class GaleriaFotoServiceImpl implements GaleriaFotoService {
   @Override
   @Transactional(readOnly = true)
   public List<GaleriaFotoResponse> findAll() {
-    return repository.findAll().stream()
-        .map(mapper::toResponse)
-        .toList();
+    return repository.findAll().stream().map(mapper::toResponse).toList();
   }
 
   @Override
   @Transactional(readOnly = true)
   public GaleriaFotoResponse findById(UUID id) {
-    return repository.findById(id)
+    return repository
+        .findById(id)
         .map(mapper::toResponse)
         .orElseThrow(() -> new EntityNotFoundException("GaleriaFoto no encontrado con id: " + id));
   }
@@ -47,8 +45,11 @@ public class GaleriaFotoServiceImpl implements GaleriaFotoService {
 
   @Override
   public GaleriaFotoResponse update(UUID id, GaleriaFotoUpdate update) {
-    var entity = repository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("GaleriaFoto no encontrado con id: " + id));
+    var entity =
+        repository
+            .findById(id)
+            .orElseThrow(
+                () -> new EntityNotFoundException("GaleriaFoto no encontrado con id: " + id));
     mapper.updateEntity(update, entity);
     entity = repository.save(entity);
     return mapper.toResponse(entity);
