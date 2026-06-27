@@ -2,6 +2,9 @@ spring:
   application:
     name: backend
 
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
 ---
 spring:
   config:
@@ -21,7 +24,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-
 ---
 spring:
   config:
@@ -40,7 +42,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
-
 ---
 spring:
   config:
