@@ -5,8 +5,10 @@ import com.santiago.joven.backend.model.enums.TipoRecurso;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /** Repositorio para la entidad {@link ResenaCalificacion}. */
+@Repository
 public interface ResenaCalificacionRepository extends JpaRepository<ResenaCalificacion, UUID> {
 
   /**

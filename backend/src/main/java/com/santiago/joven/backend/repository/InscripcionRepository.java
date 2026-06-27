@@ -5,9 +5,11 @@ import com.santiago.joven.backend.model.enums.EstadoInscripcion;
 import com.santiago.joven.backend.model.enums.TipoRecurso;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /** Repositorio para la entidad {@link Inscripcion}. */
+@Repository
 public interface InscripcionRepository extends JpaRepository<Inscripcion, UUID> {
 
   /**

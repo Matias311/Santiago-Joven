@@ -4,9 +4,11 @@ import com.santiago.joven.backend.model.entity.Estadistica;
 import com.santiago.joven.backend.model.enums.TipoRecurso;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /** Repositorio para la entidad {@link Estadistica}. */
+@Repository
 public interface EstadisticaRepository extends JpaRepository<Estadistica, UUID> {
 
   /**
