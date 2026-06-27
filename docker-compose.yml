@@ -12,6 +12,9 @@ services:
       - .env
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+      URL_DB: ${URL_DB}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "8080:8080"
     volumes:

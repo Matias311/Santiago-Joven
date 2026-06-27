@@ -19,6 +19,9 @@
 - Crear archivo `.env` y agregar la key de openai
 ```bash
 OPENAI_API_KEY=
+URL_DB=
+DB_USER=
+DB_PASSWORD=
 ```
 - Ejecutar con docker
 
