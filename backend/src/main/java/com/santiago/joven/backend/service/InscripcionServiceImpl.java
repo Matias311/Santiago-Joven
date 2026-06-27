@@ -4,7 +4,6 @@ import com.santiago.joven.backend.dto.InscripcionRequest;
 import com.santiago.joven.backend.dto.InscripcionResponse;
 import com.santiago.joven.backend.dto.InscripcionUpdate;
 import com.santiago.joven.backend.mapper.InscripcionMapper;
-import com.santiago.joven.backend.model.entity.Inscripcion;
 import com.santiago.joven.backend.model.enums.EstadoInscripcion;
 import com.santiago.joven.backend.model.enums.TipoRecurso;
 import com.santiago.joven.backend.repository.InscripcionRepository;
@@ -27,15 +26,14 @@ public class InscripcionServiceImpl implements InscripcionService {
   @Override
   @Transactional(readOnly = true)
   public List<InscripcionResponse> findAll() {
-    return repository.findAll().stream()
-        .map(mapper::toResponse)
-        .toList();
+    return repository.findAll().stream().map(mapper::toResponse).toList();
   }
 
   @Override
   @Transactional(readOnly = true)
   public InscripcionResponse findById(UUID id) {
-    return repository.findById(id)
+    return repository
+        .findById(id)
         .map(mapper::toResponse)
         .orElseThrow(() -> new EntityNotFoundException("Inscripcion no encontrada con id: " + id));
   }
@@ -43,9 +41,7 @@ public class InscripcionServiceImpl implements InscripcionService {
   @Override
   @Transactional(readOnly = true)
   public List<InscripcionResponse> findByUsuarioId(UUID usuarioId) {
-    return repository.findByUsuarioId(usuarioId).stream()
-        .map(mapper::toResponse)
-        .toList();
+    return repository.findByUsuarioId(usuarioId).stream().map(mapper::toResponse).toList();
   }
 
   @Override
@@ -59,9 +55,7 @@ public class InscripcionServiceImpl implements InscripcionService {
   @Override
   @Transactional(readOnly = true)
   public List<InscripcionResponse> findByEstado(EstadoInscripcion estado) {
-    return repository.findByEstado(estado).stream()
-        .map(mapper::toResponse)
-        .toList();
+    return repository.findByEstado(estado).stream().map(mapper::toResponse).toList();
   }
 
   @Override
@@ -72,8 +66,10 @@ public class InscripcionServiceImpl implements InscripcionService {
 
   @Override
   @Transactional(readOnly = true)
-  public boolean existsByUsuarioAndRecurso(UUID usuarioId, UUID recursoId, TipoRecurso tipoRecurso) {
-    return repository.existsByUsuarioIdAndRecursoIdAndTipoRecurso(usuarioId, recursoId, tipoRecurso);
+  public boolean existsByUsuarioAndRecurso(
+      UUID usuarioId, UUID recursoId, TipoRecurso tipoRecurso) {
+    return repository.existsByUsuarioIdAndRecursoIdAndTipoRecurso(
+        usuarioId, recursoId, tipoRecurso);
   }
 
   @Override
@@ -85,8 +81,11 @@ public class InscripcionServiceImpl implements InscripcionService {
 
   @Override
   public InscripcionResponse update(UUID id, InscripcionUpdate update) {
-    var entity = repository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Inscripcion no encontrada con id: " + id));
+    var entity =
+        repository
+            .findById(id)
+            .orElseThrow(
+                () -> new EntityNotFoundException("Inscripcion no encontrada con id: " + id));
     mapper.updateEntity(update, entity);
     entity = repository.save(entity);
     return mapper.toResponse(entity);
