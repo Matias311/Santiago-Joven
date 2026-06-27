@@ -1,7 +1,6 @@
 # Aplicacion Web para Santiago Joven
 
 ## Requisitos tecnicos para uso
-- NodeJS
 - Git 
 - Docker
 
@@ -22,10 +21,21 @@
 OPENAI_API_KEY=
 ```
 - Ejecutar con docker
-```bash
-docker compose up --build
-```
-Y listo, el frontend estara en `http://localhost:3000` y el backend en `localhost:8080/api/v1`  
+
+  **Desarrollo** (hot-reload al cambiar codigo — frontend en `localhost:3000`, backend en `localhost:8080/api/v1`):
+  ```bash
+  docker compose --profile dev up --build
+  ```
+
+  **Tests:**
+  ```bash
+  docker compose --profile test up --build --abort-on-container-exit
+  ```
+
+  **Produccion:**
+  ```bash
+  docker compose --profile prod up --build -d
+  ```  
 
 ## Integrantes:
 - Dario Jara: 

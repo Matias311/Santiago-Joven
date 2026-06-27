@@ -1,31 +1,82 @@
-services:
+volumes:
+  maven-cache:
 
-  backend:
+services:
+  backend-dev:
+    profiles: ["dev"]
     build:
       context: ./backend
-
-    container_name: backend
-
+      dockerfile: Dockerfile.dev
+    container_name: backend-dev
     env_file:
       - .env
-
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/src:/app/src
+      - maven-cache:/root/.m2
 
+  frontend-dev:
+    profiles: ["dev"]
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend-dev
+    ports:
+      - "3000:5173"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/index.html:/app/index.html
+    depends_on:
+      - backend-dev
+
+  backend-test:
+    profiles: ["test"]
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: backend-test
+    env_file:
+      - .env
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/pom.xml:/app/pom.xml
+      - maven-cache:/root/.m2
+    command: ["mvn", "test"]
+
+  frontend-test:
+    profiles: ["test"]
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend-test
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/eslint.config.js:/app/eslint.config.js
+    command: ["npm", "run", "lint"]
+
+  backend:
+    profiles: ["prod"]
+    build:
+      context: ./backend
+    container_name: backend
+    env_file:
+      - .env
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     ports:
       - "8080:8080"
 
   frontend:
+    profiles: ["prod"]
     build:
       context: ./frontend
-
-      # args:
-      #   VITE_API_URL: ${VITE_API_URL}
-
     container_name: frontend
-
     ports:
       - "3000:80"
-
     depends_on:
       - backend
