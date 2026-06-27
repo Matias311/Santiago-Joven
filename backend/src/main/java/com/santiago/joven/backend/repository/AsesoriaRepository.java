@@ -4,8 +4,10 @@ import com.santiago.joven.backend.model.entity.Asesoria;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /** Repositorio para la entidad {@link Asesoria}. */
+@Repository
 public interface AsesoriaRepository extends JpaRepository<Asesoria, UUID> {
 
   /**
