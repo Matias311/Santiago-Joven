@@ -56,3 +56,21 @@ Ejemplo:
 **Decisión:** Anotar cada record DTO con `@Builder` de Lombok para generar un builder fluido.
 **Consecuencias:** Sintaxis clara al construir DTOs (`.field(value).build()`), sin perder la inmutabilidad del record. Dependencia en Lombok.
 **Alternativas descartadas:** Constructor tradicional (ilegible con muchos parametros), patrón Builder manual (codigo repetitivo).
+
+## ¿Por qué usar profiles de Spring (dev/test/prod) en application.yml?
+**Contexto:** Los entornos de desarrollo, test y producción requieren configuraciones de base de datos y JPA diferentes.
+**Decisión:** Usar un único `application.yml` con documentos separados por `---` y `spring.config.activate.on-profile`. Dev apunta a PostgreSQL con ddl-auto=update y SQL visible. Test usa H2 en memoria con ddl-auto=create-drop. Prod apunta a PostgreSQL con ddl-auto=validate.
+**Consecuencias:** Configuración centralizada, cambios de entorno via `SPRING_PROFILES_ACTIVE` en docker-compose, sin archivos repetidos. El perfil `test` permite ejecutar `mvn test` sin depender de Docker ni PostgreSQL.
+**Alternativas descartadas:** Archivos separados `application-{profile}.properties` (más archivos, misma funcionalidad), una sola config para todos los entornos (inseguro e incompatible).
+
+## ¿Por qué usar @ControllerAdvice para el manejo global de excepciones?
+**Contexto:** Los controladores pueden lanzar diversas excepciones (EntityNotFoundException, MethodArgumentNotValidException, etc.) y se necesita una respuesta HTTP uniforme en toda la API.
+**Decisión:** Crear `GlobalExceptionHandler` con `@ControllerAdvice` que captura excepciones específicas y devuelve un `ErrorResponse` (record en `dto/`) con timestamp, status, error, message, path y detalles.
+**Consecuencias:** Centraliza la lógica de errores, evita try-catch repetitivos en los controladores, respuestas JSON consistentes. El catch-all `Exception.class` asegura que ningún error quede sin manejar.
+**Alternativas descartadas:** Try-catch en cada controlador (código repetitivo e inconsistente), `ResponseStatusException` (acopla el error al controlador).
+
+## ¿Por qué usar H2 con modo PostgreSQL en el perfil test?
+**Contexto:** Los tests usan el mismo schema JPA que producción (PostgreSQL), pero no deben depender de una base de datos externa.
+**Decisión:** Configurar H2 con `MODE=PostgreSQL` para emular la sintaxis y comportamiento de PostgreSQL en memoria.
+**Consecuencias:** Tests rápidos, auto-contenidos y portables. La mayoría del SQL es compatible, aunque ciertas funciones propias de PostgreSQL pueden no funcionar. ddl-auto=create-drop asegura esquema limpio en cada ejecución.
+**Alternativas descartadas:** Testcontainers con PostgreSQL real (más lento, requiere Docker), H2 sin modo PostgreSQL (incompatibilidades SQL).

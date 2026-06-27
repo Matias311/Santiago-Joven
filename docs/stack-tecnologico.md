@@ -14,11 +14,12 @@
     - **SpringAI 2.0.0-M6** - Para poder trabajar con modelos de IA y poder centralizar y agregar seguridad extra al chatbot
     - **Lombok** - Para eliminar el codigo repetido y poder trabajar de manera eficiente en la creacion de las clases
     - **Spring Validation (spring-boot-starter-validation)** - Validacion automatica de DTOs en los controladores via anotaciones jakarta.validation
-    - **JPA - Hibernate** - ORM 
+    - **JPA - Hibernate** - ORM
+    - **@ControllerAdvice** - Manejador global de excepciones para respuestas HTTP uniformes (400, 404, 409, 500)
 
 ## Base de datos:
-    - **H2 (dev/test)** - SetUp rapido para el desarrollo local (no estar configurando al principio del desarrollo una base de datos)
-    - **Postgresql (produccion)** - Robustez y soporte SQL avanzado (utilizar bytea para imagenes e informacion avanzada)
+    - **H2 (test)** - Base de datos en memoria para tests unitarios y de integracion
+    - **PostgreSQL (dev/prod)** - Robustez y soporte SQL avanzado (utilizar bytea para imagenes e informacion avanzada)
 
 ## DevOps:
     - **Docker** - Empaquetar de manera consistente la aplicacion
