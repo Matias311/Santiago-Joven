@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Accesibilidad.css";
 import { faAccessibleIcon } from "@fortawesome/free-brands-svg-icons/faAccessibleIcon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,6 +35,20 @@ export default function AccessibilityWidget({
   targetSelector = "#site-content",
 }: Props) {
   const [open, setOpen] = useState(false);
+  const [topOffset, setTopOffset] = useState(160);
+
+  useEffect(() => {
+    const updateTopOffset = () => {
+      const navbar = document.querySelector(".navbar");
+      const defaultOffset = 160;
+      const navHeight = navbar?.getBoundingClientRect().height ?? 128;
+      setTopOffset(navHeight + 16);
+    };
+
+    updateTopOffset();
+    window.addEventListener("resize", updateTopOffset);
+    return () => window.removeEventListener("resize", updateTopOffset);
+  }, []);
 
   /** Obtiene el elemento objetivo o `document.body` como fallback. */
   const getTarget = (): Element | null => {
@@ -84,7 +98,7 @@ export default function AccessibilityWidget({
   };
 
   return (
-    <div className="accessibility-container" aria-hidden={false}>
+    <div className="accessibility-container" aria-hidden={false} style={{ top: `${topOffset}px` }}>
       <button
         className="accessibility-btn"
         aria-label="Abrir opciones de accesibilidad"

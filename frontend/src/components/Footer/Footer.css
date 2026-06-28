@@ -23,7 +23,8 @@ footer {
     align-items: center;
 
     & img {
-      width: 25rem;
+      width: 20rem;
+      max-width: 100%;
       aspect-ratio: auto;
     }
 
