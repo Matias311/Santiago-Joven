@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /** REST controller para {@link CursoDestacado}. */
 @RestController
@@ -40,6 +41,7 @@ public class CursoDestacadoController {
   }
 
   /** Crea un nuevo registro. */
+  @PreAuthorize("hasAuthority('PERMISSION_CREATE_COURSE')")
   @PostMapping("")
   public ResponseEntity<CursoDestacadoResponse> create(
       @Valid @RequestBody CursoDestacadoRequest request) {
@@ -53,6 +55,7 @@ public class CursoDestacadoController {
   }
 
   /** Actualiza un registro existente. */
+  @PreAuthorize("hasAuthority('PERMISSION_EDIT_COURSE')")
   @PutMapping("/{id}")
   public ResponseEntity<CursoDestacadoResponse> update(
       @PathVariable UUID id, @Valid @RequestBody CursoDestacadoUpdate update) {
@@ -60,6 +63,7 @@ public class CursoDestacadoController {
   }
 
   /** Elimina un registro por ID. */
+  @PreAuthorize("hasAuthority('PERMISSION_DELETE_COURSE')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);

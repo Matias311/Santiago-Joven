@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,6 +78,7 @@ public class ResenaCalificacionController {
 
   /** Actualiza un registro existente. */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<ResenaCalificacionResponse> update(
       @PathVariable UUID id, @Valid @RequestBody ResenaCalificacionUpdate update) {
     return ResponseEntity.ok(service.update(id, update));
@@ -84,6 +86,7 @@ public class ResenaCalificacionController {
 
   /** Elimina un registro por ID. */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);
     return ResponseEntity.noContent().build();

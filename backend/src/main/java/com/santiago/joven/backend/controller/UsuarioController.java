@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /** REST controller para {@link Usuario}. */
 @RestController
 @RequestMapping("/api/v1/usuarios")
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
 public class UsuarioController {
 
   private final UsuarioService service;

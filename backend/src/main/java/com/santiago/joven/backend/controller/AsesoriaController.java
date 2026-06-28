@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /** REST controller para {@link com.santiago.joven.backend.model.entity.Asesoria}. */
 @RestController
@@ -40,6 +41,7 @@ public class AsesoriaController {
   }
 
   /** Crea un nuevo registro. */
+  @PreAuthorize("hasAuthority('PERMISSION_CREATE_ASESORIA')")
   @PostMapping("")
   public ResponseEntity<AsesoriaResponse> create(@Valid @RequestBody AsesoriaRequest request) {
     var response = service.create(request);
@@ -52,6 +54,7 @@ public class AsesoriaController {
   }
 
   /** Actualiza un registro existente. */
+  @PreAuthorize("hasAuthority('PERMISSION_EDIT_ASESORIA')")
   @PutMapping("/{id}")
   public ResponseEntity<AsesoriaResponse> update(
       @PathVariable UUID id, @Valid @RequestBody AsesoriaUpdate update) {
@@ -59,6 +62,7 @@ public class AsesoriaController {
   }
 
   /** Elimina un registro por ID. */
+  @PreAuthorize("hasAuthority('PERMISSION_DELETE_ASESORIA')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);

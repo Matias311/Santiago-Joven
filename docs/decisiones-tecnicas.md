@@ -74,3 +74,27 @@ Ejemplo:
 **Decisión:** Configurar H2 con `MODE=PostgreSQL` para emular la sintaxis y comportamiento de PostgreSQL en memoria.
 **Consecuencias:** Tests rápidos, auto-contenidos y portables. La mayoría del SQL es compatible, aunque ciertas funciones propias de PostgreSQL pueden no funcionar. ddl-auto=create-drop asegura esquema limpio en cada ejecución.
 **Alternativas descartadas:** Testcontainers con PostgreSQL real (más lento, requiere Docker), H2 sin modo PostgreSQL (incompatibilidades SQL).
+
+## ¿Por qué usar Spring Security con JWT en lugar de sesiones?
+**Contexto:** La aplicacion es una SPA que se comunica con el backend via REST. Las sesiones basadas en cookies requieren estado en el servidor y no funcionan bien con despliegues stateless.
+**Decisión:** Usar Spring Security con autenticacion stateless mediante tokens JWT. El cliente envia el token en el header `Authorization: Bearer <token>`. El servidor valida la firma con una clave HMAC-SHA256 sin almacenar sesion.
+**Consecuencias:** Sin estado en el servidor (escalable horizontalmente), token auto-contenido con datos del usuario. El token expira en 24h por defecto. Si se compromete la clave secreta, todos los tokens son vulnerables.
+**Alternativas descartadas:** Sesiones HTTP (requieren afinidad de servidor o Redis compartido), OAuth2 (complejidad innecesaria para una app monolitica), API Keys (sin granularidad de permisos).
+
+## ¿Por qué usar @PreAuthorize con permisos en lugar de roles?
+**Contexto:** El modelo de seguridad incluye roles (ADMIN, MODERATOR, USER) y permisos granulares (CREATE_COURSE, VIEW_ANALYTICS, etc.). Un rol puede tener multiples permisos.
+**Decisión:** Usar `@PreAuthorize("hasAuthority('PERMISSION_...')")` en los metodos de los controladores en lugar de `@PreAuthorize("hasRole('...')")`. Los permisos se asignan a roles via la tabla `roles_permisos` y se cargan como GrantedAuthority en el JWT.
+**Consecuencias:** Control granular sin modificar codigo — solo basta cambiar las asignaciones en `roles_permisos`. La lógica de autorización esta descentralizada en cada controller, visible directamente en los endpoints.
+**Alternativas descartadas:** `hasRole()` (solo verifica prefijo ROLE_, menos granular), SecurityConfig con matchers (un solo archivo gigante, dificil de mantener), anotaciones personalizadas (sobreingenieria).
+
+## ¿Por qué usar JOIN FETCH en la consulta del usuario para evitar LazyInitializationException?
+**Contexto:** Al cargar un usuario desde la DB para autenticacion JWT, el filtro `JwtAuthenticationFilter` necesita acceder a `usuario.roles.permisos` para construir las autoridades (`getAuthorities()`). Con el fetch LAZY por defecto, Hibernate lanza `LazyInitializationException` porque la sesion ya se cerro al salir del `@Transactional` del servicio.
+**Decisión:** Agregar una query `@Query("SELECT DISTINCT u FROM Usuario u JOIN FETCH u.roles r LEFT JOIN FETCH r.permisos WHERE u.email = :email")` en el repositorio que trae todo en una sola consulta (eager fetch). El `DISTINCT` evita filas duplicadas del JOIN y el `LEFT JOIN` asegura que roles sin permisos no filtren el resultado.
+**Consecuencias:** Una sola consulta SQL, sin lazy loading, sin sesion necesaria. El rendimiento es mejor que N+1 queries. La desventaja es que siempre se cargan roles y permisos aunque no se necesiten (no relevante para auth). Se mapeo a un metodo dedicado `findByEmailWithRoles()` en lugar de modificar el `findByEmail()` existente, manteniendo compatibilidad con otros usos.
+**Alternativas descartadas:** `@Transactional` en el filtro (acopla transacciones a la capa web), `FetchType.EAGER` en la entidad (carga siempre, aunque no se necesite), `OpenEntityManagerInViewFilter` (anti-patron, mantiene sesion abierta en toda la request).
+
+## ¿Por qué los permisos del seed no usan prefijo PERMISSION_ en la DB?
+**Contexto:** Los `@PreAuthorize` verifican `hasAuthority('PERMISSION_CREATE_COURSE')`, pero en la tabla `permisos` el nombre es `CREATE_COURSE` (sin prefijo).
+**Decisión:** Almacenar el nombre limpio en la DB y agregar el prefijo `PERMISSION_` en `CustomUserDetails.getAuthorities()` al construir el `SimpleGrantedAuthority`. Esto mantiene la DB normalizada y evita redundancia.
+**Consecuencias:** El prefijo es transparente para el seed y la DB. Si en el futuro se cambia el esquema de autoridades, solo se modifica el metodo `getAuthorities()`. El `@PreAuthorize` siempre debe usar el formato `PERMISSION_<nombre>` que es el `GrantedAuthority` final.
+

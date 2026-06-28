@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,12 +30,14 @@ public class ContactoController {
 
   /** Lista todos los registros. */
   @GetMapping("")
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<List<ContactoResponse>> findAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
   /** Busca por ID. */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<ContactoResponse> findById(@PathVariable UUID id) {
     return ResponseEntity.ok(service.findById(id));
   }
@@ -53,6 +56,7 @@ public class ContactoController {
 
   /** Actualiza un registro existente. */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<ContactoResponse> update(
       @PathVariable UUID id, @Valid @RequestBody ContactoUpdate update) {
     return ResponseEntity.ok(service.update(id, update));
@@ -60,6 +64,7 @@ public class ContactoController {
 
   /** Elimina un registro por ID. */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);
     return ResponseEntity.noContent().build();
@@ -67,12 +72,14 @@ public class ContactoController {
 
   /** Lista los registros no respondidos. */
   @GetMapping("/no-respondidos")
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<List<ContactoResponse>> findNoRespondidos() {
     return ResponseEntity.ok(service.findNoRespondidos());
   }
 
   /** Busca por email. */
   @GetMapping("/por-email/{email}")
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<List<ContactoResponse>> findByEmail(@PathVariable String email) {
     return ResponseEntity.ok(service.findByEmail(email));
   }

@@ -16,6 +16,9 @@
     - **Spring Validation (spring-boot-starter-validation)** - Validacion automatica de DTOs en los controladores via anotaciones jakarta.validation
     - **JPA - Hibernate** - ORM
     - **@ControllerAdvice** - Manejador global de excepciones para respuestas HTTP uniformes (400, 404, 409, 500)
+    - **Spring Security** - Autenticacion JWT stateless y autorizacion por permisos via @PreAuthorize
+    - **JJWT 0.12.6** - Libreria para generar y validar tokens JWT
+    - **BCrypt** - Hasheo de contraseñas via PasswordEncoder
 
 ## Base de datos:
     - **H2 (test)** - Base de datos en memoria para tests unitarios y de integracion

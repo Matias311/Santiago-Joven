@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /** REST controller para {@link Estadistica}. */
 @RestController
@@ -42,6 +43,7 @@ public class EstadisticaController {
   }
 
   /** Crea un nuevo registro. */
+  @PreAuthorize("hasAuthority('PERMISSION_VIEW_ANALYTICS')")
   @PostMapping("")
   public ResponseEntity<EstadisticaResponse> create(
       @Valid @RequestBody EstadisticaRequest request) {
@@ -55,6 +57,7 @@ public class EstadisticaController {
   }
 
   /** Actualiza un registro existente. */
+  @PreAuthorize("hasAuthority('PERMISSION_VIEW_ANALYTICS')")
   @PutMapping("/{id}")
   public ResponseEntity<EstadisticaResponse> update(
       @PathVariable UUID id, @Valid @RequestBody EstadisticaUpdate update) {
@@ -62,6 +65,7 @@ public class EstadisticaController {
   }
 
   /** Elimina un registro por ID. */
+  @PreAuthorize("hasAuthority('PERMISSION_VIEW_ANALYTICS')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);
