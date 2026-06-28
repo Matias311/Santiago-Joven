@@ -6,6 +6,9 @@ import com.santiago.joven.backend.dto.InscripcionUpdate;
 import com.santiago.joven.backend.model.enums.EstadoInscripcion;
 import com.santiago.joven.backend.model.enums.TipoRecurso;
 import com.santiago.joven.backend.service.InscripcionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -23,27 +26,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-/** REST controller para {@link Inscripcion}. */
 @RestController
 @RequestMapping("/api/v1/inscripciones")
 @RequiredArgsConstructor
+@Tag(name = "Inscripciones", description = "Gestion de inscripciones")
 public class InscripcionController {
 
   private final InscripcionService service;
 
-  /** Lista todos los registros. */
+  @Operation(summary = "Listar inscripciones", description = "Publico")
   @GetMapping("")
   public ResponseEntity<List<InscripcionResponse>> findAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
-  /** Busca por ID. */
+  @Operation(summary = "Buscar inscripcion por ID", description = "Publico")
   @GetMapping("/{id}")
   public ResponseEntity<InscripcionResponse> findById(@PathVariable UUID id) {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  /** Crea un nuevo registro. */
+  @Operation(summary = "Crear inscripcion", description = "Cualquier usuario autenticado puede inscribirse")
   @PostMapping("")
   public ResponseEntity<InscripcionResponse> create(
       @Valid @RequestBody InscripcionRequest request) {
@@ -56,7 +59,10 @@ public class InscripcionController {
     return ResponseEntity.created(location).body(response);
   }
 
-  /** Actualiza un registro existente. */
+  @Operation(
+      summary = "Actualizar inscripcion",
+      description = "Requiere permiso MANAGE_USERS",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<InscripcionResponse> update(
@@ -64,7 +70,10 @@ public class InscripcionController {
     return ResponseEntity.ok(service.update(id, update));
   }
 
-  /** Elimina un registro por ID. */
+  @Operation(
+      summary = "Eliminar inscripcion",
+      description = "Requiere permiso MANAGE_USERS",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
@@ -72,34 +81,34 @@ public class InscripcionController {
     return ResponseEntity.noContent().build();
   }
 
-  /** Busca por usuario. */
+  @Operation(summary = "Buscar inscripciones por usuario", description = "Publico")
   @GetMapping("/por-usuario/{usuarioId}")
   public ResponseEntity<List<InscripcionResponse>> findByUsuarioId(@PathVariable UUID usuarioId) {
     return ResponseEntity.ok(service.findByUsuarioId(usuarioId));
   }
 
-  /** Busca por recurso. */
+  @Operation(summary = "Buscar inscripciones por recurso", description = "Publico")
   @GetMapping("/por-recurso")
   public ResponseEntity<List<InscripcionResponse>> findByRecurso(
       @RequestParam UUID recursoId, @RequestParam TipoRecurso tipoRecurso) {
     return ResponseEntity.ok(service.findByRecurso(recursoId, tipoRecurso));
   }
 
-  /** Busca por estado. */
+  @Operation(summary = "Buscar inscripciones por estado", description = "Publico")
   @GetMapping("/por-estado/{estado}")
   public ResponseEntity<List<InscripcionResponse>> findByEstado(
       @PathVariable EstadoInscripcion estado) {
     return ResponseEntity.ok(service.findByEstado(estado));
   }
 
-  /** Cuenta registros por recurso. */
+  @Operation(summary = "Contar inscripciones por recurso", description = "Publico")
   @GetMapping("/count-por-recurso")
   public ResponseEntity<Long> countByRecurso(
       @RequestParam UUID recursoId, @RequestParam TipoRecurso tipoRecurso) {
     return ResponseEntity.ok(service.countByRecurso(recursoId, tipoRecurso));
   }
 
-  /** Verifica si existe inscripcion. */
+  @Operation(summary = "Verificar si existe inscripcion", description = "Publico")
   @GetMapping("/exists")
   public ResponseEntity<Boolean> existsByUsuarioAndRecurso(
       @RequestParam UUID usuarioId,

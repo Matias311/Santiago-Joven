@@ -4,6 +4,9 @@ import com.santiago.joven.backend.dto.TuContribucionCuentaRequest;
 import com.santiago.joven.backend.dto.TuContribucionCuentaResponse;
 import com.santiago.joven.backend.dto.TuContribucionCuentaUpdate;
 import com.santiago.joven.backend.service.TuContribucionCuentaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -20,33 +23,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-/** REST controller para {@link TuContribucionCuenta}. */
 @RestController
 @RequestMapping("/api/v1/tu-contribucion-cuenta")
 @RequiredArgsConstructor
+@Tag(name = "Tu Contribucion Cuenta", description = "Gestion de contribuciones")
 public class TuContribucionCuentaController {
 
   private final TuContribucionCuentaService service;
 
-  /** Lista todos los registros. */
+  @Operation(summary = "Listar contribuciones", description = "Publico")
   @GetMapping("")
   public ResponseEntity<List<TuContribucionCuentaResponse>> findAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
-  /** Busca por ID. */
+  @Operation(summary = "Buscar contribucion por ID", description = "Publico")
   @GetMapping("/{id}")
   public ResponseEntity<TuContribucionCuentaResponse> findById(@PathVariable UUID id) {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  /** Busca el registro activo. */
-  @GetMapping("/activo")
-  public ResponseEntity<TuContribucionCuentaResponse> findActivo() {
-    return ResponseEntity.ok(service.findActivo());
-  }
-
-  /** Crea un nuevo registro. */
+  @Operation(
+      summary = "Crear contribucion",
+      description = "Requiere permiso MANAGE_USERS",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   @PostMapping("")
   public ResponseEntity<TuContribucionCuentaResponse> create(
@@ -60,7 +60,10 @@ public class TuContribucionCuentaController {
     return ResponseEntity.created(location).body(response);
   }
 
-  /** Actualiza un registro existente. */
+  @Operation(
+      summary = "Actualizar contribucion",
+      description = "Requiere permiso MANAGE_USERS",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   @PutMapping("/{id}")
   public ResponseEntity<TuContribucionCuentaResponse> update(
@@ -68,11 +71,20 @@ public class TuContribucionCuentaController {
     return ResponseEntity.ok(service.update(id, update));
   }
 
-  /** Elimina un registro por ID. */
+  @Operation(
+      summary = "Eliminar contribucion",
+      description = "Requiere permiso MANAGE_USERS",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @Operation(summary = "Buscar contribucion activa", description = "Publico")
+  @GetMapping("/activo")
+  public ResponseEntity<TuContribucionCuentaResponse> findActivo() {
+    return ResponseEntity.ok(service.findActivo());
   }
 }
