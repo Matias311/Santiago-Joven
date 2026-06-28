@@ -5,6 +5,9 @@ import com.santiago.joven.backend.dto.ResenaCalificacionResponse;
 import com.santiago.joven.backend.dto.ResenaCalificacionUpdate;
 import com.santiago.joven.backend.model.enums.TipoRecurso;
 import com.santiago.joven.backend.service.ResenaCalificacionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -22,48 +25,48 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-/** REST controller para {@link ResenaCalificacion}. */
 @RestController
 @RequestMapping("/api/v1/resenas-calificaciones")
 @RequiredArgsConstructor
+@Tag(name = "Resenas y Calificaciones", description = "Gestion de resenas y calificaciones")
 public class ResenaCalificacionController {
 
   private final ResenaCalificacionService service;
 
-  /** Lista todos los registros. */
+  @Operation(summary = "Listar resenas", description = "Publico")
   @GetMapping("")
   public ResponseEntity<List<ResenaCalificacionResponse>> findAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
-  /** Busca por ID. */
+  @Operation(summary = "Buscar resena por ID", description = "Publico")
   @GetMapping("/{id}")
   public ResponseEntity<ResenaCalificacionResponse> findById(@PathVariable UUID id) {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  /** Busca por recurso. */
+  @Operation(summary = "Buscar resenas por recurso", description = "Publico")
   @GetMapping("/por-recurso")
   public ResponseEntity<List<ResenaCalificacionResponse>> findByRecurso(
       @RequestParam UUID recursoId, @RequestParam TipoRecurso tipoRecurso) {
     return ResponseEntity.ok(service.findByRecurso(recursoId, tipoRecurso));
   }
 
-  /** Busca por usuario. */
+  @Operation(summary = "Buscar resenas por usuario", description = "Publico")
   @GetMapping("/por-usuario/{usuarioId}")
   public ResponseEntity<List<ResenaCalificacionResponse>> findByUsuarioId(
       @PathVariable UUID usuarioId) {
     return ResponseEntity.ok(service.findByUsuarioId(usuarioId));
   }
 
-  /** Busca por calificacion minima. */
+  @Operation(summary = "Buscar resenas por calificacion minima", description = "Publico")
   @GetMapping("/por-calificacion-minima/{calificacion}")
   public ResponseEntity<List<ResenaCalificacionResponse>> findByCalificacionMinima(
       @PathVariable Integer calificacion) {
     return ResponseEntity.ok(service.findByCalificacionMinima(calificacion));
   }
 
-  /** Crea un nuevo registro. */
+  @Operation(summary = "Crear resena", description = "Cualquier usuario autenticado puede crear resena")
   @PostMapping("")
   public ResponseEntity<ResenaCalificacionResponse> create(
       @Valid @RequestBody ResenaCalificacionRequest request) {
@@ -76,7 +79,10 @@ public class ResenaCalificacionController {
     return ResponseEntity.created(location).body(response);
   }
 
-  /** Actualiza un registro existente. */
+  @Operation(
+      summary = "Actualizar resena",
+      description = "Requiere permiso MANAGE_USERS",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<ResenaCalificacionResponse> update(
@@ -84,7 +90,10 @@ public class ResenaCalificacionController {
     return ResponseEntity.ok(service.update(id, update));
   }
 
-  /** Elimina un registro por ID. */
+  @Operation(
+      summary = "Eliminar resena",
+      description = "Requiere permiso MANAGE_USERS",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {

@@ -1,85 +1,87 @@
 # Arquitectura del proyecto
 
+## Despliegue
+
+| Componente | Plataforma |
+|------------|-----------|
+| Backend | Railway |
+| Frontend | Vercel |
+| Base de datos | Neon.tech (PostgreSQL) |
+
 ## Capas del backend
 
 ```text
-controller/       → REST endpoints (api/v1/...)
+controller/       → REST endpoints (api/v1/)
     ↓
-service/          → Logica de negocio (interfaz + implementacion)
+service/          → Interfaces + implementaciones (@Transactional)
     ↓
-mapper/           → Conversion entidad ↔ DTO (@Component manual, sin MapStruct)
+mapper/           → Component mappers manuales
     ↓
-repository/       → Acceso a datos (JpaRepository)
+repository/       → JpaRepository + @Query
     ↓
-model/entity/     → Entidades JPA
+model/entity/     → JPA entities (BaseEntity, AuditableEntity)
 ```
 
 ## Seguridad
 
 ```text
 security/
-├── SecurityConfig.java           ← Configuracion HTTP Security, CORS, rutas publicas
-├── JwtTokenProvider.java         ← Generacion/validacion de tokens JWT (HMAC-SHA512)
-├── JwtAuthenticationFilter.java  ← Filtro OncePerRequestFilter, extrae token del header Authorization
-├── CustomUserDetailsService.java ← Carga usuario desde DB con JOIN FETCH de roles y permisos
-└── CustomUserDetails.java        ← Wrapper que mapea roles → ROLE_* y permisos → PERMISSION_*
+├── OpenApiConfig.java              ← Schema de seguridad JWT para Swagger
+├── SecurityConfig.java             ← HTTP Security, CORS, rutas publicas
+├── JwtTokenProvider.java           ← Generar/validar JWT (HMAC-SHA512)
+├── JwtAuthenticationFilter.java    ← Filtro OncePerRequest, extrae Bearer token
+├── CustomUserDetailsService.java   ← Carga usuario con JOIN FETCH de roles/permisos
+└── CustomUserDetails.java          ← GrantedAuthority: ROLE_, PERMISSION_
 
 exception/
-└── GlobalExceptionHandler.java   ← @ControllerAdvice para respuestas de error uniformes (ErrorResponse)
+└── GlobalExceptionHandler.java     ← @ControllerAdvice, respuestas ErrorResponse
 
-controller/AuthController.java    ← POST /api/v1/auth/login y /register (publicos)
+controller/AuthController.java      ← POST /auth/login y /register (publicos)
 ```
 
-### Detalle de componentes
+## Flujo de autenticacion
 
-- **JwtTokenProvider**: Usa `jjwt 0.12.6` con clave HMAC-SHA512. El token incluye subject (email), claims (userId, roles), issuedAt y expiration (24h por defecto).
-- **JwtAuthenticationFilter**: Filtro que intercepta cada request, extrae el token del header `Authorization: Bearer ...`, lo valida y setea el `SecurityContext`.
-- **CustomUserDetailsService**: Usa `UsuarioRepository.findByEmailWithRoles()` que hace `JOIN FETCH` de `roles` y `permisos` en una sola consulta para evitar `LazyInitializationException`.
-- **CustomUserDetails**: Expone `getAuthorities()` que retorna `ROLE_ADMIN`, `PERMISSION_MANAGE_USERS`, etc. como `GrantedAuthority`.
-- **PasswordEncoder**: `BCryptPasswordEncoder` para hashear passwords.
+1. Login en `POST /api/v1/auth/login`
+2. AuthenticationManager chequea credenciales
+   - CustomUserDetailsService carga usuario con JOIN FETCH de roles y permisos
+   - BCryptPasswordEncoder verifica el password
+3. JwtTokenProvider genera JWT HMAC-SHA512 con subject=email, userId, roles
+4. Cliente recibe token y lo envia en header `Authorization: Bearer <token>`
+5. JwtAuthenticationFilter valida token en cada request y setea SecurityContext
+6. @PreAuthorize evalua los permisos del contexto
 
-### Flujo de autenticacion
+## Endpoints publicos
 
-1. Cliente envia `POST /api/v1/auth/login` con `{ email, password }`
-2. `AuthenticationManager` delega en `CustomUserDetailsService.loadUserByUsername()` que carga usuario con roles y permisos via `JOIN FETCH`
-3. `BCryptPasswordEncoder` verifica el password
-4. `JwtTokenProvider` genera JWT firmado con HMAC-SHA512
-5. Cliente recibe `{ token, userId, email, roles }`
-6. En adelante, cliente envia `Authorization: Bearer <token>` en cada request
-7. `JwtAuthenticationFilter` extrae el token, valida firma, carga el usuario y setea el `SecurityContext`
-8. `@PreAuthorize` en los controllers evalua los `GrantedAuthority` del contexto
+- `POST /api/v1/auth/**`
+- `POST /api/v1/contactos`
+- GET de contenido: salud-mental, asesorias, cursos, actividades, programas, acciones, categorias, galeria, ubicaciones, tu-contribucion, estadisticas
+- Swagger UI: `/swagger-ui/`
 
-### Endpoints publicos
+## Endpoints protegidos
 
-- `POST /api/v1/auth/**` (login, register)
-- `POST /api/v1/contactos` (crear contacto)
-- Todos los `GET` de contenido: `/salud-mental`, `/asesorias`, `/cursos-destacados`, `/actividades-talleres`, `/programas`, `/acciones-joven`, `/categorias`, `/galeria-fotos`, `/ubicaciones`, `/tu-contribucion-cuenta`, `/estadisticas`
+- POST/PUT/DELETE de contenido: requieren permiso específico (CREATE_PROGRAM, EDIT_ACTIVITY, etc.)
+- CRUD usuarios, contactos (admin), inscripciones, resenas: require MANAGE_USERS
+- CRUD roles, permisos: require MANAGE_ROLES
+- CRUD auditoria (solo GET), estadisticas: require VIEW_ANALYTICS
 
-### Matriz de acceso
+## Documentacion interactiva
 
-| Endpoint | Sin auth | USER | MODERADOR | ADMIN |
-|---|---|---|---|---|
-| GET /contenido/** | ✅ publico | ✅ | ✅ | ✅ |
-| POST /api/v1/auth/** | ✅ publico | ✅ | ✅ | ✅ |
-| POST /api/v1/contactos | ✅ publico | ✅ | ✅ | ✅ |
-| POST /inscripciones, /resenas-calificaciones | ❌ | ✅ | ✅ | ✅ |
-| POST/PUT/DELETE /contenido | ❌ | ❌ | ✅ permiso especifico | ✅ |
-| CRUD /usuarios, /contactos (admin) | ❌ | ❌ | ❌ | ✅ MANAGE_USERS |
-| CRUD /roles, /permisos | ❌ | ❌ | ❌ | ✅ MANAGE_ROLES |
-| CRUD /auditoria | ❌ | ❌ | ❌ | ✅ VIEW_ANALYTICS |
+Swagger UI en `/swagger-ui/index.html`:
+- Boton Authorize para ingresar token
+- Candados en endpoints protegidos
+- Schemas de todos los DTOs
+- Tags agrupando cada recurso
 
 ## Estructura de paquetes
 
 ```
-com.santiago.joven.backend
-├── controller/       ← 18 REST controllers + AuthController
-├── dto/              ← 45 DTO records (Request/Update/Response) + ErrorResponse + Login*
-├── exception/        ← GlobalExceptionHandler (@ControllerAdvice)
-├── mapper/           ← 18 @Component mappers manuales (toEntity, toResponse, updateEntity)
-├── model/
-│   ├── entity/       ← 18 JPA entities (BaseEntity + AuditableEntity)
-│   └── enums/        ← Enumeraciones (NombreRol, EstadoInscripcion, TipoRecurso, etc.)
-├── repository/       ← 18 @Repository interfaces (JpaRepository + @Query personalizadas)
-├── security/         ← Spring Security + JWT
-└── service/          ← 18 interfaces + 18 implementaciones (@Transactional)
+controller/       → 19 controladores (incl. Auth)
+dto/              → 45 DTO records + ErrorResponse + Login*
+exception/        → GlobalExceptionHandler
+mapper/           → 18 mappers manuales
+model/entity/     → 18 entidades
+model/enums/      → enumeraciones
+repository/       → 18 repositorios
+security/         → Spring Security + JWT + OpenApi config
+service/          → 18 interfaces + 18 implementaciones
 ```

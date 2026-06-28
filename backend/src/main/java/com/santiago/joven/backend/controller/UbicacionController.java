@@ -4,6 +4,9 @@ import com.santiago.joven.backend.dto.UbicacionRequest;
 import com.santiago.joven.backend.dto.UbicacionResponse;
 import com.santiago.joven.backend.dto.UbicacionUpdate;
 import com.santiago.joven.backend.service.UbicacionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -20,33 +23,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-/** REST controller para {@link Ubicacion}. */
 @RestController
 @RequestMapping("/api/v1/ubicaciones")
 @RequiredArgsConstructor
+@Tag(name = "Ubicaciones", description = "Gestion de ubicaciones")
 public class UbicacionController {
 
   private final UbicacionService service;
 
-  /** Lista todos los registros. */
+  @Operation(summary = "Listar ubicaciones", description = "Publico")
   @GetMapping("")
   public ResponseEntity<List<UbicacionResponse>> findAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
-  /** Busca por ID. */
+  @Operation(summary = "Buscar ubicacion por ID", description = "Publico")
   @GetMapping("/{id}")
   public ResponseEntity<UbicacionResponse> findById(@PathVariable UUID id) {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  /** Busca por ciudad. */
-  @GetMapping("/por-ciudad/{ciudad}")
-  public ResponseEntity<List<UbicacionResponse>> findByCiudad(@PathVariable String ciudad) {
-    return ResponseEntity.ok(service.findByCiudad(ciudad));
-  }
-
-  /** Crea un nuevo registro. */
+  @Operation(
+      summary = "Crear ubicacion",
+      description = "Requiere permiso MANAGE_LOCATIONS",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_LOCATIONS')")
   @PostMapping("")
   public ResponseEntity<UbicacionResponse> create(@Valid @RequestBody UbicacionRequest request) {
@@ -59,7 +59,10 @@ public class UbicacionController {
     return ResponseEntity.created(location).body(response);
   }
 
-  /** Actualiza un registro existente. */
+  @Operation(
+      summary = "Actualizar ubicacion",
+      description = "Requiere permiso MANAGE_LOCATIONS",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_LOCATIONS')")
   @PutMapping("/{id}")
   public ResponseEntity<UbicacionResponse> update(
@@ -67,11 +70,20 @@ public class UbicacionController {
     return ResponseEntity.ok(service.update(id, update));
   }
 
-  /** Elimina un registro por ID. */
+  @Operation(
+      summary = "Eliminar ubicacion",
+      description = "Requiere permiso MANAGE_LOCATIONS",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_LOCATIONS')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @Operation(summary = "Buscar ubicaciones por ciudad", description = "Publico")
+  @GetMapping("/por-ciudad/{ciudad}")
+  public ResponseEntity<List<UbicacionResponse>> findByCiudad(@PathVariable String ciudad) {
+    return ResponseEntity.ok(service.findByCiudad(ciudad));
   }
 }

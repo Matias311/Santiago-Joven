@@ -4,6 +4,9 @@ import com.santiago.joven.backend.dto.GaleriaFotoRequest;
 import com.santiago.joven.backend.dto.GaleriaFotoResponse;
 import com.santiago.joven.backend.dto.GaleriaFotoUpdate;
 import com.santiago.joven.backend.service.GaleriaFotoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -20,27 +23,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-/** REST controller para {@link GaleriaFoto}. */
 @RestController
 @RequestMapping("/api/v1/galeria-fotos")
 @RequiredArgsConstructor
+@Tag(name = "Galeria de Fotos", description = "Gestion de galeria de fotos")
 public class GaleriaFotoController {
 
   private final GaleriaFotoService service;
 
-  /** Lista todos los registros. */
+  @Operation(summary = "Listar fotos", description = "Publico")
   @GetMapping("")
   public ResponseEntity<List<GaleriaFotoResponse>> findAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
-  /** Busca por ID. */
+  @Operation(summary = "Buscar foto por ID", description = "Publico")
   @GetMapping("/{id}")
   public ResponseEntity<GaleriaFotoResponse> findById(@PathVariable UUID id) {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  /** Crea un nuevo registro. */
+  @Operation(
+      summary = "Crear foto",
+      description = "Requiere permiso MANAGE_GALLERY",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_GALLERY')")
   @PostMapping("")
   public ResponseEntity<GaleriaFotoResponse> create(
@@ -54,7 +60,10 @@ public class GaleriaFotoController {
     return ResponseEntity.created(location).body(response);
   }
 
-  /** Actualiza un registro existente. */
+  @Operation(
+      summary = "Actualizar foto",
+      description = "Requiere permiso MANAGE_GALLERY",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_GALLERY')")
   @PutMapping("/{id}")
   public ResponseEntity<GaleriaFotoResponse> update(
@@ -62,7 +71,10 @@ public class GaleriaFotoController {
     return ResponseEntity.ok(service.update(id, update));
   }
 
-  /** Elimina un registro por ID. */
+  @Operation(
+      summary = "Eliminar foto",
+      description = "Requiere permiso MANAGE_GALLERY",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_GALLERY')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
@@ -70,7 +82,7 @@ public class GaleriaFotoController {
     return ResponseEntity.noContent().build();
   }
 
-  /** Busca por actividad. */
+  @Operation(summary = "Buscar fotos por actividad", description = "Publico")
   @GetMapping("/por-actividad/{actividadId}")
   public ResponseEntity<List<GaleriaFotoResponse>> findByActividadId(
       @PathVariable UUID actividadId) {
