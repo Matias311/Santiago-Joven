@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +47,7 @@ public class UbicacionController {
   }
 
   /** Crea un nuevo registro. */
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_LOCATIONS')")
   @PostMapping("")
   public ResponseEntity<UbicacionResponse> create(@Valid @RequestBody UbicacionRequest request) {
     var response = service.create(request);
@@ -58,6 +60,7 @@ public class UbicacionController {
   }
 
   /** Actualiza un registro existente. */
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_LOCATIONS')")
   @PutMapping("/{id}")
   public ResponseEntity<UbicacionResponse> update(
       @PathVariable UUID id, @Valid @RequestBody UbicacionUpdate update) {
@@ -65,6 +68,7 @@ public class UbicacionController {
   }
 
   /** Elimina un registro por ID. */
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_LOCATIONS')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);

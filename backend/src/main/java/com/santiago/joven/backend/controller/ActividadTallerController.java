@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /** REST controller para {@link com.santiago.joven.backend.model.entity.ActividadTaller}. */
 @RestController
@@ -43,6 +44,7 @@ public class ActividadTallerController {
   }
 
   /** Crea un nuevo registro. */
+  @PreAuthorize("hasAuthority('PERMISSION_CREATE_ACTIVITY')")
   @PostMapping("")
   public ResponseEntity<ActividadTallerResponse> create(
       @Valid @RequestBody ActividadTallerRequest request) {
@@ -56,6 +58,7 @@ public class ActividadTallerController {
   }
 
   /** Actualiza un registro existente. */
+  @PreAuthorize("hasAuthority('PERMISSION_EDIT_ACTIVITY')")
   @PutMapping("/{id}")
   public ResponseEntity<ActividadTallerResponse> update(
       @PathVariable UUID id, @Valid @RequestBody ActividadTallerUpdate update) {
@@ -63,6 +66,7 @@ public class ActividadTallerController {
   }
 
   /** Elimina un registro por ID. */
+  @PreAuthorize("hasAuthority('PERMISSION_DELETE_ACTIVITY')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /** REST controller para {@link com.santiago.joven.backend.model.entity.AccionJoven}. */
 @RestController
@@ -40,6 +41,7 @@ public class AccionJovenController {
   }
 
   /** Crea un nuevo registro. */
+  @PreAuthorize("hasAuthority('PERMISSION_CREATE_PROGRAM')")
   @PostMapping("")
   public ResponseEntity<AccionJovenResponse> create(
       @Valid @RequestBody AccionJovenRequest request) {
@@ -53,6 +55,7 @@ public class AccionJovenController {
   }
 
   /** Actualiza un registro existente. */
+  @PreAuthorize("hasAuthority('PERMISSION_EDIT_PROGRAM')")
   @PutMapping("/{id}")
   public ResponseEntity<AccionJovenResponse> update(
       @PathVariable UUID id, @Valid @RequestBody AccionJovenUpdate update) {
@@ -60,6 +63,7 @@ public class AccionJovenController {
   }
 
   /** Elimina un registro por ID. */
+  @PreAuthorize("hasAuthority('PERMISSION_DELETE_PROGRAM')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);

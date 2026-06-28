@@ -5,6 +5,10 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_API_KEY:}
+
+jwt:
+  secret: ${JWT_SECRET:4a6f76656e50617261456c456374726f6e69636f5365637265744b6579466f724a5754536861726564}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
 ---
 spring:
   config:

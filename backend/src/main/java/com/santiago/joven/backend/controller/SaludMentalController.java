@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +47,7 @@ public class SaludMentalController {
   }
 
   /** Crea un nuevo registro. */
+  @PreAuthorize("hasAuthority('PERMISSION_EDIT_HEALTH')")
   @PostMapping("")
   public ResponseEntity<SaludMentalResponse> create(
       @Valid @RequestBody SaludMentalRequest request) {
@@ -59,6 +61,7 @@ public class SaludMentalController {
   }
 
   /** Actualiza un registro existente. */
+  @PreAuthorize("hasAuthority('PERMISSION_EDIT_HEALTH')")
   @PutMapping("/{id}")
   public ResponseEntity<SaludMentalResponse> update(
       @PathVariable UUID id, @Valid @RequestBody SaludMentalUpdate update) {
@@ -66,6 +69,7 @@ public class SaludMentalController {
   }
 
   /** Elimina un registro por ID. */
+  @PreAuthorize("hasAuthority('PERMISSION_EDIT_HEALTH')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);

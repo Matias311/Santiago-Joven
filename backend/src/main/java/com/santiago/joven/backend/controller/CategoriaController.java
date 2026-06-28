@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class CategoriaController {
   }
 
   /** Crea un nuevo registro. */
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_GALLERY')")
   @PostMapping("")
   public ResponseEntity<CategoriaResponse> create(@Valid @RequestBody CategoriaRequest request) {
     var response = service.create(request);
@@ -53,6 +55,7 @@ public class CategoriaController {
   }
 
   /** Actualiza un registro existente. */
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_GALLERY')")
   @PutMapping("/{id}")
   public ResponseEntity<CategoriaResponse> update(
       @PathVariable UUID id, @Valid @RequestBody CategoriaUpdate update) {
@@ -60,6 +63,7 @@ public class CategoriaController {
   }
 
   /** Elimina un registro por ID. */
+  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_GALLERY')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);

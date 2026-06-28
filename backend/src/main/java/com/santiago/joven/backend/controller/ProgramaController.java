@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /** REST controller para {@link Programa}. */
 @RestController
@@ -40,6 +41,7 @@ public class ProgramaController {
   }
 
   /** Crea un nuevo registro. */
+  @PreAuthorize("hasAuthority('PERMISSION_CREATE_PROGRAM')")
   @PostMapping("")
   public ResponseEntity<ProgramaResponse> create(@Valid @RequestBody ProgramaRequest request) {
     var response = service.create(request);
@@ -52,6 +54,7 @@ public class ProgramaController {
   }
 
   /** Actualiza un registro existente. */
+  @PreAuthorize("hasAuthority('PERMISSION_EDIT_PROGRAM')")
   @PutMapping("/{id}")
   public ResponseEntity<ProgramaResponse> update(
       @PathVariable UUID id, @Valid @RequestBody ProgramaUpdate update) {
@@ -59,6 +62,7 @@ public class ProgramaController {
   }
 
   /** Elimina un registro por ID. */
+  @PreAuthorize("hasAuthority('PERMISSION_DELETE_PROGRAM')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);
