@@ -3,25 +3,31 @@ import { authService, ErrorAuth } from "../services/AuthService";
 import { guardarSesion } from "../utils/sessionStorage";
 import type { ErroresCampo } from "../types/Auth";
 
-/** Valida formato de correo simple: algo@algo.algo, sin espacios ni @ extra. */
+/**
+ * Expresión regular para validar formato de correo electrónico.
+ * Acepta: algo@algo.algo
+ * Rechaza: espacios, más de un @, o dominios incompletos.
+ */
 const ES_CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type Props = {
-  /** Notifica al componente padre que el registro fue exitoso (auto-login). */
+  /** Callback que se ejecuta cuando el registro fue exitoso y el auto-login completado. */
   onExito: () => void;
 };
 
 /**
  * Formulario de creación de cuenta.
+ * Tras un registro exitoso, guarda la sesión automáticamente (auto-login)
+ * y notifica al padre sin necesidad de que el usuario inicie sesión por separado.
  *
- * Nota: el campo "teléfono" se removió a propósito. El endpoint
- * POST /api/v1/auth/register no lo acepta (ver feature request enviado
- * al equipo de backend). Cuando el modelo de Usuario lo soporte, se
- * vuelve a agregar aquí.
+ * @remarks
+ * El campo "teléfono" se removió intencionalmente. El endpoint
+ * `POST /api/v1/auth/register` no lo acepta aún. Cuando el backend
+ * lo soporte, se vuelve a agregar aquí.
  *
  * @component
- * @param {Props} props - Callback de éxito.
- * @returns {JSX.Element} Formulario de registro.
+ * @param props - Callback de éxito.
+ * @returns Formulario de registro.
  */
 export const RegistroForm = ({ onExito }: Props) => {
   const [nombre, setNombre] = useState("");
@@ -33,7 +39,12 @@ export const RegistroForm = ({ onExito }: Props) => {
   const [cargando, setCargando] = useState(false);
   const [errorGeneral, setErrorGeneral] = useState("");
 
-  /** Valida los campos del formulario antes de llamar a la API. */
+  /**
+   * Valida todos los campos del formulario antes de llamar a la API.
+   * Verifica que ningún campo esté vacío, que el correo tenga formato válido,
+   * que la contraseña tenga al menos 8 caracteres y que ambas contraseñas coincidan.
+   * @returns `true` si el formulario es válido, `false` si hay errores.
+   */
   const validar = (): boolean => {
     const nuevosErrores: ErroresCampo = {};
 
@@ -62,7 +73,12 @@ export const RegistroForm = ({ onExito }: Props) => {
     return Object.keys(nuevosErrores).length === 0;
   };
 
-  /** Llama a la API, guarda la sesión (auto-login) y notifica éxito al padre. */
+  /**
+   * Maneja el envío del formulario.
+   * Valida los campos, llama a la API de registro, guarda la sesión en localStorage
+   * (auto-login) y notifica al padre que el proceso fue exitoso.
+   * Si la API responde con error, muestra el mensaje correspondiente.
+   */
   const handleSubmit = async () => {
     setErrorGeneral("");
     if (!validar()) return;
@@ -103,17 +119,17 @@ export const RegistroForm = ({ onExito }: Props) => {
       />
       {errores.apellido && <span className="field-error">{errores.apellido}</span>}
 
-      <label>Ingrese su correo</label>
+      <label>Correo</label>
       <input
         className={errores.email ? "input-error" : ""}
-        placeholder="Ingrese su correo"
+        placeholder="Ingresa tu correo"
         value={email}
         disabled={cargando}
         onChange={(e) => setEmail(e.target.value)}
       />
       {errores.email && <span className="field-error">{errores.email}</span>}
 
-      <label>Ingrese una contraseña</label>
+      <label>Contraseña</label>
       <input
         type="password"
         className={errores.password ? "input-error" : ""}
@@ -124,11 +140,11 @@ export const RegistroForm = ({ onExito }: Props) => {
       />
       {errores.password && <span className="field-error">{errores.password}</span>}
 
-      <label>Ingrese nuevamente la contraseña</label>
+      <label>Repetir contraseña</label>
       <input
         type="password"
         className={errores.repetirPassword ? "input-error" : ""}
-        placeholder="Ingrese nuevamente la contraseña"
+        placeholder="Ingresa nuevamente la contraseña"
         value={repetirPassword}
         disabled={cargando}
         onChange={(e) => setRepetirPassword(e.target.value)}

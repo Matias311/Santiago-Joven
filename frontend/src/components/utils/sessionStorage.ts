@@ -4,14 +4,16 @@ import type { SesionUsuario } from "../types/Auth";
  * Utilidades para persistir y leer la sesión del usuario autenticado.
  *
  * Se guarda un único objeto serializado (token, userId, email, roles) bajo
- * una sola clave, en lugar de múltiples claves sueltas, para que sea fácil
+ * una sola clave en lugar de múltiples claves sueltas, para que sea fácil
  * de limpiar al cerrar sesión y fácil de extender si se agregan más datos
  * a futuro (ej. fecha de expiración del token).
  *
- * Este archivo no depende de React: puede ser usado tanto desde componentes
- * como desde servicios (AuthService, futuros hooks, interceptores de fetch, etc).
+ * @remarks
+ * Este archivo no depende de React: puede ser usado desde componentes,
+ * servicios, hooks o interceptores de fetch.
  */
 
+/** Clave bajo la que se guarda la sesión en localStorage. */
 const CLAVE_SESION = "santiagojoven_sesion";
 
 /**
@@ -23,8 +25,9 @@ export const guardarSesion = (sesion: SesionUsuario): void => {
 };
 
 /**
- * Obtiene la sesión guardada, o null si no hay ninguna o está corrupta.
- * @returns {SesionUsuario | null} Objeto de sesión o null.
+ * Obtiene la sesión guardada en localStorage.
+ * Si los datos están corruptos (JSON inválido), los elimina automáticamente.
+ * @returns Objeto de sesión, o `null` si no hay sesión o está corrupta.
  */
 export const obtenerSesion = (): SesionUsuario | null => {
   const datos = localStorage.getItem(CLAVE_SESION);
@@ -39,33 +42,36 @@ export const obtenerSesion = (): SesionUsuario | null => {
 };
 
 /**
- * Obtiene únicamente el token, para usarlo en el header Authorization.
- * @returns {string | null} Token JWT o null si no hay sesión.
+ * Obtiene únicamente el token JWT de la sesión activa.
+ * Útil para construir el header `Authorization: Bearer <token>`.
+ * @returns Token JWT, o `null` si no hay sesión activa.
  */
 export const obtenerToken = (): string | null => {
   return obtenerSesion()?.token ?? null;
 };
 
 /**
- * Elimina la sesión guardada (logout).
+ * Elimina la sesión guardada en localStorage.
+ * Se llama al cerrar sesión para que el usuario quede desautenticado localmente.
  */
 export const eliminarSesion = (): void => {
   localStorage.removeItem(CLAVE_SESION);
 };
 
 /**
- * Indica si hay una sesión guardada, sin verificar si el token sigue siendo válido
- * en el backend (eso lo determina la API cuando se usa el token en un request).
- * @returns {boolean} true si hay una sesión guardada.
+ * Indica si hay una sesión guardada localmente.
+ * No verifica si el token sigue siendo válido en el backend:
+ * eso se determina cuando la API rechaza el token con un 401.
+ * @returns `true` si hay una sesión guardada, `false` si no.
  */
 export const estaAutenticado = (): boolean => {
   return obtenerSesion() !== null;
 };
 
 /**
- * Indica si el usuario actual tiene un rol específico (ej. "ADMIN").
- * @param {string} rol - Nombre del rol a verificar (ej. "ADMIN", "MODERATOR").
- * @returns {boolean} true si el usuario tiene ese rol.
+ * Indica si el usuario autenticado tiene un rol específico.
+ * @param rol - Nombre del rol a verificar (ej. "ADMIN", "MODERATOR").
+ * @returns `true` si el usuario tiene ese rol, `false` si no o si no hay sesión.
  */
 export const tieneRol = (rol: string): boolean => {
   return obtenerSesion()?.roles.includes(rol) ?? false;

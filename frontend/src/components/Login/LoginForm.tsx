@@ -3,13 +3,17 @@ import { authService, ErrorAuth } from "../services/AuthService";
 import { guardarSesion } from "../utils/sessionStorage";
 import type { ErroresCampo } from "../types/Auth";
 
-/** Valida formato de correo simple: algo@algo.algo, sin espacios ni @ extra. */
+/**
+ * Expresión regular para validar formato de correo electrónico.
+ * Acepta: algo@algo.algo
+ * Rechaza: espacios, más de un @, o dominios incompletos.
+ */
 const ES_CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type Props = {
-  /** Notifica al componente padre que el login fue exitoso (cierra el modal y refresca el Navbar). */
+  /** Callback que se ejecuta cuando el login fue exitoso. Cierra el modal y refresca el Navbar. */
   onExito: () => void;
-  /** Cambia al formulario de registro. */
+  /** Callback que cambia la vista al formulario de registro. */
   onIrARegistro: () => void;
 };
 
@@ -18,8 +22,8 @@ type Props = {
  * Responsabilidad única: pedir email/password, validar, y llamar a authService.login.
  *
  * @component
- * @param {Props} props - Callbacks de éxito y de navegación a registro.
- * @returns {JSX.Element} Formulario de login.
+ * @param props - Callbacks de éxito y de navegación a registro.
+ * @returns Formulario de login.
  */
 export const LoginForm = ({ onExito, onIrARegistro }: Props) => {
   const [email, setEmail] = useState("");
@@ -28,7 +32,11 @@ export const LoginForm = ({ onExito, onIrARegistro }: Props) => {
   const [cargando, setCargando] = useState(false);
   const [errorGeneral, setErrorGeneral] = useState("");
 
-  /** Valida los campos del formulario antes de llamar a la API. */
+  /**
+   * Valida que el email tenga formato válido y que la contraseña no esté vacía.
+   * Actualiza el estado de errores por campo.
+   * @returns `true` si el formulario es válido, `false` si hay errores.
+   */
   const validar = (): boolean => {
     const nuevosErrores: ErroresCampo = {};
     if (!email.trim()) {
@@ -43,7 +51,12 @@ export const LoginForm = ({ onExito, onIrARegistro }: Props) => {
     return Object.keys(nuevosErrores).length === 0;
   };
 
-  /** Llama a la API, guarda la sesión y notifica éxito al padre. */
+  /**
+   * Maneja el envío del formulario.
+   * Valida los campos, llama a la API de login, guarda la sesión en localStorage
+   * y notifica al componente padre que el login fue exitoso.
+   * Si la API responde con error, muestra el mensaje correspondiente.
+   */
   const handleSubmit = async () => {
     setErrorGeneral("");
     if (!validar()) return;

@@ -5,22 +5,24 @@ import type { UsuarioResponse, ErroresCampo } from "../types/Auth";
 import "./LoginModal.css";
 
 type Props = {
+  /** Controla si el modal está visible. */
   isOpen: boolean;
+  /** Callback para cerrar el modal sin cerrar sesión. */
   onClose: () => void;
-  /** Notifica al padre (Navbar) que la sesión terminó, para refrescar su estado. */
+  /** Callback que notifica al Navbar que la sesión terminó, para que refresque su estado. */
   onCerrarSesion: () => void;
 };
 
 /**
  * Modal de cuenta para usuarios autenticados.
+ * Permite ver y editar nombre, apellido y correo, cerrar sesión y eliminar la cuenta.
  *
- * Este componente no verifica si el usuario está autenticado: esa
- * responsabilidad es del Navbar, que decide si abrir este modal o el
- * de login según el estado de sesión (ver Navbar.tsx).
+ * No verifica si el usuario está autenticado: esa responsabilidad es del Navbar,
+ * que decide si abrir este modal o el de login según el estado de sesión.
  *
  * @component
- * @param {Props} props - Estado de apertura, cierre y callback de cierre de sesión.
- * @returns {JSX.Element | null} Modal de cuenta, o null si está cerrado.
+ * @param props - Estado de apertura, cierre y callback de cierre de sesión.
+ * @returns Modal de cuenta, o `null` si está cerrado.
  */
 export const MiCuentaModal = ({ isOpen, onClose, onCerrarSesion }: Props) => {
   const [usuario, setUsuario] = useState<UsuarioResponse | null>(null);
@@ -30,14 +32,25 @@ export const MiCuentaModal = ({ isOpen, onClose, onCerrarSesion }: Props) => {
   const [cargando, setCargando] = useState(false);
   const [errorGeneral, setErrorGeneral] = useState("");
 
-  // Carga los datos reales del usuario cada vez que se abre el modal
+  /**
+   * Cada vez que el modal se abre, inicia la carga de datos del usuario.
+   * Usa AbortController para cancelar la petición si el modal se cierra
+   * antes de que llegue la respuesta, evitando actualizar un componente desmontado.
+   */
   useEffect(() => {
     if (!isOpen) return;
-    cargarUsuario();
+
+    const controller = new AbortController();
+    cargarUsuario(controller.signal);
+
+    return () => controller.abort();
   }, [isOpen]);
 
-  /** Pide los datos del usuario actual a GET /api/v1/usuarios/{id}. */
-  const cargarUsuario = async () => {
+  /**
+   * Obtiene los datos del usuario autenticado desde GET /api/v1/usuarios/{id}.
+   * @param signal - Señal del AbortController para cancelar la petición si es necesario.
+   */
+  const cargarUsuario = async (signal: AbortSignal) => {
     const sesion = obtenerSesion();
     if (!sesion) return;
 
@@ -46,10 +59,13 @@ export const MiCuentaModal = ({ isOpen, onClose, onCerrarSesion }: Props) => {
     try {
       const respuesta = await fetch(`${authService.API_URL}/api/v1/usuarios/${sesion.userId}`, {
         headers: authService.headersAutenticados(),
+        signal,
       });
       if (!respuesta.ok) throw new Error();
       setUsuario(await respuesta.json());
-    } catch {
+    } catch (error) {
+      // Si la petición fue cancelada intencionalmente, no mostramos error.
+      if (error instanceof DOMException && error.name === "AbortError") return;
       setErrorGeneral("No se pudieron cargar los datos de tu cuenta");
     } finally {
       setCargando(false);
@@ -58,14 +74,22 @@ export const MiCuentaModal = ({ isOpen, onClose, onCerrarSesion }: Props) => {
 
   if (!isOpen) return null;
 
-  /** Abre el modo de edición para un campo específico, precargando su valor actual. */
+  /**
+   * Activa el modo edición para un campo específico,
+   * precargando el valor actual del usuario en el input.
+   * @param campo - Campo a editar: "nombre", "apellido" o "email".
+   */
   const handleEditar = (campo: "nombre" | "apellido" | "email") => {
     setEditando(campo);
     setValorEdicion(usuario?.[campo] ?? "");
     setErrores({});
   };
 
-  /** Envía el campo editado a PUT /api/v1/usuarios/{id}. */
+  /**
+   * Envía el campo editado a PUT /api/v1/usuarios/{id}.
+   * Si la API responde correctamente, actualiza los datos en pantalla y
+   * sale del modo edición.
+   */
   const handleGuardarEdicion = async () => {
     if (!editando || !usuario) return;
 
@@ -94,14 +118,21 @@ export const MiCuentaModal = ({ isOpen, onClose, onCerrarSesion }: Props) => {
     }
   };
 
-  /** Elimina la sesión local y notifica al padre para que actualice el estado de auth. */
+  /**
+   * Cierra la sesión local eliminando el token del localStorage
+   * y notifica al Navbar para que actualice su estado.
+   */
   const handleCerrarSesion = () => {
     authService.logout();
     onCerrarSesion();
     onClose();
   };
 
-  /** Elimina la cuenta del usuario actual vía DELETE /api/v1/usuarios/{id}. */
+  /**
+   * Solicita confirmación al usuario y luego elimina su cuenta
+   * via DELETE /api/v1/usuarios/{id}.
+   * Si tiene éxito, limpia la sesión local y cierra el modal.
+   */
   const handleBorrarCuenta = async () => {
     if (!usuario) return;
     if (!window.confirm("¿Seguro que quieres eliminar tu cuenta? Esta acción no se puede deshacer.")) {
@@ -125,7 +156,13 @@ export const MiCuentaModal = ({ isOpen, onClose, onCerrarSesion }: Props) => {
     }
   };
 
-  /** Renderiza una fila de campo: vista normal con botón de editar, o input editable. */
+  /**
+   * Renderiza una fila editable con label, input y botón de editar/guardar.
+   * El input está deshabilitado por defecto; se habilita solo cuando ese campo
+   * está siendo editado. El botón alterna entre ícono de editar y de confirmar.
+   * @param etiqueta - Texto del label visible al usuario.
+   * @param campo - Campo del objeto usuario que representa esta fila.
+   */
   const renderCampo = (etiqueta: string, campo: "nombre" | "apellido" | "email") => (
     <>
       <label>{etiqueta}</label>
@@ -155,8 +192,10 @@ export const MiCuentaModal = ({ isOpen, onClose, onCerrarSesion }: Props) => {
   return (
     <div className="overlay">
       <div className="modal">
-        <div className="brand">Santiago Joven</div>
-        <h2>Mi Cuenta</h2>
+        <div className="modal-header">
+          <h2>Mi Cuenta</h2>
+          <button className="close" onClick={onClose}>✕</button>
+        </div>
 
         {errorGeneral && <span className="field-error">{errorGeneral}</span>}
 
@@ -172,8 +211,6 @@ export const MiCuentaModal = ({ isOpen, onClose, onCerrarSesion }: Props) => {
             Borrar Cuenta
           </button>
         </div>
-
-        <button className="close" onClick={onClose}>✕</button>
       </div>
     </div>
   );
