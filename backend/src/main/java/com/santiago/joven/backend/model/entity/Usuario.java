@@ -37,6 +37,8 @@ public class Usuario extends AuditableEntity {
   @Column(nullable = false)
   private String apellido;
 
+  private String telefono;
+
   @Column(nullable = false)
   private Boolean activo = true;
 

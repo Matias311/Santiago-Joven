@@ -30,7 +30,7 @@ DB_PASSWORD=
 
   **Tests** (ejecutar por separado para evitar que un servicio aborte al otro):
   ```bash
-  docker compose --profile test run --build backend-test   # Backend: 429 tests unitarios + integracion
+  docker compose --profile test run --build backend-test   # Backend: 434 tests unitarios + integracion
   docker compose --profile test run frontend-test          # Frontend: ESLint
   docker compose --profile test run --rm frontend-e2e      # Frontend: 7 tests E2E con Cypress
   ```
@@ -51,6 +51,7 @@ Una vez ejecutando el backend en desarrollo:
 
 Desde Swagger UI puedes:
 - Probar `POST /api/v1/auth/login` para obtener un token JWT
+- Probar `POST /api/v1/auth/recuperar` y `/restablecer` para recuperar contrasena con OTP
 - Usar el boton **Authorize** (🔒) para ingresar el token
 - Probar cualquier endpoint protegido
 

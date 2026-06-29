@@ -17,6 +17,7 @@ public class UsuarioMapper {
         entity.getEmail(),
         entity.getNombre(),
         entity.getApellido(),
+        entity.getTelefono(),
         entity.getActivo());
   }
 
@@ -27,6 +28,7 @@ public class UsuarioMapper {
     entity.setPassword(request.password());
     entity.setNombre(request.nombre());
     entity.setApellido(request.apellido());
+    entity.setTelefono(request.telefono());
     return entity;
   }
 
@@ -36,6 +38,7 @@ public class UsuarioMapper {
     if (update.password() != null) entity.setPassword(update.password());
     if (update.nombre() != null) entity.setNombre(update.nombre());
     if (update.apellido() != null) entity.setApellido(update.apellido());
+    if (update.telefono() != null) entity.setTelefono(update.telefono());
     if (update.activo() != null) entity.setActivo(update.activo());
   }
 }

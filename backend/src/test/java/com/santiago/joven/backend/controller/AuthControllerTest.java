@@ -1,6 +1,7 @@
 package com.santiago.joven.backend.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -10,6 +11,7 @@ import com.santiago.joven.backend.dto.LoginResponse;
 import com.santiago.joven.backend.dto.UsuarioRequest;
 import com.santiago.joven.backend.dto.UsuarioResponse;
 import com.santiago.joven.backend.security.JwtTokenProvider;
+import com.santiago.joven.backend.service.RecuperacionPasswordService;
 import com.santiago.joven.backend.service.UsuarioService;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +31,7 @@ class AuthControllerTest {
   @MockitoBean private AuthenticationManager authenticationManager;
   @MockitoBean private JwtTokenProvider jwtTokenProvider;
   @MockitoBean private UsuarioService usuarioService;
+  @MockitoBean private RecuperacionPasswordService recuperacionPasswordService;
   @MockitoBean private PasswordEncoder passwordEncoder;
   @MockitoBean private com.santiago.joven.backend.security.CustomUserDetailsService userDetailsService;
 
@@ -110,6 +113,46 @@ class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {"email": "invalido", "password": "123"}
+                        """))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void recuperar_conEmailValido_debeRetornar200() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/auth/recuperar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"email": "test@test.cl"}
+                        """))
+        .andExpect(status().isOk());
+
+    verify(recuperacionPasswordService).solicitarCodigo("test@test.cl");
+  }
+
+  @Test
+  void restablecer_conDatosValidos_debeRetornar200() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/auth/restablecer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"email": "test@test.cl", "codigo": "12345", "nuevaPassword": "password123"}
+                        """))
+        .andExpect(status().isOk());
+
+    verify(recuperacionPasswordService).restablecerPassword("test@test.cl", "12345", "password123");
+  }
+
+  @Test
+  void restablecer_conCodigoNoNumerico_debeRetornar400() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/auth/restablecer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"email": "test@test.cl", "codigo": "abcde", "nuevaPassword": "password123"}
                         """))
         .andExpect(status().isBadRequest());
   }

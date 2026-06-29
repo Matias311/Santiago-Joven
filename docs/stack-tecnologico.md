@@ -15,6 +15,7 @@
 - **JPA / Hibernate** — ORM
 - **Spring Validation** — Validación de DTOs con anotaciones
 - **Spring Security** — Autenticación JWT stateless, autorización por permisos
+- **Spring Mail** — Envio de OTP para recuperacion de contrasena
 - **JJWT 0.12.6** — Generación y validación de JWT
 - **BCrypt** — Hasheo de passwords
 - **Lombok** — Reducción de código boilerplate (getters, setters, constructors, builders)
@@ -30,7 +31,7 @@
 - **JUnit 5 + Mockito 5 + AssertJ** — Tests unitarios e integración del backend
 - **H2 (modo PostgreSQL)** — Base de datos embebida para tests
 - **Cypress 15** — Tests E2E del frontend (React)
-- **429 tests backend** (unitarios + integración) + **7 tests E2E frontend**
+- **434 tests backend** (unitarios + integración) + **7 tests E2E frontend**
 
 ## DevOps
 - **Docker** + **Docker Compose** (3 perfiles: dev, test, prod)

@@ -106,6 +106,13 @@ A continuación, las decisiones principales tomadas durante el desarrollo, expli
 - **Alternativas:** Meterlo en el `PUT /usuarios/{id}` existente (rompe el contrato del DTO `UsuarioUpdate`), o en `RolController` (menos cohesivo).
 - **Consecuencia:** El admin puede asignar cualquier rol desde el frontend sin tocar la BD directamente.
 
+## ¿Por qué guardar OTP de recuperacion en BD?
+
+- **Contexto:** El flujo de recuperar contrasena debe sobrevivir reinicios y funcionar igual en dev/prod/test.
+- **Decisión:** Tabla `codigos_recuperacion` con email, codigo, expiracion de 5 minutos y flag `usado`.
+- **Alternativas:** Cache en memoria (se pierde al reiniciar), Redis (dependencia extra).
+- **Consecuencia:** El restablecimiento es transaccional y testeable con H2. El endpoint `/auth/recuperar` retorna 200 aunque el email no exista para evitar enumeracion.
+
 ## ¿Por qué no MapStruct?
 
 - **Contexto:** MapStruct daba errores de compilación con Records

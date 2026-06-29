@@ -16,10 +16,10 @@
 ```
 backend/src/test/java/com/santiago/joven/backend/
 ├── repository/       → @DataJpaTest (64 tests, 18 clases)
-├── service/          → Mockito (106 tests, 14 clases)
-├── controller/       → @WebMvcTest (188 tests, 18 clases)
+├── service/          → Mockito (110 tests, 15 clases)
+├── controller/       → @WebMvcTest (191 tests, 18 clases)
 ├── security/         → Tests planos + Mockito (17 tests, 3 clases)
-├── integration/      → @SpringBootTest (42 tests, 4 clases)
+├── integration/      → @SpringBootTest (51 tests, 4 clases)
 └── BackendApplicationTests.java  → Smoke test
 
 frontend/
@@ -30,12 +30,13 @@ frontend/
 | Capa         | Clases/archivos | Tests | Técnica              |
 |--------------|----------------|-------|----------------------|
 | Repository   | 18             | 64    | `@DataJpaTest`       |
-| Service      | 14             | 106   | `@ExtendWith(MockitoExtension.class)` |
-| Controller   | 18             | 188   | `@WebMvcTest`        |
+| Service      | 15             | 110   | `@ExtendWith(MockitoExtension.class)` |
+| Controller   | 18             | 191   | `@WebMvcTest`        |
 | Security     | 3              | 17    | JUnit + Mockito      |
-| Integration  | 4              | 46    | `@SpringBootTest` + `RestClient` |
+| Integration  | 4              | 51    | `@SpringBootTest` + `RestClient` |
 | E2E (front)  | 2              | 7     | Cypress              |
-| **Total**    | **59**         | **429** | —                    |
+| Smoke         | 1              | 1     | `@SpringBootTest`    |
+| **Total**    | **61**         | **441** | —                    |
 
 ## Ejecución con Docker
 
@@ -108,7 +109,7 @@ Esto levanta un contenedor con la imagen oficial `cypress/included:15.18.0` (Nod
 ### Integration (`@SpringBootTest`)
 - Usa `RestClient` para llamar a la API embebida en puerto aleatorio (`RANDOM_PORT`)
 - `BaseIntegrationTest` configura `client()` (sin auth) y `authClient()` (con token JWT)
-- **AuthIntegrationTest** (9 tests): registro+login, email+password incorrecto (401), email inexistente (401), email duplicado (409), email inválido (400), password vacío (400), login con usuario inactivo (401), token inválido en endpoint protegido (403), registro con verificación de rol USER y permisos en BD
+- **AuthIntegrationTest** (14 tests): registro+login, email+password incorrecto (401), email inexistente (401), email duplicado (409), email inválido (400), password vacío (400), login con usuario inactivo (401), token inválido en endpoint protegido (403), registro con verificación de rol USER y permisos en BD, recuperar password (200), recuperar email inexistente (200), restablecer password, codigo invalido (400), codigo expirado (400)
 - **InscripcionIntegrationTest** (15 tests): create (201), usuarioId inexistente (404), recursoId ACTIVIDAD inexistente (404), duplicado (409), sin token (403), actividad sin límite de cupo, actividad con cupo máximo, usuario inactivo (400), DELETE sin permiso (403), GET by ID inexistente (404), GET por-usuario, GET por-recurso, GET exists (true/false), GET count-por-recurso
 - **AdminInscripcionIntegrationTest** (3 tests): DELETE con permiso ADMIN (204), UPDATE con permiso ADMIN (200), flujo completo con verificación de contador `inscritos`
 - **UsuarioIntegrationTest** (19 tests): listar usuarios (200), sin token (403), con token USER (403), obtener por ID (200/404), obtener por email (200/404), exists email (true/false), crear (201), email duplicado (409), actualizar (200/404), eliminar (204/404), eliminar con USER (403), asignar roles como admin (204), asignar roles sin token (403), asignar roles con USER (403)

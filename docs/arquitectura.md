@@ -36,7 +36,7 @@ security/
 exception/
 └── GlobalExceptionHandler.java     ← @ControllerAdvice, respuestas ErrorResponse
 
-controller/AuthController.java      ← POST /auth/login y /register (publicos)
+controller/AuthController.java      ← POST /auth/login, /register, /recuperar y /restablecer (publicos)
 ```
 
 ## Flujo de autenticacion
@@ -55,6 +55,12 @@ controller/AuthController.java      ← POST /auth/login y /register (publicos)
 3. Cliente recibe token y lo envia en header `Authorization: Bearer <token>`
 4. JwtAuthenticationFilter valida token en cada request y setea SecurityContext
 5. @PreAuthorize evalua los permisos del contexto
+
+### Recuperacion de contrasena
+1. `POST /api/v1/auth/recuperar` recibe `{ email }` y siempre retorna 200 para evitar enumeracion de correos
+2. Si el email existe, genera OTP numerico de 5 digitos con expiracion de 5 minutos
+3. Persiste el OTP en `codigos_recuperacion` y lo envia por email via SMTP usando `SMTP_FROM` como remitente; si no hay SMTP local, lo loggea
+4. `POST /api/v1/auth/restablecer` recibe `{ email, codigo, nuevaPassword }`, valida OTP vigente/no usado y actualiza password con BCrypt
 
 ## Endpoints publicos
 
@@ -81,13 +87,13 @@ Swagger UI en `/swagger-ui/index.html`:
 ## Estructura de paquetes
 
 ```
-controller/       → 19 controladores (incl. Auth)
-dto/              → 45 DTO records + ErrorResponse + Login*
+controller/       → controladores REST (incl. Auth)
+dto/              → DTO records de requests/responses + ErrorResponse
 exception/        → GlobalExceptionHandler
 mapper/           → 18 mappers manuales
-model/entity/     → 18 entidades
+model/entity/     → entidades JPA
 model/enums/      → enumeraciones
-repository/       → 18 repositorios
+repository/       → repositorios Spring Data JPA
 security/         → Spring Security + JWT + OpenApi config
-service/          → 18 interfaces + 18 implementaciones
+service/          → interfaces + implementaciones transaccionales
 ```
