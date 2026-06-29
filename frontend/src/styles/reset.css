@@ -1,3 +1,37 @@
+:root {
+  color-scheme: light;
+  --page-bg: #ffffff;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --text-primary: #111827;
+  --text-secondary: #64748b;
+  --border: rgba(15, 23, 42, 0.12);
+  --navbar-bg: rgba(255, 255, 255, 0.18);
+  --navbar-border: rgba(255, 255, 255, 0.4);
+  --panel-bg: rgba(255, 255, 255, 0.95);
+  --popup-overlay: rgba(0, 0, 0, 0.5);
+  --shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+}
+
+.dark {
+  color-scheme: dark;
+  --page-bg: #050816;
+  --surface: #0b1120;
+  --surface-alt: #111a2d;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --border: rgba(148, 163, 184, 0.28);
+  --navbar-bg: rgba(8, 14, 28, 0.86);
+  --navbar-border: rgba(255, 255, 255, 0.12);
+  --panel-bg: rgba(15, 23, 42, 0.96);
+  --popup-overlay: rgba(0, 0, 0, 0.7);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  --accent: #60a5fa;
+  --accent-strong: #3b82f6;
+}
+
 * {
   margin: 0px;
   padding: 0px;
@@ -25,8 +59,14 @@ body {
   min-height: 100vh;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
-  background-color: #fff;
-  color: #111;
+  background-color: var(--page-bg);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dark body {
+  background-color: var(--page-bg);
+  color: var(--text-primary);
 }
 
 /* 4. Quita decoraciones innecesarias */

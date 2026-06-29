@@ -1,40 +1,85 @@
-# Decisiones Tecnicas
-Estructura para responder preguntas.
-Ejemplo:
-```text
-**Contexto:** Que problema o necesidad existe
-**Decision:** Que elegiste exactamente
-**Consecuencias:** Que ganas y que sacrificas
-**Alternativas descartadas:** Que otra cosa evaluaste y por que no se eligio
-```
+# Decisiones Técnicas
 
+A continuación, las decisiones principales tomadas durante el desarrollo, explicando contexto, decisión, consecuencias y alternativas descartadas.
 
-## ¿Por qué utilizar Spring Boot y Java para el backend?
-    **Contexto:** Se requiere un backend estable, escalable y con soporte a largo plazo.  
-    **Decisión:** Usar Java 21 (LTS) con Spring Boot para construir la API.  
-    **Consecuencias:** Mayor robustez y ecosistema empresarial, pero mayor verbosidad.  
-    **Alternativas descartadas:** Node.js (menos tipado y estructura), Python (menor rendimiento), Go (ecosistema enterprise más reducido).
+## ¿Por qué Spring Boot y Java?
 
-## ¿Por qué pasar el chatbot al backend utilizando Spring AI y no dejarlo en el frontend?
-    **Contexto:** El chatbot necesita acceso seguro a claves y control de prompts.  
-    **Decisión:** Ejecutarlo en el backend usando Spring AI.  
-    **Consecuencias:** Mayor seguridad y control del flujo, pero más carga en el backend.  
-    **Alternativas descartadas:** Chatbot en frontend (expone claves y reduce control).
+- **Contexto:** Backend estable, escalable, con soporte a largo plazo.
+- **Decisión:** Java 21 (LTS) + Spring Boot.
+- **Alternativas:** Node.js (menos estructura), Python (menor rendimiento), Go (ecosistema reducido).
 
-## ¿Por qué utilizar H2 con JPA y PostgreSQL para el desarrollo del backend?
-    **Contexto:** Se necesita un entorno rápido para desarrollo sin perder compatibilidad con producción.  
-    **Decisión:** Usar H2 en dev/test y PostgreSQL en producción, con JPA como capa ORM.  
-    **Consecuencias:** Arranque rápido en local, pero se debe validar compatibilidad SQL.  
-    **Alternativas descartadas:** Usar PostgreSQL también en local (más pesado), o usar solo H2 (no representa producción).
+## ¿Por qué pasar el chatbot al backend?
 
-## ¿Qué es Lombok y por qué se utiliza en el desarrollo?
-    **Contexto:** El boilerplate en Java reduce velocidad y claridad.  
-    **Decisión:** Usar Lombok para generar getters, setters y constructores.  
-    **Consecuencias:** Menos código repetido y más productividad, pero dependencia en anotaciones.  
-    **Alternativas descartadas:** Escribir manualmente el boilerplate (más propenso a errores).
+- **Contexto:** La API key de OpenAI no debe exponerse en frontend.
+- **Decisión:** Ejecutar chatbot en backend con Spring AI.
+- **Alternativas:** Chatbot en frontend (expone claves).
 
-## ¿Por qué utilizamos Docker y Docker Compose con el despliegue en Vercel?
-    **Contexto:** Se necesita consistencia entre entornos y despliegue rápido del frontend.  
-    **Decisión:** Dockerizar el backend y usar Docker Compose para orquestación local. Vercel para frontend.  
-    **Consecuencias:** Setup reproducible y despliegue ágil, pero requiere conocimientos de contenedores.  
-    **Alternativas descartadas:** Deploy manual sin contenedores (más frágil).
+## ¿Por qué H2 y PostgreSQL?
+
+- **Contexto:** rapidez en desarrollo sin perder compatibilidad.
+- **Decisión:** dev/prod con PostgreSQL (Neon), test con H2 modo PostgreSQL.
+- **Alternativas:** PostgreSQL en todos los entornos.
+
+## ¿Por qué Lombok?
+
+- **Contexto:** Reducir boilerplate de getters, setters, constructores.
+- **Decisión:** @Getter, @Setter, @NoArgsConstructor, @Builder.
+- **Riesgo:** Dependencia de procesador de anotaciones.
+
+## ¿Por qué Docker y Docker Compose?
+
+- **Contexto:** consistencia entre entornos.
+- **Decisión:** 3 profiles (dev, test, prod).
+- **Alternativas:** Deployment manual.
+
+## ¿Por qué spring-boot-starter-validation?
+
+- **Contexto:** Validar datos de entrada en la API.
+- **Decisión:** @Valid en controladores, anotaciones jakarta.validation.
+- **Alternativas:** Validación manual en servicios.
+
+## ¿Por qué Records + @Builder?
+
+- **Contexto:** DTOs inmutables, menos código.
+- **Decisión:** Records Java 21 anotados con @Builder.
+- **Alternativas:** Clases con @Data (mutables), clases manuales.
+
+## ¿Por qué perfiles en application.yml?
+
+- **Contexto:** Configuración de BD y JPA según entorno.
+- **Decisión:** Único multi-documento: base (JWT)/dev (PostgreSQL)/test (H2)/prod (validate).
+- **Alternativas:** Archivos por perfil.
+
+## ¿Por qué @ControllerAdvice?
+
+- **Contexto:** Respuestas HTTP uniformes para errores.
+- **Decisión:** GlobalExceptionHandler con ErrorResponse.
+
+## ¿Por qué Spring Security + JWT?
+
+- **Tipo:** Stateless auth para SPA
+- **Decisión:** JWT HMAC-SHA512, expira 24h
+- **Alternativas:** Sesiones (stateful), OAuth2 (complejidad)
+- **Consecuencia:** Escalable, token auto-contenido
+
+## ¿Por qué @PreAuthorize y permisos?
+
+- **Decisión:** `hasAuthority('PERMISSION_...')` a nivel método
+- **Consecuencia:** Control granular solo cambiando asignaciones en BD
+
+## ¿Por qué JOIN FETCH en auth?
+
+- **Decisión:** Query única en `UsuarioRepository.findByEmailWithRoles()` para traer roles y permisos y evitar LazyInitializationException
+- **Alternativas:** EAGER loading (innecesario en otros contextos), OpenEntityManagerInView
+
+## ¿Por qué Swagger / OpenAPI?
+
+- **Contexto:** Documentación interactiva, viva, que se actualiza con los cambios
+- **Decisión:** springdoc-openapi con @Tag, @Operation, @SecurityRequirement
+- **Consecuencia:** swagger-ui/index.html disponible, canaddos para endpoints protegidos
+
+## ¿Por qué no MapStruct?
+
+- **Contexto:** MapStruct daba errores de compilación con Records
+- **Decisión:** Mappers manuales @Component
+- **Consecuencia:** Más código pero sin dependencias problemáticas

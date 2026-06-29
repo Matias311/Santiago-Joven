@@ -1,19 +1,67 @@
+/* =============================================================
+  ARCHIVO: src/components/Accesibilidad/Accesibilidad.css
+  PROPÓSITO: Panel de accesibilidad y utilidades (grayscale, contraste, fuentes)
+
+  SECCIONES:
+  1. Contenedor / Botones
+  2. Panel / Elementos de la lista
+  3. Clases utilitarias aplicadas a #site-content
+  4. Uso de tema y sobrescrituras de modo oscuro
+  ============================================================= */
+
 .accessibility-container {
   position: fixed;
-  top: 9rem;
-  left: 1rem;
+  top: 10rem;
+  right: 1rem;
   z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  transition: top 0.2s ease;
 }
 
 .accessibility-btn {
   background: #404fbf;
   color: white;
   font-size: 2rem;
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: 0.5rem;
   border: none;
   cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+  .accessibility-container {
+    top: 10rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .accessibility-container {
+    top: 10rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .accessibility-container {
+    top: 8rem;
+    right: 0.875rem;
+  }
+}
+
+@media (max-width: 650px) {
+  .accessibility-container {
+    top: 12rem;
+    right: 0.875rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .accessibility-container {
+    top: 14rem;
+    right: 0.875rem;
+  }
 }
 
 .accessibility-panel {
@@ -70,4 +118,23 @@
 
 #site-content.readable-font {
   font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.accessibility-panel {
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.accessibility-panel li:hover {
+  color: var(--accent);
+}
+
+.dark .accessibility-panel {
+  background: var(--surface-alt);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+}
+
+.dark .accessibility-btn {
+  background: var(--accent);
 }

@@ -1,0 +1,8 @@
+target/
+.idea/
+*.iml
+.git/
+.gitattributes
+Dockerfile
+Dockerfile.dev
+README.md

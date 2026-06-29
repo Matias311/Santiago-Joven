@@ -103,31 +103,42 @@ export default function AccessibilityWidget({
           <h2>Accesibilidad</h2>
           <ul>
             <li onClick={increaseText}>
-              <span className="material-symbols-outlined">zoom_in</span> Aumentar Texto
+              <span className="material-symbols-outlined">zoom_in</span>{" "}
+              Aumentar Texto
             </li>
             <li onClick={decreaseText}>
-              <span className="material-symbols-outlined">zoom_out</span> Reducir Texto
+              <span className="material-symbols-outlined">zoom_out</span>{" "}
+              Reducir Texto
             </li>
             <li onClick={() => applyClass("grayscale")}>
-              <span className="material-symbols-outlined">format_color_reset</span> Escala de grises
+              <span className="material-symbols-outlined">
+                format_color_reset
+              </span>{" "}
+              Escala de grises
             </li>
             <li onClick={() => applyClass("high-contrast")}>
-              <span className="material-symbols-outlined">contrast</span> Alto Contraste
+              <span className="material-symbols-outlined">contrast</span> Alto
+              Contraste
             </li>
             <li onClick={() => applyClass("negative-contrast")}>
-              <span className="material-symbols-outlined">invert_colors</span> Contraste Negativo
+              <span className="material-symbols-outlined">invert_colors</span>{" "}
+              Contraste Negativo
             </li>
             <li onClick={() => applyClass("light-background")}>
-              <span className="material-symbols-outlined">light_mode</span> Fondo Claro
+              <span className="material-symbols-outlined">light_mode</span>{" "}
+              Fondo Claro
             </li>
             <li onClick={() => applyClass("highlight-links")}>
-              <span className="material-symbols-outlined">link</span> Links destacados
+              <span className="material-symbols-outlined">link</span> Links
+              destacados
             </li>
             <li onClick={() => applyClass("readable-font")}>
-              <span className="material-symbols-outlined">text_fields</span> Texto Legible
+              <span className="material-symbols-outlined">text_fields</span>{" "}
+              Texto Legible
             </li>
             <li onClick={resetAll}>
-              <span className="material-symbols-outlined">restart_alt</span> Restablecer
+              <span className="material-symbols-outlined">restart_alt</span>{" "}
+              Restablecer
             </li>
           </ul>
         </div>
@@ -135,3 +146,4 @@ export default function AccessibilityWidget({
     </div>
   );
 }
+

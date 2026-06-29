@@ -1,5 +1,6 @@
 import "./Card.css";
 import type { CartaItem } from '../types/CartaItem';
+import SpotlightCard from '../DisenoCartas/DisenoCartas';
 
 /**
  * Componente de tarjeta universal reutilizable.
@@ -48,7 +49,11 @@ function Card({
   clase,
 }: CartaItem) {
   return (
-    <div className={`carta-universal ${clase || ''}`} style={{ boxShadow: sliderSombra }}>
+    <SpotlightCard 
+      className={`carta-universal ${clase || ''}`} 
+      spotlightColor="rgba(146, 231, 252, 0.37)"
+      style={{ boxShadow: sliderSombra }}
+    >
       <span
         className="material-symbols-outlined icono"
         style={{ color: iconoColor, fontSize: iconoTamaño, background: iconoFondo }}
@@ -63,8 +68,9 @@ function Card({
           {boton}
         </button>
       )}
-    </div>
+    </SpotlightCard>
   );
 }
+
 
 export default Card;
