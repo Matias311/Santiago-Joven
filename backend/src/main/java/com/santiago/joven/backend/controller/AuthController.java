@@ -2,8 +2,11 @@ package com.santiago.joven.backend.controller;
 
 import com.santiago.joven.backend.dto.LoginRequest;
 import com.santiago.joven.backend.dto.LoginResponse;
+import com.santiago.joven.backend.dto.RecuperarRequest;
+import com.santiago.joven.backend.dto.RestablecerRequest;
 import com.santiago.joven.backend.dto.UsuarioRequest;
 import com.santiago.joven.backend.security.JwtTokenProvider;
+import com.santiago.joven.backend.service.RecuperacionPasswordService;
 import com.santiago.joven.backend.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,13 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@Tag(name = "Autenticacion", description = "Endpoints publicos de login y registro")
+@Tag(name = "Autenticacion", description = "Endpoints publicos de login, registro y recuperacion")
 public class AuthController {
 
   private final AuthenticationManager authenticationManager;
   private final JwtTokenProvider jwtTokenProvider;
   private final UsuarioService usuarioService;
   private final PasswordEncoder passwordEncoder;
+  private final RecuperacionPasswordService recuperacionPasswordService;
 
   @Operation(
       summary = "Iniciar sesion",
@@ -58,7 +62,7 @@ public class AuthController {
 
   @Operation(
       summary = "Registrar usuario",
-      description = "Crea un nuevo usuario con rol USER y devuelve un token JWT")
+      description = "Crea un nuevo usuario con rol USER y devuelve un token JWT. El campo telefono es opcional y debe tener exactamente 9 digitos")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "201", description = "Usuario creado, token generado"),
@@ -78,6 +82,7 @@ public class AuthController {
             .password(encodedPassword)
             .nombre(request.nombre())
             .apellido(request.apellido())
+            .telefono(request.telefono())
             .build();
 
     var usuario = usuarioService.create(usuarioConPassword);
@@ -87,5 +92,36 @@ public class AuthController {
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(new LoginResponse(token, usuario.id(), usuario.email(), roles));
+  }
+
+  @Operation(
+      summary = "Solicitar codigo de recuperacion",
+      description =
+          "Envia un codigo OTP de 5 digitos al correo del usuario para restablecer la contrasena. "
+              + "Siempre retorna 200 para evitar enumeracion de correos")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Codigo enviado si el email existe"),
+        @ApiResponse(responseCode = "400", description = "Email invalido")
+      })
+  @PostMapping("/recuperar")
+  public ResponseEntity<Void> recuperar(@Valid @RequestBody RecuperarRequest request) {
+    recuperacionPasswordService.solicitarCodigo(request.email());
+    return ResponseEntity.ok().build();
+  }
+
+  @Operation(
+      summary = "Restablecer contrasena",
+      description = "Valida el codigo OTP y actualiza la contrasena del usuario")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Contrasena actualizada exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Codigo invalido/expirado o datos invalidos")
+      })
+  @PostMapping("/restablecer")
+  public ResponseEntity<Void> restablecer(@Valid @RequestBody RestablecerRequest request) {
+    recuperacionPasswordService.restablecerPassword(
+        request.email(), request.codigo(), request.nuevaPassword());
+    return ResponseEntity.ok().build();
   }
 }

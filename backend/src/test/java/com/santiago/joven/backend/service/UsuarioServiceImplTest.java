@@ -60,7 +60,7 @@ class UsuarioServiceImplTest {
     usuario.setApellido("Muñoz");
     usuario.setActivo(true);
 
-    response = new UsuarioResponse(id, "benjamin.munoz@santiagojoven.org", "Benjamín", "Muñoz", true);
+    response = new UsuarioResponse(id, "benjamin.munoz@santiagojoven.org", "Benjamín", "Muñoz", null, true);
   }
 
   @Test
@@ -174,7 +174,7 @@ class UsuarioServiceImplTest {
     when(repository.findById(id)).thenReturn(Optional.of(usuario));
     when(repository.save(usuario)).thenReturn(usuario);
 
-    var updatedResponse = new UsuarioResponse(id, "benjamin.munoz@santiagojoven.org", "Benjamín Andrés", "Muñoz Soto", true);
+    var updatedResponse = new UsuarioResponse(id, "benjamin.munoz@santiagojoven.org", "Benjamín Andrés", "Muñoz Soto", null, true);
     when(mapper.toResponse(usuario)).thenReturn(updatedResponse);
 
     var result = service.update(id, update);

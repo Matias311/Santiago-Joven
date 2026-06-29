@@ -4,10 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.santiago.joven.backend.dto.LoginRequest;
 import com.santiago.joven.backend.dto.LoginResponse;
+import com.santiago.joven.backend.dto.RecuperarRequest;
+import com.santiago.joven.backend.dto.RestablecerRequest;
 import com.santiago.joven.backend.dto.UsuarioRequest;
 import com.santiago.joven.backend.dto.InscripcionRequest;
-import com.santiago.joven.backend.dto.InscripcionResponse;
+import com.santiago.joven.backend.dto.ErrorResponse;
 import com.santiago.joven.backend.model.enums.TipoRecurso;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -239,5 +242,138 @@ class AuthIntegrationTest extends BaseIntegrationTest {
         .toBodilessEntity();
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  void recuperar_conEmailValido_generaCodigoEnDb() {
+    var email = "recuperar-flow@santiagojoven.org";
+    client().post()
+        .uri("/api/v1/auth/register")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(UsuarioRequest.builder()
+            .email(email).password("password123").nombre("T").apellido("U").build())
+        .retrieve()
+        .toBodilessEntity();
+
+    var response = client().post()
+        .uri("/api/v1/auth/recuperar")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new RecuperarRequest(email))
+        .retrieve()
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    var codigos = jdbcTemplate.queryForList(
+        "SELECT codigo FROM codigos_recuperacion WHERE email = ? AND usado = false",
+        String.class, email);
+    assertThat(codigos).hasSize(1);
+    assertThat(codigos.get(0)).hasSize(5);
+  }
+
+  @Test
+  void recuperar_conEmailInexistente_retorna200() {
+    var response = client().post()
+        .uri("/api/v1/auth/recuperar")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new RecuperarRequest("no-existe@test.cl"))
+        .retrieve()
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  void restablecer_conCodigoValido_actualizaPassword() {
+    var email = "restablecer-flow@santiagojoven.org";
+    client().post()
+        .uri("/api/v1/auth/register")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(UsuarioRequest.builder()
+            .email(email).password("password123").nombre("T").apellido("U").build())
+        .retrieve()
+        .toBodilessEntity();
+
+    client().post()
+        .uri("/api/v1/auth/recuperar")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new RecuperarRequest(email))
+        .retrieve()
+        .toBodilessEntity();
+
+    var codigo = jdbcTemplate.queryForObject(
+        "SELECT codigo FROM codigos_recuperacion WHERE email = ? AND usado = false",
+        String.class, email);
+
+    var response = client().post()
+        .uri("/api/v1/auth/restablecer")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new RestablecerRequest(email, codigo, "new-password-123"))
+        .retrieve()
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    var loginResponse = client().post()
+        .uri("/api/v1/auth/login")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new LoginRequest(email, "new-password-123"))
+        .retrieve()
+        .toEntity(LoginResponse.class);
+
+    assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(loginResponse.getBody()).isNotNull();
+    assertThat(loginResponse.getBody().token()).isNotBlank();
+  }
+
+  @Test
+  void restablecer_conCodigoInvalido_retorna400() {
+    var response = client().post()
+        .uri("/api/v1/auth/restablecer")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new RestablecerRequest("test@test.cl", "00000", "new-password-123"))
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.BAD_REQUEST, (req, res) -> {})
+        .toEntity(ErrorResponse.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().message()).contains("Codigo invalido");
+  }
+
+  @Test
+  void restablecer_conCodigoExpirado_retorna400() {
+    var email = "codigo-expirado@santiagojoven.org";
+    client().post()
+        .uri("/api/v1/auth/register")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(UsuarioRequest.builder()
+            .email(email).password("password123").nombre("T").apellido("U").build())
+        .retrieve()
+        .toBodilessEntity();
+
+    client().post()
+        .uri("/api/v1/auth/recuperar")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new RecuperarRequest(email))
+        .retrieve()
+        .toBodilessEntity();
+
+    var codigo = jdbcTemplate.queryForObject(
+        "SELECT codigo FROM codigos_recuperacion WHERE email = ? AND usado = false",
+        String.class, email);
+    jdbcTemplate.update(
+        "UPDATE codigos_recuperacion SET expiracion = ? WHERE email = ?",
+        LocalDateTime.now().minusMinutes(1), email);
+
+    var response = client().post()
+        .uri("/api/v1/auth/restablecer")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new RestablecerRequest(email, codigo, "new-password-123"))
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.BAD_REQUEST, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 }
