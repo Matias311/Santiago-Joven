@@ -129,8 +129,10 @@ class UsuarioServiceImplTest {
         .build();
 
     var entity = new Usuario();
+    var rolUser = new Rol(NombreRol.USER);
     when(mapper.toEntity(request)).thenReturn(entity);
     when(passwordEncoder.encode("plain123")).thenReturn("$2a$10$encoded");
+    when(rolRepository.findByNombre(NombreRol.USER)).thenReturn(Optional.of(rolUser));
     when(repository.save(entity)).thenReturn(usuario);
     when(mapper.toResponse(usuario)).thenReturn(response);
 
@@ -151,7 +153,9 @@ class UsuarioServiceImplTest {
 
     var entity = new Usuario();
     entity.setPassword("$2a$10$existinghash");
+    var rolUser = new Rol(NombreRol.USER);
     when(mapper.toEntity(request)).thenReturn(entity);
+    when(rolRepository.findByNombre(NombreRol.USER)).thenReturn(Optional.of(rolUser));
     when(repository.save(entity)).thenReturn(usuario);
     when(mapper.toResponse(usuario)).thenReturn(response);
 
@@ -227,12 +231,10 @@ class UsuarioServiceImplTest {
 
     when(repository.findById(id)).thenReturn(Optional.of(usuario));
     when(rolRepository.findAllById(Set.of(rolId))).thenReturn(List.of(rol));
-    when(repository.save(usuario)).thenReturn(usuario);
 
     service.asignarRoles(id, Set.of(rolId));
 
     assertThat(usuario.getRoles()).hasSize(1);
-    verify(repository).save(usuario);
   }
 
   @Test

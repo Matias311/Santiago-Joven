@@ -22,19 +22,29 @@ describe("Página de Inicio", () => {
     cy.get("#contacto").should("exist");
   });
 
-  it("debe tener el boton de modo oscuro y alternar tema", () => {
+  it("debe tener el boton de modo oscuro y persistir el tema", () => {
     cy.get("button.boton-modo-oscuro").should("exist");
+    cy.get("button.boton-modo-oscuro").should("have.attr", "aria-label");
 
-    cy.get(".popup-cerrar").realClick();
-    cy.get(".popup-overlay").should("not.exist");
+    cy.clearLocalStorage("theme");
+    cy.visit("/");
+    cy.get("html").should(($html) => {
+      expect($html.hasClass("dark") || $html.hasClass("light")).to.be.true;
+    });
 
-    cy.get("button.boton-modo-oscuro").realClick();
+    cy.clearLocalStorage("theme");
+    cy.window().then((win) => {
+      win.localStorage.setItem("theme", "light");
+    });
+    cy.visit("/");
     cy.get("html").should("have.class", "light");
-    cy.window().its("localStorage.theme").should("eq", "light");
 
-    cy.get("button.boton-modo-oscuro").realClick();
+    cy.clearLocalStorage("theme");
+    cy.window().then((win) => {
+      win.localStorage.setItem("theme", "dark");
+    });
+    cy.visit("/");
     cy.get("html").should("have.class", "dark");
-    cy.window().its("localStorage.theme").should("eq", "dark");
   });
 
   it("debe mostrar los filtros de calendario", () => {

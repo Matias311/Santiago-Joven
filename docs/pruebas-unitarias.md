@@ -119,9 +119,7 @@ Esto levanta un contenedor con la imagen oficial `cypress/included:15.18.0` (Nod
 ### E2E — Frontend (Cypress)
 - Corre contra el servidor Vite de desarrollo en `http://localhost:5173`
 - Navegador: Electron en modo headless (CI) o interactivo (`cy:open`)
-- Usa `cypress-real-events` (plugin CDP) para `realClick()` — dispara eventos reales del navegador (confiables) en vez de `dispatchEvent` sintético
-- El popup de encuesta (`PopupEncuesta`) cubre el botón de modo oscuro; se cierra con `realClick()` antes de interactuar
-- **`cypress/e2e/inicio.cy.ts`** (6 tests): logo y navbar, secciones del home, toggle de modo oscuro (`realClick`), filtros de calendario, enlaces de navegación, widget de accesibilidad
+- **`cypress/e2e/inicio.cy.ts`** (6 tests): logo y navbar, secciones del home, persistencia del modo oscuro vía `localStorage`, filtros de calendario, enlaces de navegación, widget de accesibilidad
 - **`cypress/e2e/asesoria.cy.ts`** (1 test): carga directa de `/asesoria`
 
 ### Mapper (test plano)
