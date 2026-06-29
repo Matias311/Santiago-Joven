@@ -6,7 +6,7 @@ import type { CartaItem } from "../../types/CartaItem";
 import type { ConexionItem } from "../../types/ConexionItem";
 
 export default function Inicio() {
-  const [datosInicio, setDatosInicio] = useState<any>(null);
+  const [datosInicio, setDatosInicio] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,8 +22,8 @@ export default function Inicio() {
       fetch(`${apiBase}/actividades-talleres`).then((r) => r.json()),
       fetch(`${apiBase}/ubicaciones`).then((r) => r.json()),
     ]).then((results) => {
-      const ok = (r: PromiseSettledResult<any>) =>
-        r.status === "fulfilled" ? r.value : [];
+      const ok = (r: PromiseSettledResult<unknown>) =>
+        r.status === "fulfilled" ? (r.value as Record<string, unknown>[]) : [];
 
       results.forEach((r, i) => {
         if (r.status === "rejected") {
@@ -42,51 +42,53 @@ export default function Inicio() {
       ] = results.map(ok);
 
       const actividades: ConexionItem[] = (actividadesData || [])
-        .filter((item: any) => !/taller/i.test(item.titulo))
-        .map((item: any) => ({
+        .filter((item: Record<string, unknown>) => !/taller/i.test(String(item.titulo || "")))
+        .map((item: Record<string, unknown>) => ({
           icono: "sports_soccer",
-          texto: item.titulo,
+          texto: String(item.titulo || ""),
         }));
 
       const talleres: ConexionItem[] = (actividadesData || [])
-        .filter((item: any) => /taller/i.test(item.titulo))
-        .map((item: any) => ({
+        .filter((item: Record<string, unknown>) => /taller/i.test(String(item.titulo || "")))
+        .map((item: Record<string, unknown>) => ({
           icono: "work_outline",
-          texto: item.titulo,
+          texto: String(item.titulo || ""),
         }));
 
       setDatosInicio({
         encabezado: [],
-        asesorias: (asesoriasData || []).map((item: any) => ({
-          titulo: item.titulo,
-          descripcion: item.definicion || item.objetivos || "",
+        asesorias: (asesoriasData || []).map((item: Record<string, unknown>) => ({
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.definicion || item.objetivos || ""),
           icono: "support",
         })),
         preuniversitario: [],
-        cursos: (cursosData || []).map((item: any) => ({
-          titulo: item.titulo,
-          descripcion: item.eslogan || item.descripcion || "",
+        cursos: (cursosData || []).map((item: Record<string, unknown>) => ({
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.eslogan || item.descripcion || ""),
           icono: "school",
         })),
-        accion: (accionData || []).map((item: any) => ({
-          titulo: item.titulo,
-          descripcion: item.descripcion,
+        accion: (accionData || []).map((item: Record<string, unknown>) => ({
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.descripcion || ""),
           boton: "Ver más",
         })),
-        programas: (programasData || []).map((item: any) => ({
-          titulo: item.titulo,
-          descripcion: item.descripcion,
+        programas: (programasData || []).map((item: Record<string, unknown>) => ({
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.descripcion || ""),
           icono: "groups",
         })),
-        salud: (saludData || []).map((item: any) => ({
-          titulo: item.titulo,
-          descripcion: item.descripcion,
-          icono: item.icono || "health_and_safety",
+        salud: (saludData || []).map((item: Record<string, unknown>) => ({
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.descripcion || ""),
+          icono: String(item.icono || "health_and_safety"),
         })),
         actividades,
         talleres,
         contacto: {
-          direccion: ubicacionesData?.[0]?.direccion ?? "",
+          direccion: String((ubicacionesData?.[0] as Record<string, unknown>)?.direccion ?? ""),
+          horario: "",
+          email: "",
         },
       });
       setLoading(false);
@@ -98,6 +100,19 @@ export default function Inicio() {
   if (!datosInicio)
     return <div className="error">No se pudo cargar la información.</div>;
 
+  // Para evitar que el linter tire error al acceder a propiedades desconocidas en el HTML, 
+  // hacemos una conversión segura en una variable local usando tipos definidos de tus imports.
+  const encabezado = (datosInicio.encabezado as CartaItem[]) || [];
+  const asesorias = (datosInicio.asesorias as CartaItem[]) || [];
+  const preuniversitario = (datosInicio.preuniversitario as CartaItem[]) || [];
+  const cursos = (datosInicio.cursos as CartaItem[]) || [];
+  const accion = (datosInicio.accion as CartaItem[]) || [];
+  const programas = (datosInicio.programas as CartaItem[]) || [];
+  const salud = (datosInicio.salud as CartaItem[]) || [];
+  const actividades = (datosInicio.actividades as ConexionItem[]) || [];
+  const talleres = (datosInicio.talleres as ConexionItem[]) || [];
+  const contacto = datosInicio.contacto as Record<string, string>;
+
   return (
     <>
       {/* encabezado de la pagina principal */}
@@ -108,7 +123,7 @@ export default function Inicio() {
           <p className="subtitulo-edad">Dirigido a jóvenes de 14 a 29 años.</p>
         </div>
         <div className="carta-seccion">
-          {datosInicio.encabezado.map((carta: CartaItem) => (
+          {encabezado.map((carta: CartaItem) => (
             <Card
               key={carta.titulo}
               icono={carta.icono}
@@ -139,7 +154,7 @@ export default function Inicio() {
           </div>
           <div className="grupo-cartas">
             <h3>Asesoría</h3>
-            {datosInicio.asesorias.length === 0 ? (
+            {asesorias.length === 0 ? (
               <div className="sin-actividades">
                 <span
                   className="material-symbols-outlined seccion-icono"
@@ -151,7 +166,7 @@ export default function Inicio() {
               </div>
             ) : (
               <div className="contenedor-flex">
-                {datosInicio.asesorias.map((carta: CartaItem) => (
+                {asesorias.map((carta: CartaItem) => (
                   <Card
                     key={carta.titulo}
                     icono={carta.icono}
@@ -166,7 +181,7 @@ export default function Inicio() {
           </div>
           <div className="grupo-cartas">
             <h3>Preuniversitario</h3>
-            {datosInicio.preuniversitario.length === 0 ? (
+            {preuniversitario.length === 0 ? (
               <div className="sin-actividades">
                 <span
                   className="material-symbols-outlined seccion-icono"
@@ -178,7 +193,7 @@ export default function Inicio() {
               </div>
             ) : (
               <div className="contenedor-flex">
-                {datosInicio.preuniversitario.map((carta: CartaItem) => (
+                {preuniversitario.map((carta: CartaItem) => (
                   <Card
                     key={carta.titulo}
                     icono={carta.icono}
@@ -211,7 +226,7 @@ export default function Inicio() {
           <h3 style={{ textAlign: "center", fontSize: "1.4rem" }}>
             Cursos Destacados
           </h3>
-          {datosInicio.cursos.length === 0 ? (
+          {cursos.length === 0 ? (
             <div className="sin-actividades">
               <span
                 className="material-symbols-outlined seccion-icono"
@@ -222,7 +237,7 @@ export default function Inicio() {
               <p>No hay cursos destacados por el momento.</p>
             </div>
           ) : (
-            <Slider cartas={datosInicio.cursos} />
+            <Slider cartas={cursos} />
           )}
         </section>
 
@@ -242,7 +257,7 @@ export default function Inicio() {
                 iniciativas sociales y proyectos de voluntariado.
               </p>
             </div>
-            {datosInicio.accion.length === 0 ? (
+            {accion.length === 0 ? (
               <div className="sin-actividades">
                 <span
                   className="material-symbols-outlined seccion-icono"
@@ -253,7 +268,7 @@ export default function Inicio() {
                 <p>No hay acciones joven disponibles por el momento.</p>
               </div>
             ) : (
-              datosInicio.accion.map((carta: CartaItem) => (
+              accion.map((carta: CartaItem) => (
                 <Card
                   key={carta.titulo}
                   titulo={carta.titulo}
@@ -280,7 +295,7 @@ export default function Inicio() {
               apoyarte.
             </p>
           </div>
-          {datosInicio.programas.length === 0 ? (
+          {programas.length === 0 ? (
             <div className="sin-actividades">
               <span
                 className="material-symbols-outlined seccion-icono"
@@ -291,7 +306,7 @@ export default function Inicio() {
               <p>No hay programas disponibles por el momento.</p>
             </div>
           ) : (
-            <Slider cartas={datosInicio.programas} />
+            <Slider cartas={programas} />
           )}
         </section>
 
@@ -315,7 +330,7 @@ export default function Inicio() {
               </p>
             </div>
             <div className="grupo-cartas">
-              {datosInicio.salud.length === 0 ? (
+              {salud.length === 0 ? (
                 <div className="sin-actividades">
                   <span
                     className="material-symbols-outlined seccion-icono"
@@ -326,7 +341,7 @@ export default function Inicio() {
                   <p>No hay recursos de salud mental disponibles por el momento.</p>
                 </div>
               ) : (
-                datosInicio.salud.map((carta: CartaItem) => (
+                salud.map((carta: CartaItem) => (
                   <Card
                     key={carta.titulo}
                     icono={carta.icono}
@@ -363,7 +378,7 @@ export default function Inicio() {
           <div className="contenedor-flex">
             <div className="lista-conexion">
               <h3>Actividades</h3>
-              {datosInicio.actividades.length === 0 ? (
+              {actividades.length === 0 ? (
                 <div className="sin-actividades">
                   <span
                     className="material-symbols-outlined seccion-icono"
@@ -375,7 +390,7 @@ export default function Inicio() {
                 </div>
               ) : (
                 <ul>
-                  {datosInicio.actividades.map((item: ConexionItem) => (
+                  {actividades.map((item: ConexionItem) => (
                     <li key={item.texto}>
                       <span className="material-symbols-outlined">
                         {item.icono}
@@ -388,7 +403,7 @@ export default function Inicio() {
             </div>
             <div className="lista-conexion">
               <h3>Talleres</h3>
-              {datosInicio.talleres.length === 0 ? (
+              {talleres.length === 0 ? (
                 <div className="sin-actividades">
                   <span
                     className="material-symbols-outlined seccion-icono"
@@ -400,7 +415,7 @@ export default function Inicio() {
                 </div>
               ) : (
                 <ul>
-                  {datosInicio.talleres.map((item: ConexionItem) => (
+                  {talleres.map((item: ConexionItem) => (
                     <li key={item.texto}>
                       <span className="material-symbols-outlined">
                         {item.icono}
@@ -551,19 +566,19 @@ export default function Inicio() {
                 <span className="material-symbols-outlined seccion-icono">
                   location_on
                 </span>
-                <p>{datosInicio.contacto.direccion}</p>
+                <p>{contacto.direccion}</p>
               </div>
               <div className="ubicacion-item">
                 <span className="material-symbols-outlined seccion-icono">
                   schedule
                 </span>
-                <p>{datosInicio.contacto.horario}</p>
+                <p>{contacto.horario}</p>
               </div>
               <div className="ubicacion-item">
                 <span className="material-symbols-outlined seccion-icono">
                   email
                 </span>
-                <p>{datosInicio.contacto.email}</p>
+                <p>{contacto.email}</p>
               </div>
             </div>
           </div>
