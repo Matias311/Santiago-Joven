@@ -4,7 +4,7 @@ import InfoCard from "../../cartas/InfoCard";
 import type { CartaItem } from "../../types/CartaItem";
 import { useState, useEffect, useRef } from "react";
 
-// Íconos y títulos que aparecen en el encabezado como accesos directos
+// Acceso directo del encabezado hacia la sección de asesorías
 const headerIconos: CartaItem[] = [
   {
     icono: "handshake",
@@ -12,17 +12,10 @@ const headerIconos: CartaItem[] = [
     iconoTamaño: "2.5rem",
     titulo: "Asesorías",
   },
-  {
-    icono: "school",
-    iconoColor: "#E3E3E3",
-    iconoTamaño: "2.5rem",
-    titulo: "Pre Universitario",
-  },
 ];
-// Anclas a las que redirige cada acceso directo del encabezado
-const anclas = ["#asesorias", "#preuniversitario"];
+const anclas = ["#asesorias"];
 
-// Íconos de Material Symbols usados en las tarjetas (pequeño = esquina, grande = decorativo)
+// Íconos de Material Symbols (pequeño = esquina superior derecha, grande = decorativo)
 const IcoNetworkSmall = (
   <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>
     work
@@ -44,39 +37,6 @@ const IcoWorkGrande = (
     style={{ fontVariationSettings: "'FILL' 1", fontSize: "130px" }}
   >
     work
-  </span>
-);
-const IcoBookSmall = (
-  <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>
-    auto_stories
-  </span>
-);
-const IcoBookGrande = (
-  <span className="material-symbols-outlined" style={{ fontSize: "130px" }}>
-    book_5
-  </span>
-);
-const IcoCalcSmall = (
-  <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>
-    auto_stories
-  </span>
-);
-const IcoCalcGrande = (
-  <span className="material-symbols-outlined" style={{ fontSize: "130px" }}>
-    calculate
-  </span>
-);
-const IcoCsSmall = (
-  <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>
-    auto_stories
-  </span>
-);
-const IcoCsGrande = (
-  <span
-    className="material-symbols-outlined"
-    style={{ fontVariationSettings: "'FILL' 1", fontSize: "130px" }}
-  >
-    auto_stories
   </span>
 );
 
@@ -112,57 +72,11 @@ const cartasCapacitacion = [
   },
 ];
 
-// Contenido de las tarjetas de la sección "Pre Universitario"
-const cartasPreuniversitario = [
-  {
-    colorAcento: "#D2954C",
-    etiquetaSuperior: "Competencia Lectora",
-    iconoSuperiorDerecho: IcoBookSmall,
-    iconoGrande: IcoBookGrande,
-    textDefinicion:
-      "La sección de Preuniversitario brinda nivelación académica gratuita a jóvenes que no pueden acceder a centros privados, ayudando a reducir desigualdades y preparando mejor a los estudiantes para las pruebas de admisión universitaria.",
-    textObjetivos:
-      "Fortalecer los conocimientos y habilidades de razonamiento de los estudiantes para que puedan obtener el puntaje necesario e ingresar a la carrera y universidad que desean.",
-    textMetodologia:
-      "Mejorar los conocimientos y habilidades de los estudiantes para ayudarlos a ingresar a la carrera y universidad que desean.",
-    etiquetaCTA: "¿Interesado en el Preuniversitario?",
-    textBoton: "¡Contáctanos!",
-  },
-  {
-    colorAcento: "#129AFE",
-    etiquetaSuperior: "M1 (Matemáticas)",
-    iconoSuperiorDerecho: IcoCalcSmall,
-    iconoGrande: IcoCalcGrande,
-    textDefinicion:
-      "El programa busca que los jóvenes desarrollen pensamiento lógico y resolución de problemas, convirtiendo las matemáticas en una herramienta útil y accesible para todos.",
-    textObjetivos:
-      "Lograr que los estudiantes dominen los contenidos fundamentales y desarrollen habilidades para resolver problemas, obteniendo el puntaje necesario para ingresar a la carrera universitaria que deseen.",
-    textMetodologia:
-      "Fortalecer los conocimientos y habilidades matemáticas de los estudiantes para ayudarlos a alcanzar el puntaje necesario e ingresar a la carrera que desean.",
-    etiquetaCTA: "¿Interesado en el Preuniversitario?",
-    textBoton: "¡Contáctanos!",
-  },
-  {
-    colorAcento: "#62C550",
-    etiquetaSuperior: "Ciencias Sociales",
-    iconoSuperiorDerecho: IcoCsSmall,
-    iconoGrande: IcoCsGrande,
-    textDefinicion:
-      "El programa busca que los jóvenes desarrollen pensamiento crítico sobre historia, economía y ciudadanía, fomentando una participación activa en la sociedad y la democracia.",
-    textObjetivos:
-      "Brindar herramientas de análisis histórico, geográfico y social para comprender la realidad, rendir con éxito la prueba electiva y desarrollar una visión integral de la sociedad.",
-    textMetodologia:
-      "Entregar herramientas de análisis social, histórico y geográfico para comprender la realidad y enfrentar con éxito la prueba electiva.",
-    etiquetaCTA: "¿Interesado en el Preuniversitario?",
-    textBoton: "¡Contáctanos!",
-  },
-];
-
 // Componente slider: muestra una tarjeta a la vez y permite navegar entre ellas.
 // Avanza automáticamente cada 15 segundos.
 function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
-  const [actual, setActual] = useState(0); // Índice de la carta visible
-  const [direccion, setDireccion] = useState<"right" | "left">("right"); // Dirección de la animación
+  const [actual, setActual] = useState(0);
+  const [direccion, setDireccion] = useState<"right" | "left">("right");
   const [animando, setAnimando] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -186,7 +100,8 @@ function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
     }, 15000);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
-    }; // Limpia el timer al desmontar
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const anterior = () =>
@@ -243,18 +158,15 @@ export default function Asesoria() {
     <>
       <header id="asesoria-inicio" className="asesoria-header">
         <div className="asesoria-header-texto">
-          <h1>Asesorías y Preuniversitarios</h1>
+          <h1>Asesorías</h1>
           <p>
             Te acompañamos en tus trámites, estudios y beneficios. Encuentra
             aquí toda la asesoría que necesitas.
           </p>
         </div>
 
-        {/* Accesos directos a cada sección, renderizados como tarjetas clicables */}
-        <div
-          className="carta-seccion"
-          style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
-        >
+        {/* Acceso directo a la sección, centrado al tener un solo elemento */}
+        <div className="carta-seccion">
           {headerIconos.map((carta, index) => (
             <a
               key={carta.titulo}
@@ -281,30 +193,11 @@ export default function Asesoria() {
             >
               handshake
             </span>
-            <h2 style={{ color: "#3f7d44" }}>Asesorías</h2>
+            <h2 style={{ color: "#78A75A" }}>Asesorías</h2>
             <p>Programas de capacitación y asesoría para adultos y jóvenes.</p>
           </div>
           <SliderInfoCard cartas={cartasCapacitacion} />
         </section>
-
-        <div className="fondo-gris">
-          <section id="preuniversitario" className="seccion-informativa">
-            <div className="seccion-encabezado">
-              <span
-                className="material-symbols-outlined seccion-icono"
-                style={{ color: "#DA954B", fontSize: "70px" }}
-              >
-                school
-              </span>
-              <h2 style={{ color: "#b97a3a" }}>Pre Universitario</h2>
-              <p>
-                Nivelación académica gratuita para rendir la PAES y alcanzar tu
-                carrera.
-              </p>
-            </div>
-            <SliderInfoCard cartas={cartasPreuniversitario} />
-          </section>
-        </div>
       </main>
     </>
   );

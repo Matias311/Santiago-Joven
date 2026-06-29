@@ -45,6 +45,15 @@
   transform: translateY(-4px);
 }
 
+.carta-seccion {
+  display: flex;
+  justify-content: center;
+}
+
+.contenido-principal {
+  padding-bottom: 10rem;
+}
+
 /* ── Slider ── */
 
 .slider-infocard {
