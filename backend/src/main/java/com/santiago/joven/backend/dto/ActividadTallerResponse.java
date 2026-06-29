@@ -1,0 +1,23 @@
+package com.santiago.joven.backend.dto;
+
+import com.santiago.joven.backend.model.enums.EstadoActividad;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import lombok.Builder;
+
+/** DTO de salida para una {@code ActividadTaller}. */
+@Builder
+public record ActividadTallerResponse(
+    UUID id,
+    String titulo,
+    String descripcion,
+    UUID categoriaId,
+    LocalDateTime fechaHora,
+    Boolean activo,
+    Integer cantidadMaximaParticipantes,
+    String imagen,
+    UUID ubicacionId,
+    String enlaceInscripcion,
+    Integer inscritos,
+    EstadoActividad estado,
+    UUID usuarioCreadorId) {}
