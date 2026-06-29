@@ -6,12 +6,14 @@ import Card from "../../cartas/Card";
 // Iconos — Programa Lazos
 // ──────────────────────────────────────────
 
+/** Icono pequeño de Lazos, usado en la etiqueta superior de InfoCard. */
 const IconoLazosSmall = (
   <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>
     favorite
   </span>
 );
 
+/** Icono grande de Lazos, usado como ilustración principal en InfoCard. */
 const IconoLazosGrande = (
   <span className="material-symbols-outlined" style={{ fontSize: "130px" }}>
     diversity_3
@@ -22,12 +24,14 @@ const IconoLazosGrande = (
 // Iconos — Programa Senda
 // ──────────────────────────────────────────
 
+/** Icono pequeño de Senda, usado en la etiqueta superior de InfoCard. */
 const IconoSendaSmall = (
   <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>
     route
   </span>
 );
 
+/** Icono grande de Senda, usado como ilustración principal en InfoCard. */
 const IconoSendaGrande = (
   <span className="material-symbols-outlined" style={{ fontSize: "130px" }}>
     directions_walk
@@ -38,16 +42,19 @@ const IconoSendaGrande = (
 // Textos — Programa Lazos
 // ──────────────────────────────────────────
 
+/** Definición general del programa Lazos. */
 const definicionLazos =
   "Lazos es un programa de acompañamiento socioemocional para jóvenes que enfrentan " +
   "situaciones de vulnerabilidad. A través del vínculo con adultos referentes, se busca " +
   "fortalecer la autoestima, la pertenencia y la capacidad de proyectarse hacia el futuro.";
 
+/** Objetivos principales del programa Lazos. */
 const objetivosLazos =
   "Construir relaciones de confianza entre jóvenes y adultos de la comunidad que " +
   "sirvan como red de apoyo real, promoviendo el desarrollo personal, la resiliencia " +
   "y la participación activa en el entorno social.";
 
+/** Metodología de trabajo del programa Lazos. */
 const metodologiaLazos =
   "Sesiones grupales e individuales facilitadas por profesionales capacitados, con " +
   "actividades de expresión, diálogo y construcción de proyectos de vida. El programa " +
@@ -57,16 +64,19 @@ const metodologiaLazos =
 // Textos — Programa Senda
 // ──────────────────────────────────────────
 
+/** Definición general del programa Senda. */
 const definicionSenda =
   "Senda acompaña a jóvenes en situación de calle o riesgo de habitabilidad precaria, " +
   "ofreciendo un recorrido estructurado hacia la reinserción social, laboral y familiar " +
   "mediante el acceso a herramientas concretas y redes de apoyo.";
 
+/** Objetivos principales del programa Senda. */
 const objetivosSenda =
   "Guiar a los jóvenes en la construcción de un proyecto de vida sostenible, " +
   "facilitando el acceso a vivienda transitoria, capacitación laboral y vínculos " +
   "institucionales que permitan una reinserción digna y duradera.";
 
+/** Metodología de trabajo del programa Senda. */
 const metodologiaSenda =
   "Trabajo de calle con duplas psicosociales, derivación a casas de acogida y talleres " +
   "de formación en habilidades para la vida. Se trabaja con enfoque de derechos y " +
@@ -76,6 +86,16 @@ const metodologiaSenda =
 // Página
 // ──────────────────────────────────────────
 
+/**
+ * Página "Programas" de Santiago Joven.
+ *
+ * Muestra un header con accesos rápidos a los programas Lazos y Senda,
+ * seguido de una sección informativa detallada para cada uno (definición,
+ * objetivos y metodología) usando el componente {@link InfoCard}.
+ *
+ * @component
+ * @returns {JSX.Element} Página completa de Programas.
+ */
 export default function Programas() {
   return (
     <>
