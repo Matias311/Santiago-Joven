@@ -11,7 +11,13 @@ import { obtenerToken, eliminarSesion } from "../utils/sessionStorage";
  * URL base de la API. Se puede sobrescribir con una variable de entorno
  * (VITE_API_URL) para apuntar a staging/producción sin tocar código.
  */
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+const DEFAULT_API_URL = import.meta.env.PROD
+  ? "https://santiago-joven-production.up.railway.app"
+  : "http://127.0.0.1:8080";
+
+const API_URL = (import.meta.env.VITE_API_URL ?? DEFAULT_API_URL).replace(/\/+$/, "");
+
+const apiUrl = (path: string) => `${API_URL}${path}`;
 
 /**
  * Mensaje genérico que se muestra ante credenciales inválidas.
@@ -34,7 +40,7 @@ export class ErrorAuth extends Error {}
  * @throws {ErrorAuth} Si las credenciales son inválidas (401) o el servidor falla.
  */
 const login = async (datos: PayloadLogin): Promise<RespuestaAuth> => {
-  const respuesta = await fetch(`${API_URL}api/v1/auth/login`, {
+  const respuesta = await fetch(apiUrl("/api/v1/auth/login"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(datos),
@@ -54,7 +60,7 @@ const login = async (datos: PayloadLogin): Promise<RespuestaAuth> => {
  * @throws {ErrorAuth} Si el correo ya existe (409) o los datos son inválidos (400).
  */
 const register = async (datos: PayloadRegistro): Promise<RespuestaAuth> => {
-  const respuesta = await fetch(`${API_URL}api/v1/auth/register`, {
+  const respuesta = await fetch(apiUrl("/api/v1/auth/register"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(datos),
@@ -74,7 +80,7 @@ const register = async (datos: PayloadRegistro): Promise<RespuestaAuth> => {
  * @throws {ErrorAuth} Si el servidor falla.
  */
 const recuperar = async (datos: PayloadRecuperar): Promise<void> => {
-  const respuesta = await fetch(`${API_URL}api/v1/auth/recuperar`, {
+  const respuesta = await fetch(apiUrl("/api/v1/auth/recuperar"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(datos),
@@ -89,7 +95,7 @@ const recuperar = async (datos: PayloadRecuperar): Promise<void> => {
  * @throws {ErrorAuth} Si el código es inválido o expiró.
  */
 const restablecer = async (datos: PayloadRestablecer): Promise<void> => {
-  const respuesta = await fetch(`${API_URL}api/v1/auth/restablecer`, {
+  const respuesta = await fetch(apiUrl("/api/v1/auth/restablecer"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(datos),

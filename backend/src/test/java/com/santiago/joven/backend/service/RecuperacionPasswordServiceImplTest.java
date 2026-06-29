@@ -3,7 +3,6 @@ package com.santiago.joven.backend.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -22,6 +21,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,29 +29,33 @@ class RecuperacionPasswordServiceImplTest {
 
   @Mock private CodigoRecuperacionRepository codigoRepository;
   @Mock private UsuarioRepository usuarioRepository;
-  @Mock private EmailService emailService;
   @Mock private PasswordEncoder passwordEncoder;
+  @Mock private ApplicationEventPublisher eventPublisher;
 
   @InjectMocks private RecuperacionPasswordServiceImpl service;
 
   @Captor private ArgumentCaptor<CodigoRecuperacion> codigoCaptor;
+  @Captor private ArgumentCaptor<CodigoRecuperacionGeneradoEvent> eventCaptor;
 
   private static final String EMAIL = "user@santiagojoven.org";
 
   @Test
-  void solicitarCodigo_cuandoEmailExiste_generaCodigoYEnviaEmail() {
+  void solicitarCodigo_cuandoEmailExiste_invalidaCodigosPreviosYPublicaEvento() {
     when(usuarioRepository.existsByEmail(EMAIL)).thenReturn(true);
 
     service.solicitarCodigo(EMAIL);
 
-    verify(codigoRepository).save(codigoCaptor.capture());
+    verify(codigoRepository).marcarCodigosActivosComoUsados(EMAIL);
+    verify(codigoRepository).saveAndFlush(codigoCaptor.capture());
     var saved = codigoCaptor.getValue();
     assertThat(saved.getEmail()).isEqualTo(EMAIL);
     assertThat(saved.getCodigo()).hasSize(5);
     assertThat(saved.isUsado()).isFalse();
     assertThat(saved.getExpiracion()).isAfter(LocalDateTime.now());
 
-    verify(emailService).enviarCodigoRecuperacion(eq(EMAIL), eq(saved.getCodigo()));
+    verify(eventPublisher).publishEvent(eventCaptor.capture());
+    assertThat(eventCaptor.getValue().email()).isEqualTo(EMAIL);
+    assertThat(eventCaptor.getValue().codigo()).isEqualTo(saved.getCodigo());
   }
 
   @Test
@@ -60,8 +64,9 @@ class RecuperacionPasswordServiceImplTest {
 
     service.solicitarCodigo(EMAIL);
 
-    verify(codigoRepository, never()).save(any());
-    verify(emailService, never()).enviarCodigoRecuperacion(any(), any());
+    verify(codigoRepository, never()).marcarCodigosActivosComoUsados(any());
+    verify(codigoRepository, never()).saveAndFlush(any());
+    verify(eventPublisher, never()).publishEvent(any());
   }
 
   @Test
