@@ -58,7 +58,11 @@ const IconoFlujo: React.FC = () => (
   </svg>
 );
 
-// Bloque reutilizable que muestra un ícono, título y texto. Se usa tres veces.
+
+ /* Bloque reutilizable para cada fila de contenido de la tarjeta.*/
+ /* Se instancia tres veces: Definición, Objetivos y Metodología.*/
+ /*Acepta cualquier ReactNode como ícono, por lo que admite SVGs, spans o imágenes.*/
+
 const Seccion: React.FC<PropsSeccion> = ({ icono, titulo, texto }) => (
   <div className="ic-section">
     <div className="ic-section-header">
