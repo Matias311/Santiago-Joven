@@ -101,7 +101,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             .orElseThrow(
                 () -> new EntityNotFoundException("Usuario no encontrado con id: " + usuarioId));
     var roles = rolRepository.findAllById(rolIds);
-    usuario.setRoles(Set.copyOf(roles));
+    usuario.setRoles(new java.util.HashSet<>(roles));
     repository.save(usuario);
   }
 

@@ -37,7 +37,9 @@ public class AuthController {
   private final RolRepository rolRepository;
   private final PasswordEncoder passwordEncoder;
 
-  @Operation(summary = "Iniciar sesion", description = "Autentica al usuario y devuelve un token JWT")
+  @Operation(
+      summary = "Iniciar sesion",
+      description = "Autentica al usuario y devuelve un token JWT")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200", description = "Login exitoso, token generado"),
@@ -51,17 +53,16 @@ public class AuthController {
 
     var usuario = usuarioService.findByEmail(request.email());
 
-    var roles =
-        usuarioService.obtenerRoles(usuario.id()).stream()
-            .map(Enum::name)
-            .toList();
+    var roles = usuarioService.obtenerRoles(usuario.id()).stream().map(Enum::name).toList();
 
     var token = jwtTokenProvider.generateToken(usuario.id(), usuario.email(), roles);
 
     return ResponseEntity.ok(new LoginResponse(token, usuario.id(), usuario.email(), roles));
   }
 
-  @Operation(summary = "Registrar usuario", description = "Crea un nuevo usuario con rol USER y devuelve un token JWT")
+  @Operation(
+      summary = "Registrar usuario",
+      description = "Crea un nuevo usuario con rol USER y devuelve un token JWT")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "201", description = "Usuario creado, token generado"),
