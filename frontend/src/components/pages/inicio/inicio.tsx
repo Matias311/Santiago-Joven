@@ -100,8 +100,6 @@ export default function Inicio() {
   if (!datosInicio)
     return <div className="error">No se pudo cargar la información.</div>;
 
-  // Para evitar que el linter tire error al acceder a propiedades desconocidas en el HTML, 
-  // hacemos una conversión segura en una variable local usando tipos definidos de tus imports.
   const encabezado = (datosInicio.encabezado as CartaItem[]) || [];
   const asesorias = (datosInicio.asesorias as CartaItem[]) || [];
   const preuniversitario = (datosInicio.preuniversitario as CartaItem[]) || [];
