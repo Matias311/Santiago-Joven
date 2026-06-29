@@ -1,189 +1,102 @@
+import { useState, useEffect } from "react";
 import "./inicio.css";
 import Card from "../../cartas/Card";
 import Slider from "../../sliders/slider";
 import type { CartaItem } from "../../types/CartaItem";
 import type { ConexionItem } from "../../types/ConexionItem";
 
-const asesorias: CartaItem[] = [
-  {
-    icono: "service_toolbox",
-    iconoColor: "#78A75A",
-    iconoTamaño: "42px",
-    titulo: "Capacitación Adulto",
-    descripcion:
-      "Programas de alfabetización digital y capacitación tecnológica para adultos.",
-  },
-  {
-    icono: "school",
-    iconoColor: "#78A75A",
-    iconoTamaño: "42px",
-    titulo: "Asesoría a Jóvenes",
-    descripcion:
-      "¿Dudas con la TNE, el FUAS o el Servicio Militar? Te orientamos paso a paso.",
-  },
-];
-
-const preuniversitario: CartaItem[] = [
-  {
-    icono: "book_ribbon",
-    iconoColor: "#DA954B",
-    iconoTamaño: "40px",
-    titulo: "Competencia Lectora",
-    descripcion: "Potencia tu comprensión y análisis de textos.",
-  },
-  {
-    icono: "calculate",
-    iconoColor: "#DA954B",
-    iconoTamaño: "40px",
-    titulo: "M1 (Matemáticas)",
-    descripcion: "Refuerza tus habilidades numéricas para la PAES.",
-  },
-  {
-    icono: "account_balance",
-    iconoColor: "#DA954B",
-    iconoTamaño: "40px",
-    titulo: "Ciencias Sociales",
-    descripcion: "Prepárate para la prueba de Historia y Cs. Sociales.",
-  },
-];
-
-const cursos: CartaItem[] = [
-  {
-    icono: "smart_toy",
-    iconoColor: "#789DE5",
-    iconoFondo: "rgba(56,189,248,0.15)",
-    botoncolor: "#0ea5e9",
-    tituloColor: "#0ea5e9",
-    sliderSombra: "0 16px 40px rgba(56,189,248,0.2)",
-    titulo: "Introducción a la Inteligencia Artificial",
-    descripcion:
-      "Descubre los fundamentos de la IA, aprende sobre machine learning y cómo esta tecnología está cambiando el mundo.",
-  },
-  {
-    icono: "content_copy",
-    iconoColor: "#78A75A",
-    iconoFondo: "rgba(32,197,141,0.15)",
-    botoncolor: "#3f7d44",
-    tituloColor: "#3f7d44",
-    sliderSombra: "0 16px 40px rgba(32,197,141,0.2)",
-    titulo: "Excel: Básico e Intermedio",
-    descripcion:
-      "Domina la planilla de cálculo más usada. Desde fórmulas básicas hasta tablas dinámicas.",
-  },
-];
-
-const accion: CartaItem[] = [
-  {
-    titulo: "Proyectos de Impacto Social",
-    descripcion:
-      "Participa en campañas de reforestación, visitas a hogares de ancianos, colectas de alimentos y más. Conecta con otros jóvenes que, como tú, quieren dejar una huella positiva.",
-    boton: "¡Quiero ser voluntario!",
-  },
-];
-
-const programas: CartaItem[] = [
-  {
-    icono: "family_group",
-    iconoColor: "#789DE5",
-    iconoFondo: "rgba(56,189,248,0.15)",
-    botoncolor: "#0ea5e9",
-    tituloColor: "#0ea5e9",
-    sliderSombra: "0 16px 40px rgba(56,189,248,0.2)",
-    titulo: "Programa Lazos",
-    descripcion:
-      "El Programa Lazos es una iniciativa del Gobierno de Chile que busca prevenir conductas de riesgo en jóvenes.",
-    boton: "¡Conócenos aquí!",
-    clase: "programa-lazos",
-  },
-  {
-    icono: "potted_plant",
-    iconoColor: "#B15330",
-    iconoFondo: "rgba(197, 120, 32, 0.15)",
-    botoncolor: "#B15330",
-    tituloColor: "#B15330",
-    sliderSombra: "0 16px 40px rgba(197, 120, 32, 0.15)",
-    titulo: "Programa Senda",
-    descripcion:
-      "El Programa Senda es una iniciativa del Gobierno de Chile que busca prevenir conductas de riesgo en jóvenes.",
-    boton: "¡Conócenos aquí!",
-    clase: "programa-senda",
-  },
-];
-
-const salud: CartaItem[] = [
-  {
-    icono: "call",
-    titulo: "Fono *4141",
-    subtitulo: "Prevención del Suicidio",
-    descripcion:
-      "No estás solo, no estás sola. Línea gratuita, confidencial y disponible las 24 horas.",
-  },
-  {
-    icono: "home_health",
-    titulo: "SAMU 131",
-    subtitulo: "Emergencias Vitales",
-    descripcion:
-      "Llama a la Ambulancia (SAMU) en caso de riesgo vital inmediato o emergencia grave.",
-  },
-  {
-    icono: "record_voice_over",
-    titulo: "Salud Responde",
-    subtitulo: "Orientación 24/7",
-    descripcion:
-      "Llama al 600 360 77 77 para recibir orientación de profesionales de salud.",
-  },
-];
-
-const actividades: ConexionItem[] = [
-  {
-    icono: "event_available",
-    texto: "Ferias vocacionales y de emprendimiento.",
-  },
-  { icono: "account_balance", texto: "Viaje cultural al Museo." },
-  { icono: "conversation", texto: "Reuniones y círculos de conversación." },
-];
-
-const talleres: ConexionItem[] = [
-  { icono: "mic", texto: "Taller de liderazgo y oratoria." },
-  { icono: "draw", texto: "Talleres creativos (Música, dibujo, teatro)." },
-  { icono: "lightbulb", texto: "Taller de debate y pensamiento crítico." },
-];
-
-const contacto = {
-  direccion:
-    "Herrera 360, Comuna de Santiago. (Centro Comunitario Santiago en Compañía)",
-  horario: "Lunes a jueves [09:00 - 18:00 hrs] - Viernes [09:00 a 17:00 hrs]",
-  email: "stgojoven@munistgo.cl",
-};
-
-const encabezado: CartaItem[] = [
-  {
-    icono: "handshake",
-    iconoColor: "#E3E3E3",
-    iconoTamaño: "2.5rem",
-    titulo: "Apoyo Joven",
-  },
-  {
-    icono: "rocket",
-    iconoColor: "#E3E3E3",
-    iconoTamaño: "2.5rem",
-    titulo: "Proyección",
-  },
-  {
-    icono: "campaign",
-    iconoColor: "#E3E3E3",
-    iconoTamaño: "2.5rem",
-    titulo: "Acción Joven",
-  },
-  {
-    icono: "diversity_3",
-    iconoColor: "#E3E3E3",
-    iconoTamaño: "2.5rem",
-    titulo: "Conexión",
-  },
-];
-
 export default function Inicio() {
+  const [datosInicio, setDatosInicio] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const rawUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "";
+    const apiBase = `${rawUrl}/api/v1`;
+
+    Promise.allSettled([
+      fetch(`${apiBase}/asesorias`).then((r) => r.json()),
+      fetch(`${apiBase}/cursos-destacados`).then((r) => r.json()),
+      fetch(`${apiBase}/acciones-joven`).then((r) => r.json()),
+      fetch(`${apiBase}/programas`).then((r) => r.json()),
+      fetch(`${apiBase}/salud-mental`).then((r) => r.json()),
+      fetch(`${apiBase}/actividades-talleres`).then((r) => r.json()),
+      fetch(`${apiBase}/ubicaciones`).then((r) => r.json()),
+    ]).then((results) => {
+      const ok = (r: PromiseSettledResult<any>) =>
+        r.status === "fulfilled" ? r.value : [];
+
+      results.forEach((r, i) => {
+        if (r.status === "rejected") {
+          console.error(`Fetch #${i} falló:`, r.reason);
+        }
+      });
+
+      const [
+        asesoriasData,
+        cursosData,
+        accionData,
+        programasData,
+        saludData,
+        actividadesData,
+        ubicacionesData,
+      ] = results.map(ok);
+
+      const actividades: ConexionItem[] = (actividadesData || [])
+        .filter((item: any) => !/taller/i.test(item.titulo))
+        .map((item: any) => ({
+          icono: "sports_soccer",
+          texto: item.titulo,
+        }));
+
+      const talleres: ConexionItem[] = (actividadesData || [])
+        .filter((item: any) => /taller/i.test(item.titulo))
+        .map((item: any) => ({
+          icono: "work_outline",
+          texto: item.titulo,
+        }));
+
+      setDatosInicio({
+        encabezado: [],
+        asesorias: (asesoriasData || []).map((item: any) => ({
+          titulo: item.titulo,
+          descripcion: item.definicion || item.objetivos || "",
+          icono: "support",
+        })),
+        preuniversitario: [],
+        cursos: (cursosData || []).map((item: any) => ({
+          titulo: item.titulo,
+          descripcion: item.eslogan || item.descripcion || "",
+          icono: "school",
+        })),
+        accion: (accionData || []).map((item: any) => ({
+          titulo: item.titulo,
+          descripcion: item.descripcion,
+          boton: "Ver más",
+        })),
+        programas: (programasData || []).map((item: any) => ({
+          titulo: item.titulo,
+          descripcion: item.descripcion,
+          icono: "groups",
+        })),
+        salud: (saludData || []).map((item: any) => ({
+          titulo: item.titulo,
+          descripcion: item.descripcion,
+          icono: item.icono || "health_and_safety",
+        })),
+        actividades,
+        talleres,
+        contacto: {
+          direccion: ubicacionesData?.[0]?.direccion ?? "",
+        },
+      });
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading)
+    return <div className="cargando">Cargando Santiago Joven...</div>;
+  if (!datosInicio)
+    return <div className="error">No se pudo cargar la información.</div>;
   return (
     <>
       {/* encabezado de la pagina principal */}
@@ -194,7 +107,7 @@ export default function Inicio() {
           <p className="subtitulo-edad">Dirigido a jóvenes de 14 a 29 años.</p>
         </div>
         <div className="carta-seccion">
-          {encabezado.map((carta) => (
+          {datosInicio.encabezado?.map((carta: CartaItem) => (
             <Card
               key={carta.titulo}
               icono={carta.icono}
@@ -226,7 +139,7 @@ export default function Inicio() {
           <div className="grupo-cartas">
             <h3>Asesoría</h3>
             <div className="contenedor-flex">
-              {asesorias.map((carta) => (
+              {datosInicio.asesorias?.map((carta: CartaItem) => (
                 <Card
                   key={carta.titulo}
                   icono={carta.icono}
@@ -241,7 +154,7 @@ export default function Inicio() {
           <div className="grupo-cartas">
             <h3>Preuniversitario</h3>
             <div className="contenedor-flex">
-              {preuniversitario.map((carta) => (
+              {datosInicio.preuniversitario?.map((carta: CartaItem) => (
                 <Card
                   key={carta.titulo}
                   icono={carta.icono}
@@ -273,7 +186,7 @@ export default function Inicio() {
           <h3 style={{ textAlign: "center", fontSize: "1.4rem" }}>
             Cursos Destacados
           </h3>
-          <Slider cartas={cursos} />
+          <Slider cartas={datosInicio.cursos || []} />
         </section>
 
         {/* accion joven */}
@@ -292,7 +205,7 @@ export default function Inicio() {
                 iniciativas sociales y proyectos de voluntariado.
               </p>
             </div>
-            {accion.map((carta) => (
+            {datosInicio.accion?.map((carta: CartaItem) => (
               <Card
                 key={carta.titulo}
                 titulo={carta.titulo}
@@ -318,7 +231,7 @@ export default function Inicio() {
               apoyarte.
             </p>
           </div>
-          <Slider cartas={programas} />
+          <Slider cartas={datosInicio.programas || []} />
         </section>
 
         {/* salud mental */}
@@ -341,7 +254,7 @@ export default function Inicio() {
               </p>
             </div>
             <div className="grupo-cartas">
-              {salud.map((carta) => (
+              {datosInicio.salud?.map((carta: CartaItem) => (
                 <Card
                   key={carta.titulo}
                   icono={carta.icono}
@@ -378,7 +291,7 @@ export default function Inicio() {
             <div className="lista-conexion">
               <h3>Actividades</h3>
               <ul>
-                {actividades.map((item) => (
+                {datosInicio.actividades?.map((item: ConexionItem) => (
                   <li key={item.texto}>
                     <span className="material-symbols-outlined">
                       {item.icono}
@@ -391,7 +304,7 @@ export default function Inicio() {
             <div className="lista-conexion">
               <h3>Talleres</h3>
               <ul>
-                {talleres.map((item) => (
+                {datosInicio.talleres?.map((item: ConexionItem) => (
                   <li key={item.texto}>
                     <span className="material-symbols-outlined">
                       {item.icono}
@@ -541,19 +454,19 @@ export default function Inicio() {
                 <span className="material-symbols-outlined seccion-icono">
                   location_on
                 </span>
-                <p>{contacto.direccion}</p>
+                <p>{datosInicio.contacto?.direccion}</p>
               </div>
               <div className="ubicacion-item">
                 <span className="material-symbols-outlined seccion-icono">
                   schedule
                 </span>
-                <p>{contacto.horario}</p>
+                <p>{datosInicio.contacto?.horario}</p>
               </div>
               <div className="ubicacion-item">
                 <span className="material-symbols-outlined seccion-icono">
                   email
                 </span>
-                <p>{contacto.email}</p>
+                <p>{datosInicio.contacto?.email}</p>
               </div>
             </div>
           </div>
