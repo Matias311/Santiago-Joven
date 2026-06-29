@@ -1,12 +1,11 @@
-# Pruebas Unitarias
+# Pruebas
 
 ## Stack
 
 | Herramienta | Propósito |
 |---|---|
-| JUnit 5 | Framework de testing |
-| Mockito 5 | Mockeo de dependencias |
-| AssertJ | Aserciones fluidas |
+| JUnit 5 + Mockito 5 + AssertJ | Tests backend (Java) |
+| Cypress 15 | Tests E2E frontend (React) |
 | H2 (modo PostgreSQL) | Base de datos en memoria para `@DataJpaTest` |
 | `@DataJpaTest` | Test de repositorios (solo capa JPA) |
 | `@WebMvcTest` | Test de controladores (solo capa web) |
@@ -15,29 +14,30 @@
 ## Estructura
 
 ```
-src/test/java/com/santiago/joven/backend/
+backend/src/test/java/com/santiago/joven/backend/
 ├── repository/       → @DataJpaTest (64 tests, 18 clases)
 ├── service/          → Mockito (106 tests, 14 clases)
 ├── controller/       → @WebMvcTest (188 tests, 18 clases)
 ├── security/         → Tests planos + Mockito (17 tests, 3 clases)
 ├── integration/      → @SpringBootTest (42 tests, 4 clases)
 └── BackendApplicationTests.java  → Smoke test
-```
+
+frontend/
+└── cypress/e2e/      → Cypress (7 tests, 2 archivos)
 
 ### Resumen de cobertura
 
-| Capa      | Clases de test | Tests | Técnica              |
-|-----------|----------------|-------|----------------------|
-| Repository| 18             | 64    | `@DataJpaTest`       |
-| Service   | 14             | 106   | `@ExtendWith(MockitoExtension.class)` |
-| Controller| 18             | 188   | `@WebMvcTest`        |
-| Security  | 3              | 17    | JUnit + Mockito      |
-| Integration| 4             | 42    | `@SpringBootTest` + `RestClient` |
-| **Total** | **57**         | **418** | —                    |
+| Capa         | Clases/archivos | Tests | Técnica              |
+|--------------|----------------|-------|----------------------|
+| Repository   | 18             | 64    | `@DataJpaTest`       |
+| Service      | 14             | 106   | `@ExtendWith(MockitoExtension.class)` |
+| Controller   | 18             | 188   | `@WebMvcTest`        |
+| Security     | 3              | 17    | JUnit + Mockito      |
+| Integration  | 4              | 42    | `@SpringBootTest` + `RestClient` |
+| E2E (front)  | 2              | 7     | Cypress              |
+| **Total**    | **59**         | **425** | —                    |
 
 ## Ejecución con Docker
-
-Los tests se ejecutan por separado para evitar que un servicio aborte al otro:
 
 ```bash
 # Backend (Maven)
@@ -46,6 +46,22 @@ docker compose --profile test run backend-test
 # Frontend (lint)
 docker compose --profile test run frontend-test
 ```
+
+## CI (GitHub Actions)
+
+El workflow `.github/workflows/pr.yml` se ejecuta en cada PR contra `main` con 3 jobs paralelos:
+
+1. **Backend Tests**: JDK 21, `mvn test`
+2. **Frontend Lint**: Node 22, `npm ci`, `npm run lint`
+3. **Frontend E2E**: Node 22, `npm ci`, Cypress con Electron headless contra Vite dev server
+
+## Ejecutar E2E con Docker
+
+```bash
+docker compose --profile test run --rm frontend-e2e
+```
+
+Esto levanta un contenedor con la imagen oficial `cypress/included:15.18.0` (Node, Xvfb, Electron incluidos), monta el proyecto frontend, instala dependencias, inicia Vite, y corre Cypress en modo headless.
 
 ## Estrategia por capa
 
@@ -99,6 +115,13 @@ docker compose --profile test run frontend-test
 - `BaseIntegrationTest.authClient(String token)` permite autenticarse con distintos usuarios en un mismo test
 - Semilla de datos: `TestDataInitializer` con `@Profile("test")` inserta roles `USER`, `ADMIN`, `MODERATOR`, `VOLUNTEER`, permisos `MANAGE_USERS` y `CREATE_ACTIVITY` con asignación al rol `ADMIN` via `roles_permisos`
 - Para tests admin se usa `JdbcTemplate` para asignar el rol `ADMIN` al usuario registrado y luego obtener un token actualizado vía `auth/login`
+
+### E2E — Frontend (Cypress)
+- Corre contra el servidor Vite de desarrollo en `http://localhost:5173`
+- Navegador: Electron en modo headless (CI) o interactivo (`cy:open`)
+- El popup de encuesta (`PopupEncuesta`) se cierra con `click({ force: true })` cuando interfiere con elementos
+- **`cypress/e2e/inicio.cy.ts`** (6 tests): logo y navbar, secciones del home, toggle de modo oscuro (`force: true` por popup), filtros de calendario, enlaces de navegación, widget de accesibilidad
+- **`cypress/e2e/asesoria.cy.ts`** (1 test): carga directa de `/asesoria` (no hay enlace desde inicio hacia esta ruta)
 
 ### Mapper (test plano)
 - Convierte `Request` → `Entity` → `Response`

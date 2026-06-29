@@ -78,6 +78,20 @@ A continuación, las decisiones principales tomadas durante el desarrollo, expli
 - **Decisión:** springdoc-openapi con @Tag, @Operation, @SecurityRequirement
 - **Consecuencia:** swagger-ui/index.html disponible, canaddos para endpoints protegidos
 
+## ¿Por qué Cypress para E2E?
+
+- **Contexto:** Frontend React sin tests; se necesitaban pruebas de navegación, renderizado e interacción del usuario.
+- **Decisión:** Cypress 15 con Electron headless, integrado via Docker Compose (`cypress/included`) y GitHub Actions.
+- **Alternativas:** Playwright (similar), Selenium (más lento), Testing Library (solo unit/component).
+- **Consecuencia:** 7 tests E2E que verifican renderizado de secciones, navegación entre rutas y toggle de modo oscuro.
+
+## ¿Por qué tests de integración con RestClient?
+
+- **Contexto:** Verificar flujos completos autenticados (JWT + Spring Security + BD real) sin mockear capas.
+- **Decisión:** `@SpringBootTest(webEnvironment=RANDOM_PORT)` + `RestClient` para llamar a la API embebida.
+- **Alternativas:** `TestRestTemplate` (no disponible en Spring Boot 4), MockMvc (no prueba serialización HTTP real).
+- **Consecuencia:** 42 tests de integración con autenticación real y BD H2.
+
 ## ¿Por qué no MapStruct?
 
 - **Contexto:** MapStruct daba errores de compilación con Records
