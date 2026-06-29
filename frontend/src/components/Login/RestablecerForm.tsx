@@ -1,7 +1,10 @@
 import { useRef, useState } from "react";
+import { authService, ErrorAuth } from "../services/AuthService";
 import type { ErroresCampo } from "../types/Auth";
 
 type Props = {
+  /** Correo del usuario, necesario para el endpoint de restablecimiento. */
+  correo: string;
   /** Callback que se ejecuta cuando la contraseña fue restablecida exitosamente. */
   onExito: () => void;
 };
@@ -9,15 +12,13 @@ type Props = {
 /**
  * Formulario del segundo paso de recuperación de contraseña.
  * Permite ingresar el código OTP de 5 dígitos recibido por correo
- * y definir una nueva contraseña.
- *
- * @todo Conectar con `authService.resetPassword` cuando el backend soporte este endpoint.
+ * y definir una nueva contraseña. Llama a POST /api/v1/auth/restablecer.
  *
  * @component
- * @param props - Callback que se ejecuta al restablecer exitosamente.
+ * @param props - Correo del usuario y callback que se ejecuta al restablecer exitosamente.
  * @returns Formulario de restablecimiento de contraseña.
  */
-export const RestablecerForm = ({ onExito }: Props) => {
+export const RestablecerForm = ({ correo, onExito }: Props) => {
   const [codigo, setCodigo] = useState(Array(5).fill(""));
   const [nuevaPassword, setNuevaPassword] = useState("");
   const [errores, setErrores] = useState<ErroresCampo>({});
@@ -77,17 +78,24 @@ export const RestablecerForm = ({ onExito }: Props) => {
 
   /**
    * Maneja el envío del formulario.
-   * Valida los campos y simula la llamada a la API con un delay de 800ms.
+   * Valida los campos, llama a la API con el correo, código y nueva contraseña.
    * Notifica al padre cuando el restablecimiento fue exitoso.
    */
   const handleSubmit = async () => {
     if (!validar()) return;
     setCargando(true);
-    // TODO: reemplazar por authService.resetPassword({ codigo: codigo.join(""), nuevaPassword })
-    // cuando el backend soporte este endpoint.
-    await new Promise((r) => setTimeout(r, 800));
-    setCargando(false);
-    onExito();
+    try {
+      await authService.restablecer({
+        email: correo,
+        codigo: codigo.join(""),
+        nuevaPassword,
+      });
+      onExito();
+    } catch (error) {
+      setErrores({ codigo: error instanceof ErrorAuth ? error.message : "Error inesperado" });
+    } finally {
+      setCargando(false);
+    }
   };
 
   return (
@@ -125,4 +133,4 @@ export const RestablecerForm = ({ onExito }: Props) => {
       </button>
     </>
   );
-}
+};

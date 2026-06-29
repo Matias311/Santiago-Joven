@@ -90,7 +90,7 @@ A continuación, las decisiones principales tomadas durante el desarrollo, expli
 - **Contexto:** Verificar flujos completos autenticados (JWT + Spring Security + BD real) sin mockear capas.
 - **Decisión:** `@SpringBootTest(webEnvironment=RANDOM_PORT)` + `RestClient` para llamar a la API embebida.
 - **Alternativas:** `TestRestTemplate` (no disponible en Spring Boot 4), MockMvc (no prueba serialización HTTP real).
-- **Consecuencia:** 42 tests de integración con autenticación real y BD H2.
+- **Consecuencia:** 52 tests de integración con autenticación real y BD H2.
 
 ## ¿Por qué asignar el rol USER en create() en vez de un paso separado?
 

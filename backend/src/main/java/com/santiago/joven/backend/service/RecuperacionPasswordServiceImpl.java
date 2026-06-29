@@ -6,6 +6,7 @@ import com.santiago.joven.backend.repository.UsuarioRepository;
 import java.time.LocalDateTime;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +20,8 @@ public class RecuperacionPasswordServiceImpl implements RecuperacionPasswordServ
 
   private final CodigoRecuperacionRepository codigoRepository;
   private final UsuarioRepository usuarioRepository;
-  private final EmailService emailService;
   private final PasswordEncoder passwordEncoder;
+  private final ApplicationEventPublisher eventPublisher;
 
   @Override
   public void solicitarCodigo(String email) {
@@ -31,15 +32,17 @@ public class RecuperacionPasswordServiceImpl implements RecuperacionPasswordServ
     var codigo = String.format("%05d", ThreadLocalRandom.current().nextInt(10000, 100000));
     var now = LocalDateTime.now();
 
+    codigoRepository.marcarCodigosActivosComoUsados(email);
+
     var entity = new CodigoRecuperacion();
     entity.setEmail(email);
     entity.setCodigo(codigo);
     entity.setExpiracion(now.plusMinutes(EXPIRACION_MINUTOS));
     entity.setUsado(false);
     entity.setFechaCreacion(now);
-    codigoRepository.save(entity);
+    codigoRepository.saveAndFlush(entity);
 
-    emailService.enviarCodigoRecuperacion(email, codigo);
+    eventPublisher.publishEvent(new CodigoRecuperacionGeneradoEvent(email, codigo));
   }
 
   @Override

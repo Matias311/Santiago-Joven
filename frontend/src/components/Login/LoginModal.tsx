@@ -35,6 +35,7 @@ const TITULOS: Record<ModoAuth, string> = {
 export const LoginModal = ({ isOpen, onClose, onLoginExitoso }: PropsLoginModal) => {
   const [modo, setModo] = useState<ModoAuth>("login");
   const [mensajeExito, setMensajeExito] = useState("");
+  const [correoRecuperacion, setCorreoRecuperacion] = useState("");
 
   /**
    * Cada vez que el modal se abre, resetea el modo a "login" y limpia
@@ -44,6 +45,7 @@ export const LoginModal = ({ isOpen, onClose, onLoginExitoso }: PropsLoginModal)
     if (isOpen) {
       setModo("login");
       setMensajeExito("");
+      setCorreoRecuperacion("");
     }
   }, [isOpen]);
 
@@ -91,11 +93,14 @@ export const LoginModal = ({ isOpen, onClose, onLoginExitoso }: PropsLoginModal)
         {modo === "registro" && <RegistroForm onExito={handleExito} />}
 
         {modo === "recuperar-correo" && (
-          <RecuperarForm onEnviar={() => setModo("restablecer-correo")} />
+          <RecuperarForm onEnviar={(correo) => {
+            setCorreoRecuperacion(correo);
+            setModo("restablecer-correo");
+          }} />
         )}
 
         {modo === "restablecer-correo" && (
-          <RestablecerForm onExito={handleRestablecerExito} />
+          <RestablecerForm correo={correoRecuperacion} onExito={handleRestablecerExito} />
         )}
       </div>
     </div>

@@ -376,4 +376,44 @@ class AuthIntegrationTest extends BaseIntegrationTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
+
+  @Test
+  void recuperar_dosVeces_invalidaCodigoAnterior() {
+    var email = "doble-otp@santiagojoven.org";
+    client().post()
+        .uri("/api/v1/auth/register")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(UsuarioRequest.builder()
+            .email(email).password("password123").nombre("T").apellido("U").build())
+        .retrieve()
+        .toBodilessEntity();
+
+    client().post()
+        .uri("/api/v1/auth/recuperar")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new RecuperarRequest(email))
+        .retrieve()
+        .toBodilessEntity();
+
+    client().post()
+        .uri("/api/v1/auth/recuperar")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new RecuperarRequest(email))
+        .retrieve()
+        .toBodilessEntity();
+
+    var total = jdbcTemplate.queryForObject(
+        "SELECT COUNT(*) FROM codigos_recuperacion WHERE email = ?",
+        Integer.class, email);
+    var activos = jdbcTemplate.queryForObject(
+        "SELECT COUNT(*) FROM codigos_recuperacion WHERE email = ? AND usado = false",
+        Integer.class, email);
+    var usados = jdbcTemplate.queryForObject(
+        "SELECT COUNT(*) FROM codigos_recuperacion WHERE email = ? AND usado = true",
+        Integer.class, email);
+
+    assertThat(total).isEqualTo(2);
+    assertThat(activos).isEqualTo(1);
+    assertThat(usados).isEqualTo(1);
+  }
 }
