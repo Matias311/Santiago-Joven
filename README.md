@@ -30,7 +30,7 @@ DB_PASSWORD=
 
   **Tests** (ejecutar por separado para evitar que un servicio aborte al otro):
   ```bash
-  docker compose --profile test run --build backend-test   # Backend: 418 tests unitarios + integracion
+  docker compose --profile test run --build backend-test   # Backend: 429 tests unitarios + integracion
   docker compose --profile test run frontend-test          # Frontend: ESLint
   docker compose --profile test run --rm frontend-e2e      # Frontend: 7 tests E2E con Cypress
   ```

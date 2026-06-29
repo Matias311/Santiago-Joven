@@ -33,9 +33,9 @@ frontend/
 | Service      | 14             | 106   | `@ExtendWith(MockitoExtension.class)` |
 | Controller   | 18             | 188   | `@WebMvcTest`        |
 | Security     | 3              | 17    | JUnit + Mockito      |
-| Integration  | 4              | 43    | `@SpringBootTest` + `RestClient` |
+| Integration  | 4              | 46    | `@SpringBootTest` + `RestClient` |
 | E2E (front)  | 2              | 7     | Cypress              |
-| **Total**    | **59**         | **426** | —                    |
+| **Total**    | **59**         | **429** | —                    |
 
 ## Ejecución con Docker
 
@@ -111,7 +111,7 @@ Esto levanta un contenedor con la imagen oficial `cypress/included:15.18.0` (Nod
 - **AuthIntegrationTest** (9 tests): registro+login, email+password incorrecto (401), email inexistente (401), email duplicado (409), email inválido (400), password vacío (400), login con usuario inactivo (401), token inválido en endpoint protegido (403), registro con verificación de rol USER y permisos en BD
 - **InscripcionIntegrationTest** (15 tests): create (201), usuarioId inexistente (404), recursoId ACTIVIDAD inexistente (404), duplicado (409), sin token (403), actividad sin límite de cupo, actividad con cupo máximo, usuario inactivo (400), DELETE sin permiso (403), GET by ID inexistente (404), GET por-usuario, GET por-recurso, GET exists (true/false), GET count-por-recurso
 - **AdminInscripcionIntegrationTest** (3 tests): DELETE con permiso ADMIN (204), UPDATE con permiso ADMIN (200), flujo completo con verificación de contador `inscritos`
-- **UsuarioIntegrationTest** (16 tests): listar usuarios (200), sin token (403), con token USER (403), obtener por ID (200/404), obtener por email (200/404), exists email (true/false), crear (201), email duplicado (409), actualizar (200/404), eliminar (204/404), eliminar con USER (403)
+- **UsuarioIntegrationTest** (19 tests): listar usuarios (200), sin token (403), con token USER (403), obtener por ID (200/404), obtener por email (200/404), exists email (true/false), crear (201), email duplicado (409), actualizar (200/404), eliminar (204/404), eliminar con USER (403), asignar roles como admin (204), asignar roles sin token (403), asignar roles con USER (403)
 - `BaseIntegrationTest.authClient(String token)` permite autenticarse con distintos usuarios en un mismo test
 - Semilla de datos: `TestDataInitializer` con `@Profile("test")` inserta roles `USER`, `ADMIN`, `MODERATOR`, `VOLUNTEER`, permisos `MANAGE_USERS` y `CREATE_ACTIVITY` con asignación al rol `ADMIN` via `roles_permisos`
 - Para tests admin se usa `JdbcTemplate` para asignar el rol `ADMIN` al usuario registrado y luego obtener un token actualizado vía `auth/login`

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.santiago.joven.backend.dto.UsuarioRequest;
 import com.santiago.joven.backend.dto.UsuarioResponse;
 import com.santiago.joven.backend.dto.UsuarioUpdate;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -268,6 +269,56 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
         .toBodilessEntity();
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  void asignarRoles_comoAdmin_retorna204() {
+    var moderatorRolId = jdbc.queryForObject(
+        "SELECT id FROM roles WHERE nombre = ?", UUID.class, "MODERATOR");
+
+    var response = authClient(adminToken).put()
+        .uri("/api/v1/usuarios/{id}/roles", testUserId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new com.santiago.joven.backend.dto.AsignarRolesRequest(Set.of(moderatorRolId)))
+        .retrieve()
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+    var roles = jdbc.queryForList(
+        "SELECT r.nombre FROM roles r "
+            + "JOIN usuarios_roles ur ON ur.rol_id = r.id "
+            + "WHERE ur.usuario_id = ?",
+        String.class, testUserId);
+    assertThat(roles).contains("MODERATOR");
+  }
+
+  @Test
+  void asignarRoles_sinToken_retorna403() {
+    var response = client().put()
+        .uri("/api/v1/usuarios/{id}/roles", UUID.randomUUID())
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new com.santiago.joven.backend.dto.AsignarRolesRequest(Set.of(UUID.randomUUID())))
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  void asignarRoles_conUsuarioComun_retorna403() {
+    var userToken = registrarUsuarioComun();
+
+    var response = authClient(userToken).put()
+        .uri("/api/v1/usuarios/{id}/roles", UUID.randomUUID())
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new com.santiago.joven.backend.dto.AsignarRolesRequest(Set.of(UUID.randomUUID())))
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
   @Test

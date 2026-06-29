@@ -99,6 +99,13 @@ A continuación, las decisiones principales tomadas durante el desarrollo, expli
 - **Alternativas:** Dejarlo en dos pasos (create + asignarRoles), que expone una ventana donde el usuario existe sin rol.
 - **Consecuencia:** El registro es atómico: o el usuario se crea con su rol o no se crea. El controller ya no necesita `RolRepository`.
 
+## ¿Por qué exponer asignar roles como endpoint separado?
+
+- **Contexto:** El admin necesitaba poder cambiar el rol de un usuario (ej: promover a MODERATOR). Ya existía `UsuarioService.asignarRoles()` pero sin endpoint REST.
+- **Decisión:** Endpoint `PUT /api/v1/usuarios/{id}/roles` protegido con `PERMISSION_MANAGE_USERS` (el admin ya lo tiene). Recibe un `Set<UUID>` de IDs de roles y los asigna al usuario.
+- **Alternativas:** Meterlo en el `PUT /usuarios/{id}` existente (rompe el contrato del DTO `UsuarioUpdate`), o en `RolController` (menos cohesivo).
+- **Consecuencia:** El admin puede asignar cualquier rol desde el frontend sin tocar la BD directamente.
+
 ## ¿Por qué no MapStruct?
 
 - **Contexto:** MapStruct daba errores de compilación con Records
