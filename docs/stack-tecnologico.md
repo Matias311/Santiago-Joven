@@ -31,7 +31,7 @@
 - **JUnit 5 + Mockito 5 + AssertJ** — Tests unitarios e integración del backend
 - **H2 (modo PostgreSQL)** — Base de datos embebida para tests
 - **Cypress 15** — Tests E2E del frontend (React)
-- **434 tests backend** (unitarios + integración) + **7 tests E2E frontend**
+- **435 tests backend** (unitarios + integración) + **7 tests E2E frontend**
 
 ## DevOps
 - **Docker** + **Docker Compose** (3 perfiles: dev, test, prod)

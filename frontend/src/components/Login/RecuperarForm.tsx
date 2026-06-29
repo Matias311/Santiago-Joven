@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { authService, ErrorAuth } from "../services/AuthService";
 import type { ErroresCampo } from "../types/Auth";
 
 /**
@@ -11,16 +12,15 @@ const ES_CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 type Props = {
   /**
    * Callback que se ejecuta cuando el correo fue enviado exitosamente.
-   * Recibe el correo ingresado para que el paso siguiente pueda usarlo si es necesario.
+   * Recibe el correo ingresado para que el paso siguiente pueda usarlo.
    */
   onEnviar: (correo: string) => void;
 };
 
 /**
  * Formulario del primer paso de recuperación de contraseña.
- * Pide el correo registrado y simula el envío de un código OTP.
- *
- * @todo Conectar con `authService.recoverByEmail` cuando el backend soporte este endpoint.
+ * Pide el correo registrado y llama a POST /api/v1/auth/recuperar
+ * para enviar un código OTP al correo del usuario.
  *
  * @component
  * @param props - Callback que se ejecuta al enviar el correo exitosamente.
@@ -48,16 +48,20 @@ export const RecuperarForm = ({ onEnviar }: Props) => {
 
   /**
    * Maneja el envío del formulario.
-   * Valida el correo, simula la llamada a la API con un delay de 800ms
-   * y notifica al padre para avanzar al paso del OTP.
+   * Valida el correo, llama a la API y notifica al padre para avanzar al paso del OTP.
+   * Si la API falla, muestra el mensaje de error bajo el campo.
    */
   const handleSubmit = async () => {
     if (!validar()) return;
     setCargando(true);
-    // TODO: reemplazar por authService.recoverByEmail({ correo }) cuando el backend lo soporte.
-    await new Promise((r) => setTimeout(r, 800));
-    setCargando(false);
-    onEnviar(correo);
+    try {
+      await authService.recuperar({ email: correo });
+      onEnviar(correo);
+    } catch (error) {
+      setErrores({ correo: error instanceof ErrorAuth ? error.message : "Error inesperado" });
+    } finally {
+      setCargando(false);
+    }
   };
 
   return (

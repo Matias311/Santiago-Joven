@@ -32,6 +32,9 @@ jwt:
 app:
   mail:
     from: ${SMTP_FROM:no-reply@santiagojoven.org}
+    brevo-api-key: ${BREVO_API_KEY:}
+    brevo-url: ${BREVO_API_URL:https://api.brevo.com/v3/smtp/email}
+    brevo-timeout-ms: ${BREVO_TIMEOUT_MS:5000}
 ---
 spring:
   config:

@@ -16,6 +16,10 @@ public interface CodigoRecuperacionRepository extends JpaRepository<CodigoRecupe
       String email, String codigo, LocalDateTime now);
 
   @Modifying
+  @Query("UPDATE CodigoRecuperacion c SET c.usado = true WHERE c.email = :email AND c.usado = false")
+  int marcarCodigosActivosComoUsados(String email);
+
+  @Modifying
   @Query("DELETE FROM CodigoRecuperacion c WHERE c.expiracion < :fecha")
   int deleteExpiradosAntesDe(LocalDateTime fecha);
 }
