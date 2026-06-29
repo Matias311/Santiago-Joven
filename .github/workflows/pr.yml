@@ -72,6 +72,6 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: ./frontend
-          browser: electron
+          browser: chrome
           start: npx vite --host 0.0.0.0 --port 5173
           wait-on: "http://localhost:5173"

@@ -9,12 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.santiago.joven.backend.dto.LoginResponse;
 import com.santiago.joven.backend.dto.UsuarioRequest;
 import com.santiago.joven.backend.dto.UsuarioResponse;
-import com.santiago.joven.backend.model.enums.NombreRol;
-import com.santiago.joven.backend.repository.RolRepository;
 import com.santiago.joven.backend.security.JwtTokenProvider;
 import com.santiago.joven.backend.service.UsuarioService;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +29,6 @@ class AuthControllerTest {
   @MockitoBean private AuthenticationManager authenticationManager;
   @MockitoBean private JwtTokenProvider jwtTokenProvider;
   @MockitoBean private UsuarioService usuarioService;
-  @MockitoBean private RolRepository rolRepository;
   @MockitoBean private PasswordEncoder passwordEncoder;
   @MockitoBean private com.santiago.joven.backend.security.CustomUserDetailsService userDetailsService;
 
@@ -74,14 +70,10 @@ class AuthControllerTest {
   void register_conDatosValidos_debeRetornar201() throws Exception {
     var usuarioResponse =
         UsuarioResponse.builder().id(userId).email("test@test.cl").build();
-    var rol = new com.santiago.joven.backend.model.entity.Rol();
-    var rolId = UUID.randomUUID();
-    rol.setId(rolId);
 
     when(usuarioService.existsByEmail("test@test.cl")).thenReturn(false);
     when(passwordEncoder.encode("password123")).thenReturn("encoded");
     when(usuarioService.create(any(UsuarioRequest.class))).thenReturn(usuarioResponse);
-    when(rolRepository.findByNombre(NombreRol.USER)).thenReturn(java.util.Optional.of(rol));
     when(jwtTokenProvider.generateToken(any(UUID.class), any(String.class), any(List.class)))
         .thenReturn("token456");
 

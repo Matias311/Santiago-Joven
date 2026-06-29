@@ -64,6 +64,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     if (request.password() != null && !request.password().startsWith("$2a$")) {
       entity.setPassword(passwordEncoder.encode(request.password()));
     }
+    var rolUser =
+        rolRepository
+            .findByNombre(NombreRol.USER)
+            .orElseThrow(() -> new RuntimeException("Rol USER no encontrado"));
+    entity.getRoles().add(rolUser);
     entity = repository.save(entity);
     return mapper.toResponse(entity);
   }
@@ -101,8 +106,8 @@ public class UsuarioServiceImpl implements UsuarioService {
             .orElseThrow(
                 () -> new EntityNotFoundException("Usuario no encontrado con id: " + usuarioId));
     var roles = rolRepository.findAllById(rolIds);
-    usuario.setRoles(new java.util.HashSet<>(roles));
-    repository.save(usuario);
+    usuario.getRoles().clear();
+    usuario.getRoles().addAll(roles);
   }
 
   @Override

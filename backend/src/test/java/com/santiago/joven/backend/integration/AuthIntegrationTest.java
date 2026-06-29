@@ -181,6 +181,44 @@ class AuthIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  void registerYVerificarRolYPermisos() {
+    var email = "rol-permiso-test@santiagojoven.org";
+    var body = UsuarioRequest.builder()
+        .email(email)
+        .password("password123")
+        .nombre("Test")
+        .apellido("User")
+        .build();
+
+    client().post()
+        .uri("/api/v1/auth/register")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(body)
+        .retrieve()
+        .toBodilessEntity();
+
+    var userId = jdbcTemplate.queryForObject(
+        "SELECT id FROM usuarios WHERE email = ?", UUID.class, email);
+
+    var rolNames = jdbcTemplate.queryForList(
+        "SELECT r.nombre FROM roles r "
+            + "JOIN usuarios_roles ur ON ur.rol_id = r.id "
+            + "WHERE ur.usuario_id = ?",
+        String.class, userId);
+
+    assertThat(rolNames).containsExactly("USER");
+
+    var permisos = jdbcTemplate.queryForList(
+        "SELECT p.nombre FROM permisos p "
+            + "JOIN roles_permisos rp ON rp.permiso_id = p.id "
+            + "JOIN roles r ON r.id = rp.rol_id "
+            + "WHERE r.nombre = 'USER'",
+        String.class);
+
+    assertThat(permisos).isEmpty();
+  }
+
+  @Test
   void endpointProtegido_conTokenInvalido_debeRetornar403() {
     var request = InscripcionRequest.builder()
         .usuarioId(UUID.randomUUID())

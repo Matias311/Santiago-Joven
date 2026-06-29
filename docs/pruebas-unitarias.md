@@ -33,9 +33,9 @@ frontend/
 | Service      | 14             | 106   | `@ExtendWith(MockitoExtension.class)` |
 | Controller   | 18             | 188   | `@WebMvcTest`        |
 | Security     | 3              | 17    | JUnit + Mockito      |
-| Integration  | 4              | 42    | `@SpringBootTest` + `RestClient` |
+| Integration  | 4              | 43    | `@SpringBootTest` + `RestClient` |
 | E2E (front)  | 2              | 7     | Cypress              |
-| **Total**    | **59**         | **425** | —                    |
+| **Total**    | **59**         | **426** | —                    |
 
 ## Ejecución con Docker
 
@@ -96,7 +96,7 @@ Esto levanta un contenedor con la imagen oficial `cypress/included:15.18.0` (Nod
 - Endpoints protegidos usan `@WithMockUser(authorities = "PERMISSION_...")` con la autoridad requerida
 - `InscripcionController.create()` tiene `@PreAuthorize("isAuthenticated()")` para exigir autenticación explícita
 - Se prueban: status HTTP (200, 201+Location, 204, 400, 404), cuerpo de respuesta con `jsonPath`
-- Para `AuthController` se mockean también `AuthenticationManager`, `PasswordEncoder`, `RolRepository`
+- Para `AuthController` se mockean también `AuthenticationManager`, `PasswordEncoder`
 
 ### Security (test plano + Mockito)
 - `JwtTokenProviderTest`: prueba unitaria sin Spring, crea el provider con clave fija
@@ -108,7 +108,7 @@ Esto levanta un contenedor con la imagen oficial `cypress/included:15.18.0` (Nod
 ### Integration (`@SpringBootTest`)
 - Usa `RestClient` para llamar a la API embebida en puerto aleatorio (`RANDOM_PORT`)
 - `BaseIntegrationTest` configura `client()` (sin auth) y `authClient()` (con token JWT)
-- **AuthIntegrationTest** (8 tests): registro+login, email+password incorrecto (401), email inexistente (401), email duplicado (409), email inválido (400), password vacío (400), login con usuario inactivo (401), token inválido en endpoint protegido (403)
+- **AuthIntegrationTest** (9 tests): registro+login, email+password incorrecto (401), email inexistente (401), email duplicado (409), email inválido (400), password vacío (400), login con usuario inactivo (401), token inválido en endpoint protegido (403), registro con verificación de rol USER y permisos en BD
 - **InscripcionIntegrationTest** (15 tests): create (201), usuarioId inexistente (404), recursoId ACTIVIDAD inexistente (404), duplicado (409), sin token (403), actividad sin límite de cupo, actividad con cupo máximo, usuario inactivo (400), DELETE sin permiso (403), GET by ID inexistente (404), GET por-usuario, GET por-recurso, GET exists (true/false), GET count-por-recurso
 - **AdminInscripcionIntegrationTest** (3 tests): DELETE con permiso ADMIN (204), UPDATE con permiso ADMIN (200), flujo completo con verificación de contador `inscritos`
 - **UsuarioIntegrationTest** (16 tests): listar usuarios (200), sin token (403), con token USER (403), obtener por ID (200/404), obtener por email (200/404), exists email (true/false), crear (201), email duplicado (409), actualizar (200/404), eliminar (204/404), eliminar con USER (403)
@@ -119,9 +119,10 @@ Esto levanta un contenedor con la imagen oficial `cypress/included:15.18.0` (Nod
 ### E2E — Frontend (Cypress)
 - Corre contra el servidor Vite de desarrollo en `http://localhost:5173`
 - Navegador: Electron en modo headless (CI) o interactivo (`cy:open`)
-- El popup de encuesta (`PopupEncuesta`) se cierra con `click({ force: true })` cuando interfiere con elementos
-- **`cypress/e2e/inicio.cy.ts`** (6 tests): logo y navbar, secciones del home, toggle de modo oscuro (`force: true` por popup), filtros de calendario, enlaces de navegación, widget de accesibilidad
-- **`cypress/e2e/asesoria.cy.ts`** (1 test): carga directa de `/asesoria` (no hay enlace desde inicio hacia esta ruta)
+- Usa `cypress-real-events` (plugin CDP) para `realClick()` — dispara eventos reales del navegador (confiables) en vez de `dispatchEvent` sintético
+- El popup de encuesta (`PopupEncuesta`) cubre el botón de modo oscuro; se cierra con `realClick()` antes de interactuar
+- **`cypress/e2e/inicio.cy.ts`** (6 tests): logo y navbar, secciones del home, toggle de modo oscuro (`realClick`), filtros de calendario, enlaces de navegación, widget de accesibilidad
+- **`cypress/e2e/asesoria.cy.ts`** (1 test): carga directa de `/asesoria`
 
 ### Mapper (test plano)
 - Convierte `Request` → `Entity` → `Response`
