@@ -97,6 +97,7 @@ export default function Inicio() {
     return <div className="cargando">Cargando Santiago Joven...</div>;
   if (!datosInicio)
     return <div className="error">No se pudo cargar la información.</div>;
+
   return (
     <>
       {/* encabezado de la pagina principal */}
@@ -107,7 +108,7 @@ export default function Inicio() {
           <p className="subtitulo-edad">Dirigido a jóvenes de 14 a 29 años.</p>
         </div>
         <div className="carta-seccion">
-          {datosInicio.encabezado?.map((carta: CartaItem) => (
+          {datosInicio.encabezado.map((carta: CartaItem) => (
             <Card
               key={carta.titulo}
               icono={carta.icono}
@@ -138,33 +139,57 @@ export default function Inicio() {
           </div>
           <div className="grupo-cartas">
             <h3>Asesoría</h3>
-            <div className="contenedor-flex">
-              {datosInicio.asesorias?.map((carta: CartaItem) => (
-                <Card
-                  key={carta.titulo}
-                  icono={carta.icono}
-                  iconoColor={carta.iconoColor}
-                  iconoTamaño={carta.iconoTamaño}
-                  titulo={carta.titulo}
-                  descripcion={carta.descripcion}
-                />
-              ))}
-            </div>
+            {datosInicio.asesorias.length === 0 ? (
+              <div className="sin-actividades">
+                <span
+                  className="material-symbols-outlined seccion-icono"
+                  style={{ color: "#AFB0B1", fontSize: "160px" }}
+                >
+                  schedule
+                </span>
+                <p>No hay asesorías disponibles por el momento.</p>
+              </div>
+            ) : (
+              <div className="contenedor-flex">
+                {datosInicio.asesorias.map((carta: CartaItem) => (
+                  <Card
+                    key={carta.titulo}
+                    icono={carta.icono}
+                    iconoColor={carta.iconoColor}
+                    iconoTamaño={carta.iconoTamaño}
+                    titulo={carta.titulo}
+                    descripcion={carta.descripcion}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <div className="grupo-cartas">
             <h3>Preuniversitario</h3>
-            <div className="contenedor-flex">
-              {datosInicio.preuniversitario?.map((carta: CartaItem) => (
-                <Card
-                  key={carta.titulo}
-                  icono={carta.icono}
-                  iconoColor={carta.iconoColor}
-                  iconoTamaño={carta.iconoTamaño}
-                  titulo={carta.titulo}
-                  descripcion={carta.descripcion}
-                />
-              ))}
-            </div>
+            {datosInicio.preuniversitario.length === 0 ? (
+              <div className="sin-actividades">
+                <span
+                  className="material-symbols-outlined seccion-icono"
+                  style={{ color: "#AFB0B1", fontSize: "160px" }}
+                >
+                  schedule
+                </span>
+                <p>No hay cursos preuniversitarios disponibles por el momento.</p>
+              </div>
+            ) : (
+              <div className="contenedor-flex">
+                {datosInicio.preuniversitario.map((carta: CartaItem) => (
+                  <Card
+                    key={carta.titulo}
+                    icono={carta.icono}
+                    iconoColor={carta.iconoColor}
+                    iconoTamaño={carta.iconoTamaño}
+                    titulo={carta.titulo}
+                    descripcion={carta.descripcion}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
@@ -186,7 +211,19 @@ export default function Inicio() {
           <h3 style={{ textAlign: "center", fontSize: "1.4rem" }}>
             Cursos Destacados
           </h3>
-          <Slider cartas={datosInicio.cursos || []} />
+          {datosInicio.cursos.length === 0 ? (
+            <div className="sin-actividades">
+              <span
+                className="material-symbols-outlined seccion-icono"
+                style={{ color: "#AFB0B1", fontSize: "160px" }}
+              >
+                schedule
+              </span>
+              <p>No hay cursos destacados por el momento.</p>
+            </div>
+          ) : (
+            <Slider cartas={datosInicio.cursos} />
+          )}
         </section>
 
         {/* accion joven */}
@@ -205,14 +242,26 @@ export default function Inicio() {
                 iniciativas sociales y proyectos de voluntariado.
               </p>
             </div>
-            {datosInicio.accion?.map((carta: CartaItem) => (
-              <Card
-                key={carta.titulo}
-                titulo={carta.titulo}
-                descripcion={carta.descripcion}
-                boton={carta.boton}
-              />
-            ))}
+            {datosInicio.accion.length === 0 ? (
+              <div className="sin-actividades">
+                <span
+                  className="material-symbols-outlined seccion-icono"
+                  style={{ color: "#AFB0B1", fontSize: "160px" }}
+                >
+                  schedule
+                </span>
+                <p>No hay acciones joven disponibles por el momento.</p>
+              </div>
+            ) : (
+              datosInicio.accion.map((carta: CartaItem) => (
+                <Card
+                  key={carta.titulo}
+                  titulo={carta.titulo}
+                  descripcion={carta.descripcion}
+                  boton={carta.boton}
+                />
+              ))
+            )}
           </section>
         </div>
 
@@ -231,7 +280,19 @@ export default function Inicio() {
               apoyarte.
             </p>
           </div>
-          <Slider cartas={datosInicio.programas || []} />
+          {datosInicio.programas.length === 0 ? (
+            <div className="sin-actividades">
+              <span
+                className="material-symbols-outlined seccion-icono"
+                style={{ color: "#AFB0B1", fontSize: "160px" }}
+              >
+                schedule
+              </span>
+              <p>No hay programas disponibles por el momento.</p>
+            </div>
+          ) : (
+            <Slider cartas={datosInicio.programas} />
+          )}
         </section>
 
         {/* salud mental */}
@@ -254,17 +315,29 @@ export default function Inicio() {
               </p>
             </div>
             <div className="grupo-cartas">
-              {datosInicio.salud?.map((carta: CartaItem) => (
-                <Card
-                  key={carta.titulo}
-                  icono={carta.icono}
-                  iconoColor={carta.iconoColor}
-                  iconoTamaño={carta.iconoTamaño}
-                  titulo={carta.titulo}
-                  subtitulo={carta.subtitulo}
-                  descripcion={carta.descripcion}
-                />
-              ))}
+              {datosInicio.salud.length === 0 ? (
+                <div className="sin-actividades">
+                  <span
+                    className="material-symbols-outlined seccion-icono"
+                    style={{ color: "#AFB0B1", fontSize: "160px" }}
+                  >
+                    schedule
+                  </span>
+                  <p>No hay recursos de salud mental disponibles por el momento.</p>
+                </div>
+              ) : (
+                datosInicio.salud.map((carta: CartaItem) => (
+                  <Card
+                    key={carta.titulo}
+                    icono={carta.icono}
+                    iconoColor={carta.iconoColor}
+                    iconoTamaño={carta.iconoTamaño}
+                    titulo={carta.titulo}
+                    subtitulo={carta.subtitulo}
+                    descripcion={carta.descripcion}
+                  />
+                ))
+              )}
             </div>
           </section>
         </div>
@@ -290,29 +363,53 @@ export default function Inicio() {
           <div className="contenedor-flex">
             <div className="lista-conexion">
               <h3>Actividades</h3>
-              <ul>
-                {datosInicio.actividades?.map((item: ConexionItem) => (
-                  <li key={item.texto}>
-                    <span className="material-symbols-outlined">
-                      {item.icono}
-                    </span>
-                    {item.texto}
-                  </li>
-                ))}
-              </ul>
+              {datosInicio.actividades.length === 0 ? (
+                <div className="sin-actividades">
+                  <span
+                    className="material-symbols-outlined seccion-icono"
+                    style={{ color: "#AFB0B1", fontSize: "160px" }}
+                  >
+                    schedule
+                  </span>
+                  <p>No hay actividades disponibles por el momento.</p>
+                </div>
+              ) : (
+                <ul>
+                  {datosInicio.actividades.map((item: ConexionItem) => (
+                    <li key={item.texto}>
+                      <span className="material-symbols-outlined">
+                        {item.icono}
+                      </span>
+                      {item.texto}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <div className="lista-conexion">
               <h3>Talleres</h3>
-              <ul>
-                {datosInicio.talleres?.map((item: ConexionItem) => (
-                  <li key={item.texto}>
-                    <span className="material-symbols-outlined">
-                      {item.icono}
-                    </span>
-                    {item.texto}
-                  </li>
-                ))}
-              </ul>
+              {datosInicio.talleres.length === 0 ? (
+                <div className="sin-actividades">
+                  <span
+                    className="material-symbols-outlined seccion-icono"
+                    style={{ color: "#AFB0B1", fontSize: "160px" }}
+                  >
+                    schedule
+                  </span>
+                  <p>No hay talleres disponibles por el momento.</p>
+                </div>
+              ) : (
+                <ul>
+                  {datosInicio.talleres.map((item: ConexionItem) => (
+                    <li key={item.texto}>
+                      <span className="material-symbols-outlined">
+                        {item.icono}
+                      </span>
+                      {item.texto}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </section>
@@ -454,19 +551,19 @@ export default function Inicio() {
                 <span className="material-symbols-outlined seccion-icono">
                   location_on
                 </span>
-                <p>{datosInicio.contacto?.direccion}</p>
+                <p>{datosInicio.contacto.direccion}</p>
               </div>
               <div className="ubicacion-item">
                 <span className="material-symbols-outlined seccion-icono">
                   schedule
                 </span>
-                <p>{datosInicio.contacto?.horario}</p>
+                <p>{datosInicio.contacto.horario}</p>
               </div>
               <div className="ubicacion-item">
                 <span className="material-symbols-outlined seccion-icono">
                   email
                 </span>
-                <p>{datosInicio.contacto?.email}</p>
+                <p>{datosInicio.contacto.email}</p>
               </div>
             </div>
           </div>
