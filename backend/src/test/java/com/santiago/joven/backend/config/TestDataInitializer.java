@@ -43,6 +43,11 @@ public class TestDataInitializer {
           "INSERT INTO permisos (id, nombre, descripcion, modulo) VALUES (?, ?, ?, ?)",
           permCreateActivity, "CREATE_ACTIVITY", "Crear actividades", "ACTIVITIES");
 
+      var permManageRoles = UUID.randomUUID();
+      jdbc.update(
+          "INSERT INTO permisos (id, nombre, descripcion, modulo) VALUES (?, ?, ?, ?)",
+          permManageRoles, "MANAGE_ROLES", "Gestionar roles y permisos", "ROLES");
+
       var adminRolId = jdbc.queryForObject(
           "SELECT id FROM roles WHERE nombre = ?", UUID.class, "ADMIN");
       jdbc.update(
@@ -51,6 +56,9 @@ public class TestDataInitializer {
       jdbc.update(
           "INSERT INTO roles_permisos (rol_id, permiso_id) VALUES (?, ?)",
           adminRolId, permCreateActivity);
+      jdbc.update(
+          "INSERT INTO roles_permisos (rol_id, permiso_id) VALUES (?, ?)",
+          adminRolId, permManageRoles);
     };
   }
 }

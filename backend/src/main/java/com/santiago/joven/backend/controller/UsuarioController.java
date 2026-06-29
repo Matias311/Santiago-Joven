@@ -1,5 +1,6 @@
 package com.santiago.joven.backend.controller;
 
+import com.santiago.joven.backend.dto.AsignarRolesRequest;
 import com.santiago.joven.backend.dto.UsuarioRequest;
 import com.santiago.joven.backend.dto.UsuarioResponse;
 import com.santiago.joven.backend.dto.UsuarioUpdate;
@@ -27,37 +28,37 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("/api/v1/usuarios")
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
-@Tag(name = "Usuarios", description = "Gestion de usuarios (solo admin)")
+@Tag(name = "Usuarios", description = "Gestion de usuarios (requiere PERMISSION_MANAGE_USERS)")
 @SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
 
   private final UsuarioService service;
 
-  @Operation(summary = "Listar usuarios")
+  @Operation(summary = "Listar usuarios", description = "Requiere PERMISSION_MANAGE_USERS")
   @GetMapping("")
   public ResponseEntity<List<UsuarioResponse>> findAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
-  @Operation(summary = "Buscar usuario por ID")
+  @Operation(summary = "Buscar usuario por ID", description = "Requiere PERMISSION_MANAGE_USERS")
   @GetMapping("/{id}")
   public ResponseEntity<UsuarioResponse> findById(@PathVariable UUID id) {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  @Operation(summary = "Buscar usuario por email")
+  @Operation(summary = "Buscar usuario por email", description = "Requiere PERMISSION_MANAGE_USERS")
   @GetMapping("/por-email/{email}")
   public ResponseEntity<UsuarioResponse> findByEmail(@PathVariable String email) {
     return ResponseEntity.ok(service.findByEmail(email));
   }
 
-  @Operation(summary = "Verificar si el email existe")
+  @Operation(summary = "Verificar si el email existe", description = "Requiere PERMISSION_MANAGE_USERS")
   @GetMapping("/exists-email/{email}")
   public ResponseEntity<Boolean> existsByEmail(@PathVariable String email) {
     return ResponseEntity.ok(service.existsByEmail(email));
   }
 
-  @Operation(summary = "Crear usuario")
+  @Operation(summary = "Crear usuario", description = "Requiere PERMISSION_MANAGE_USERS")
   @PostMapping("")
   public ResponseEntity<UsuarioResponse> create(@Valid @RequestBody UsuarioRequest request) {
     var response = service.create(request);
@@ -69,14 +70,22 @@ public class UsuarioController {
     return ResponseEntity.created(location).body(response);
   }
 
-  @Operation(summary = "Actualizar usuario")
+  @Operation(summary = "Actualizar usuario", description = "Requiere PERMISSION_MANAGE_USERS")
   @PutMapping("/{id}")
   public ResponseEntity<UsuarioResponse> update(
       @PathVariable UUID id, @Valid @RequestBody UsuarioUpdate update) {
     return ResponseEntity.ok(service.update(id, update));
   }
 
-  @Operation(summary = "Eliminar usuario")
+  @Operation(summary = "Asignar roles a un usuario", description = "Requiere PERMISSION_MANAGE_USERS")
+  @PutMapping("/{id}/roles")
+  public ResponseEntity<Void> asignarRoles(
+      @PathVariable UUID id, @Valid @RequestBody AsignarRolesRequest request) {
+    service.asignarRoles(id, request.rolIds());
+    return ResponseEntity.noContent().build();
+  }
+
+  @Operation(summary = "Eliminar usuario", description = "Requiere PERMISSION_MANAGE_USERS")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);

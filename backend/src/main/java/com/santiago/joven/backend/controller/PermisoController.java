@@ -27,25 +27,25 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("/api/v1/permisos")
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('PERMISSION_MANAGE_ROLES')")
-@Tag(name = "Permisos", description = "Gestion de permisos (solo admin)")
+@Tag(name = "Permisos", description = "Gestion de permisos (requiere PERMISSION_MANAGE_ROLES)")
 @SecurityRequirement(name = "bearerAuth")
 public class PermisoController {
 
   private final PermisoService service;
 
-  @Operation(summary = "Listar permisos")
+  @Operation(summary = "Listar permisos", description = "Requiere PERMISSION_MANAGE_ROLES")
   @GetMapping("")
   public ResponseEntity<List<PermisoResponse>> findAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
-  @Operation(summary = "Buscar permiso por ID")
+  @Operation(summary = "Buscar permiso por ID", description = "Requiere PERMISSION_MANAGE_ROLES")
   @GetMapping("/{id}")
   public ResponseEntity<PermisoResponse> findById(@PathVariable UUID id) {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  @Operation(summary = "Crear permiso")
+  @Operation(summary = "Crear permiso", description = "Requiere PERMISSION_MANAGE_ROLES")
   @PostMapping("")
   public ResponseEntity<PermisoResponse> create(@Valid @RequestBody PermisoRequest request) {
     var response = service.create(request);
@@ -57,27 +57,27 @@ public class PermisoController {
     return ResponseEntity.created(location).body(response);
   }
 
-  @Operation(summary = "Actualizar permiso")
+  @Operation(summary = "Actualizar permiso", description = "Requiere PERMISSION_MANAGE_ROLES")
   @PutMapping("/{id}")
   public ResponseEntity<PermisoResponse> update(
       @PathVariable UUID id, @Valid @RequestBody PermisoUpdate update) {
     return ResponseEntity.ok(service.update(id, update));
   }
 
-  @Operation(summary = "Eliminar permiso")
+  @Operation(summary = "Eliminar permiso", description = "Requiere PERMISSION_MANAGE_ROLES")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);
     return ResponseEntity.noContent().build();
   }
 
-  @Operation(summary = "Buscar permiso por nombre")
+  @Operation(summary = "Buscar permiso por nombre", description = "Requiere PERMISSION_MANAGE_ROLES")
   @GetMapping("/por-nombre/{nombre}")
   public ResponseEntity<PermisoResponse> findByNombre(@PathVariable String nombre) {
     return ResponseEntity.ok(service.findByNombre(nombre));
   }
 
-  @Operation(summary = "Buscar permisos por modulo")
+  @Operation(summary = "Buscar permisos por modulo", description = "Requiere PERMISSION_MANAGE_ROLES")
   @GetMapping("/por-modulo/{modulo}")
   public ResponseEntity<List<PermisoResponse>> findByModulo(@PathVariable String modulo) {
     return ResponseEntity.ok(service.findByModulo(modulo));
