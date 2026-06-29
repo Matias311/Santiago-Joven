@@ -28,9 +28,7 @@ describe("Página de Inicio", () => {
 
     cy.clearLocalStorage("theme");
     cy.visit("/");
-    cy.get("html").should(($html) => {
-      expect($html.hasClass("dark") || $html.hasClass("light")).to.be.true;
-    });
+    cy.get("html").should(($html) => $html.hasClass("dark") || $html.hasClass("light"));
 
     cy.clearLocalStorage("theme");
     cy.window().then((win) => {
