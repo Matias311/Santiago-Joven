@@ -68,7 +68,8 @@ function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
     timerRef.current = setTimeout(() => {
       cambiar(1 % cartas.length, "right");
     }, 15000);
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); }; // Limpia el timer al desmontar
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const anterior  = () => cambiar((actual - 1 + cartas.length) % cartas.length, "left");

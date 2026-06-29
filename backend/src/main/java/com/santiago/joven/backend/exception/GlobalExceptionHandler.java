@@ -7,6 +7,9 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -128,6 +131,41 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
       DataIntegrityViolationException ex, WebRequest request) {
     var response = buildResponse(HttpStatus.CONFLICT, "Conflicto de integridad de datos", request);
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleBadCredentials(
+      BadCredentialsException ex, WebRequest request) {
+    var response = buildResponse(HttpStatus.UNAUTHORIZED, "Credenciales invalidas", request);
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+  }
+
+  @ExceptionHandler(DisabledException.class)
+  public ResponseEntity<ErrorResponse> handleDisabled(
+      DisabledException ex, WebRequest request) {
+    var response = buildResponse(HttpStatus.UNAUTHORIZED, "Cuenta desactivada", request);
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+  }
+
+  @ExceptionHandler(IllegalStateException.class)
+  public ResponseEntity<ErrorResponse> handleIllegalState(
+      IllegalStateException ex, WebRequest request) {
+    var response = buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    return ResponseEntity.badRequest().body(response);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAccessDenied(
+      AccessDeniedException ex, WebRequest request) {
+    var response = buildResponse(HttpStatus.FORBIDDEN, "Acceso denegado", request);
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ErrorResponse> handleIllegalArgument(
+      IllegalArgumentException ex, WebRequest request) {
+    var response = buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request);
     return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
   }
 
