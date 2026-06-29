@@ -29,4 +29,6 @@ export interface CartaItem {
   boton?: string;
   /** Clase CSS adicional para el contenedor raíz de la tarjeta. */
   clase?: string;
+  /** Ruta de navegación interna al hacer clic en el botón. */
+  link?: string;
 }

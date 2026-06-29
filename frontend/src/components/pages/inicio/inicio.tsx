@@ -3,6 +3,7 @@ import Card from "../../cartas/Card";
 import Slider from "../../sliders/slider";
 import type { CartaItem } from "../../types/CartaItem";
 import type { ConexionItem } from "../../types/ConexionItem";
+import { Link } from "react-router-dom";
 
 const asesorias: CartaItem[] = [
   {
@@ -94,6 +95,7 @@ const programas: CartaItem[] = [
       "El Programa Lazos es una iniciativa del Gobierno de Chile que busca prevenir conductas de riesgo en jóvenes.",
     boton: "¡Conócenos aquí!",
     clase: "programa-lazos",
+    link: "/programas",
   },
   {
     icono: "potted_plant",
@@ -107,6 +109,7 @@ const programas: CartaItem[] = [
       "El Programa Senda es una iniciativa del Gobierno de Chile que busca prevenir conductas de riesgo en jóvenes.",
     boton: "¡Conócenos aquí!",
     clase: "programa-senda",
+    link: "/programas",
   },
 ];
 
@@ -186,7 +189,6 @@ const encabezado: CartaItem[] = [
 export default function Inicio() {
   return (
     <>
-      {/* encabezado de la pagina principal */}
       <header id="inicio" className="inicio-section">
         <div className="inicio-texto">
           <h1>Santiago Joven: Crece, participa y aprende</h1>
@@ -206,7 +208,6 @@ export default function Inicio() {
         </div>
       </header>
 
-      {/* contenido principal */}
       <main className="contenido-principal">
         {/* apoyo joven */}
         <section id="apoyo" className="seccion-informativa">
@@ -227,14 +228,19 @@ export default function Inicio() {
             <h3>Asesoría</h3>
             <div className="contenedor-flex">
               {asesorias.map((carta) => (
-                <Card
+                <Link
                   key={carta.titulo}
-                  icono={carta.icono}
-                  iconoColor={carta.iconoColor}
-                  iconoTamaño={carta.iconoTamaño}
-                  titulo={carta.titulo}
-                  descripcion={carta.descripcion}
-                />
+                  to="/asesoria"
+                  style={{ textDecoration: "none" }}
+                >
+                  <Card
+                    icono={carta.icono}
+                    iconoColor={carta.iconoColor}
+                    iconoTamaño={carta.iconoTamaño}
+                    titulo={carta.titulo}
+                    descripcion={carta.descripcion}
+                  />
+                </Link>
               ))}
             </div>
           </div>

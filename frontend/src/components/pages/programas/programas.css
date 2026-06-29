@@ -1,0 +1,182 @@
+/**
+ * @fileoverview Estilos para la página de Programas de Santiago Joven.
+ * Incluye el header con gradiente, tarjetas decorativas y secciones informativas.
+ *
+ * @requires Google Fonts: Outfit, Inter
+ * @see {@link https://fonts.google.com}
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap");
+
+/* ─────────────────────────────────────────
+ * HEADER
+ * Sección principal de la página con fondo
+ * degradado azul-verde y texto centrado.
+ * ───────────────────────────────────────── */
+
+/**
+ * @class .programas-header
+ * @description Contenedor principal del header de la página Programas.
+ * Aplica un gradiente diagonal de azul a verde con contenido centrado.
+ *
+ * @prop {string} background - Gradiente de 135deg: #4a90d9 → #1a9e73 → #20c997
+ * @prop {string} min-height - Altura mínima de 300px
+ * @prop {string} padding    - 5rem arriba/abajo, 3rem izquierda/derecha
+ */
+.programas-header {
+  background: linear-gradient(
+    135deg,
+    #4a90d9 0%,
+    #1a9e73 60%,
+    #20c997 100%
+  ) !important;
+  min-height: 300px;
+  padding: 5rem 3rem 3rem;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 2rem;
+}
+
+/**
+ * @class .programas-header-texto
+ * @description Bloque de texto dentro del header.
+ * Limita el ancho máximo a 700px para mejorar la legibilidad.
+ */
+.programas-header-texto {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/**
+ * @class .programas-header-texto h1
+ * @description Título principal del header.
+ *
+ * @prop {string} font-family - Outfit, sans-serif (peso 800)
+ * @prop {string} font-size   - 2.6rem en escritorio
+ * @prop {string} color       - Blanco puro (#ffffff)
+ */
+.programas-header-texto h1 {
+  font-family: "Outfit", sans-serif;
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+/**
+ * @class .programas-header-texto p
+ * @description Párrafo descriptivo del header.
+ *
+ * @prop {string} font-family - Inter, sans-serif
+ * @prop {number} opacity     - 0.9 para suavizar sobre el gradiente
+ * @prop {string} line-height - 1.6 para mejor lectura
+ */
+.programas-header-texto p {
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  opacity: 0.9;
+  line-height: 1.6;
+  color: #ffffff;
+}
+
+/* ─────────────────────────────────────────
+ * TARJETAS DEL HEADER
+ * Cartas cuadradas dentro del header usadas
+ * como accesos directos a secciones.
+ * ───────────────────────────────────────── */
+
+/**
+ * @class .programas-header .carta-seccion
+ * @description Contenedor de tarjetas dentro del header.
+ * Aplica espaciado entre tarjetas de 1.5rem.
+ */
+.programas-header .carta-seccion {
+  gap: 1.5rem;
+}
+
+/**
+ * @class .programas-header .carta-seccion .carta-universal
+ * @description Tarjeta individual dentro del header.
+ * Tamaño fijo cuadrado de 130x130px con contenido centrado.
+ *
+ * @prop {string} width  - 130px
+ * @prop {string} height - 130px
+ * @prop {string} cursor - pointer (indica interactividad)
+ */
+.programas-header .carta-seccion .carta-universal {
+  width: 130px;
+  height: 130px;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ─────────────────────────────────────────
+ * SECCIONES INFORMATIVAS
+ * Contenedores de contenido debajo del header.
+ * ───────────────────────────────────────── */
+
+/**
+ * @class .seccion-informativa
+ * @description Sección de contenido informativo.
+ * Alinea su contenido en columna centrada.
+ */
+.seccion-informativa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/**
+ * @class .seccion-encabezado
+ * @description Encabezado de cada sección informativa.
+ * Centra el texto y los elementos hijos verticalmente.
+ */
+.seccion-encabezado {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/**
+ * @class .ic-wrapper
+ * @description Wrapper de contenido interior de sección.
+ * Limita el ancho a 800px para mantener legibilidad.
+ */
+.ic-wrapper {
+  width: 100%;
+  max-width: 800px;
+}
+
+/* ─────────────────────────────────────────
+ * RESPONSIVE — móviles (max-width: 640px)
+ * Ajustes de tamaño para pantallas pequeñas.
+ * ───────────────────────────────────────── */
+
+/**
+ * @media (max-width: 640px)
+ * @description Adaptaciones para dispositivos móviles.
+ *
+ * - .programas-header-texto h1 → reduce font-size a 1.8rem
+ * - .programas-header           → reduce padding a 4rem/1.5rem/2rem
+ * - .carta-universal            → reduce tamaño a 100x100px
+ */
+@media (max-width: 640px) {
+  .programas-header-texto h1 {
+    font-size: 1.8rem;
+  }
+
+  .programas-header {
+    padding: 4rem 1.5rem 2rem;
+  }
+
+  .programas-header .carta-seccion .carta-universal {
+    width: 100px;
+    height: 100px;
+  }
+}

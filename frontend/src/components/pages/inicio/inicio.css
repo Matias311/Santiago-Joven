@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap");
 
 /* =============================================================
    VARIABLES GLOBALES
@@ -23,7 +23,13 @@
 
   /* Elementos modo claro */
   --bg-main: #f0f4f8;
-  --bg-content: linear-gradient(to bottom, #E3F5E1 0%, #ffffff 10%, #ffffff 93%, #E3F5E1 100%);
+  --bg-content: linear-gradient(
+    to bottom,
+    #e3f5e1 0%,
+    #ffffff 10%,
+    #ffffff 93%,
+    #e3f5e1 100%
+  );
   --surface: #ffffff;
   --surface-border: #e2e8f0;
   --sombra: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -65,7 +71,12 @@
    Definición de estilos generales para toda la página.
    ============================================================= */
 .pagina-principal {
-  background: linear-gradient(135deg, var(--azul) 0%, #1a9e73 60%, var(--verde) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--azul) 0%,
+    #1a9e73 60%,
+    var(--verde) 100%
+  );
 }
 
 * {
@@ -75,7 +86,7 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background: var(--bg-main);
   color: var(--text-primary);
   overflow-x: hidden;
@@ -88,7 +99,12 @@ body {
 .inicio-section {
   width: 100%;
   padding-inline: 3rem;
-  background: linear-gradient(135deg, var(--azul) 0%, #1a9e73 60%, var(--verde) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--azul) 0%,
+    #1a9e73 60%,
+    var(--verde) 100%
+  );
   min-height: 400px;
   padding: 7rem 3rem;
   color: var(--blanco);
@@ -144,18 +160,28 @@ body {
 }
 
 .seccion-informativa h2 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.8rem;
   font-weight: 800;
   color: var(--azul-oscuro);
   margin-bottom: 0.5rem;
 }
 
-#apoyo h2 { color: var(--azul-oscuro); }
-#proyeccion h2 { color: var(--verde-oscuro); }
-#salud h2 { color: var(--azul); }
-#calendario h2 { color: var(--verde-oscuro); }
-#opinion h2 { color: #c2614a; }
+#apoyo h2 {
+  color: var(--azul-oscuro);
+}
+#proyeccion h2 {
+  color: var(--verde-oscuro);
+}
+#salud h2 {
+  color: var(--azul);
+}
+#calendario h2 {
+  color: var(--verde-oscuro);
+}
+#opinion h2 {
+  color: #c2614a;
+}
 
 .seccion-encabezado p {
   color: var(--gris-texto);
@@ -169,10 +195,12 @@ body {
    GRUPOS DE CARTAS
    Estilos para listados de tarjetas y rejillas de contenido.
    ============================================================= */
-.grupo-cartas { margin-bottom: 2.5rem; }
+.grupo-cartas {
+  margin-bottom: 2.5rem;
+}
 
 .grupo-cartas h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -207,7 +235,9 @@ body {
   font-size: 2.2rem;
 }
 
-.accion-joven .seccion-encabezado p { color: var(--gris-texto); }
+.accion-joven .seccion-encabezado p {
+  color: var(--gris-texto);
+}
 
 .accion-joven .carta-universal {
   background: var(--surface);
@@ -225,7 +255,7 @@ body {
 
 .accion-joven .carta-universal h3 {
   color: var(--azul-oscuro);
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.3rem;
   font-weight: 800;
   margin-bottom: 0.5rem;
@@ -244,7 +274,7 @@ body {
 
 .accion-joven .btn-inscribase {
   background: linear-gradient(135deg, #f59e0b, #fbbf24);
-  box-shadow: 0 6px 20px rgba(245,158,11,0.3);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
 }
 
 /* =============================================================
@@ -257,9 +287,15 @@ body {
   margin-bottom: 1.5rem;
 }
 
-#programas .seccion-encabezado .seccion-icono { color: var(--verde); }
-#programas .seccion-encabezado h2 { color: var(--verde-oscuro); }
-#programas .seccion-encabezado p { color: var(--gris-texto); }
+#programas .seccion-encabezado .seccion-icono {
+  color: var(--verde);
+}
+#programas .seccion-encabezado h2 {
+  color: var(--verde-oscuro);
+}
+#programas .seccion-encabezado p {
+  color: var(--gris-texto);
+}
 
 #programas .slider-activo .carta-universal {
   background: var(--surface);
@@ -272,8 +308,12 @@ body {
   color: var(--verde);
 }
 
-#programas .slider-activo .programa-lazos h3 { color: var(--verde-oscuro); }
-#programas .slider-activo .programa-senda h3 { color: var(--naranja); }
+#programas .slider-activo .programa-lazos h3 {
+  color: var(--verde-oscuro);
+}
+#programas .slider-activo .programa-senda h3 {
+  color: var(--naranja);
+}
 
 #programas .slider-activo .btn-inscribase {
   background: linear-gradient(135deg, #22c55e, #16a34a);
@@ -303,11 +343,19 @@ body {
 }
 
 .dark #programas .programa-lazos .btn-inscribase {
-  background: linear-gradient(135deg, rgba(20, 185, 42, 0.9), rgba(105, 168, 79, 0.9));
+  background: linear-gradient(
+    135deg,
+    rgba(20, 185, 42, 0.9),
+    rgba(105, 168, 79, 0.9)
+  );
 }
 
 .dark #programas .programa-senda .btn-inscribase {
-  background: linear-gradient(135deg, rgba(194, 65, 11, 0.9), rgba(245, 159, 11, 0.9));
+  background: linear-gradient(
+    135deg,
+    rgba(194, 65, 11, 0.9),
+    rgba(245, 159, 11, 0.9)
+  );
 }
 
 /* =============================================================
@@ -367,7 +415,9 @@ body {
   flex-direction: column;
   align-items: flex-start;
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .salud-mental-bienestar .carta-universal:hover {
@@ -376,7 +426,7 @@ body {
 }
 
 .salud-mental-bienestar .carta-universal h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.1rem;
   font-weight: 800;
   color: var(--text-primary);
@@ -409,13 +459,28 @@ body {
   border-radius: 999px;
 }
 
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(1) { border-top-color: #38bdf8; }
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(2) { border-top-color: #f97316; }
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(3) { border-top-color: #22c55e; }
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(1) {
+  border-top-color: #38bdf8;
+}
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(2) {
+  border-top-color: #f97316;
+}
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(3) {
+  border-top-color: #22c55e;
+}
 
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(1) .icono { background: #dbeafe; color: #2563eb; }
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(2) .icono { background: #fee2e2; color: #dc2626; }
-.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(3) .icono { background: #dcfce7; color: #15803d; }
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(1) .icono {
+  background: #dbeafe;
+  color: #2563eb;
+}
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(2) .icono {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.salud-mental-bienestar .grupo-cartas .carta-universal:nth-child(3) .icono {
+  background: #dcfce7;
+  color: #15803d;
+}
 
 /* =============================================================
    CONEXIÓN COMUNITARIA
@@ -427,7 +492,7 @@ body {
 }
 
 .lista-conexion h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -477,7 +542,7 @@ body {
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .filtro-eventos:hover,
@@ -502,7 +567,9 @@ body {
   height: auto;
 }
 
-.sin-actividades p { font-size: 0.9rem; }
+.sin-actividades p {
+  font-size: 0.9rem;
+}
 
 /* =============================================================
    TU OPINIÓN CUENTA
@@ -527,14 +594,16 @@ body {
   border-radius: 10px;
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
 }
 
 .formulario-opinion input:focus,
-.formulario-opinion textarea:focus { border-color: var(--accent-info); }
+.formulario-opinion textarea:focus {
+  border-color: var(--accent-info);
+}
 
 .formulario-opinion textarea {
   height: 150px;
@@ -562,8 +631,10 @@ body {
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
-  font-family: 'Inter', sans-serif;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+  font-family: "Inter", sans-serif;
   white-space: nowrap;
 }
 
@@ -582,7 +653,9 @@ body {
   color: var(--gris-texto);
 }
 
-.tu-contribucion .seccion-encabezado { margin-top: 3rem; }
+.tu-contribucion .seccion-encabezado {
+  margin-top: 3rem;
+}
 
 /* =============================================================
    CONTACTO Y UBICACIÓN
@@ -602,7 +675,7 @@ body {
 }
 
 .formulario-contacto h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -621,14 +694,16 @@ body {
   border-radius: 10px;
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
 }
 
 .formulario-contacto input:focus,
-.formulario-contacto textarea:focus { border-color: var(--accent-info); }
+.formulario-contacto textarea:focus {
+  border-color: var(--accent-info);
+}
 
 .formulario-contacto textarea {
   height: 150px;
@@ -646,12 +721,12 @@ body {
   cursor: pointer;
   width: fit-content;
   transition: transform 0.2s;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .btn-enviar-contacto:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59,130,246,0.3);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
 }
 
 .info-ubicacion {
@@ -661,7 +736,7 @@ body {
 }
 
 .info-ubicacion h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -676,7 +751,9 @@ body {
   gap: 0.5rem;
 }
 
-.ubicacion-item span { font-size: 2rem; }
+.ubicacion-item span {
+  font-size: 2rem;
+}
 
 .ubicacion-item p {
   font-size: 0.92rem;
@@ -689,7 +766,7 @@ body {
    Sección de fondo alterno usado para separar bloques.
    ============================================================= */
 .fondo-gris {
-  background: #F8FAFC;
+  background: #f8fafc;
   padding: 2rem;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
@@ -925,6 +1002,24 @@ body {
 
 .dark .fondo-gris {
   background: #07121e;
+}
+
+/* ── Preuniversitario en fila centrada ── */
+#apoyo .grupo-cartas:last-child .contenedor-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+}
+
+#apoyo .grupo-cartas:last-child .contenedor-flex .carta-universal {
+  max-width: 400px;
+  flex: 1 1 200px;
+}
+
+#apoyo .grupo-cartas:last-child h3 {
+  text-align: center;
 }
 
 /* =============================================================
