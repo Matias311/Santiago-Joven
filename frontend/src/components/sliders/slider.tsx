@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./slider.css";
 import Card from "../cartas/Card";
 import type { CartaItem } from '../types/CartaItem';
@@ -32,11 +32,14 @@ export default function Slider({ cartas }: Props) {
   const siguienteCarta = () => setIndiceActual((prev) => (prev === cartas.length - 1 ? 0 : prev + 1));
   const cartaAnterior = () => setIndiceActual((prev) => (prev === 0 ? cartas.length - 1 : prev - 1));
 
+  const siguienteCartaRef = useRef(siguienteCarta);
+  siguienteCartaRef.current = siguienteCarta;
+
   /** Avanza automáticamente al siguiente slide cada 5 segundos. */
   useEffect(() => {
-    const timer = setInterval(siguienteCarta, 5000);
+    const timer = setInterval(() => siguienteCartaRef.current(), 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [cartas.length]);
 
   return (
     <div className="contenedor-slider">

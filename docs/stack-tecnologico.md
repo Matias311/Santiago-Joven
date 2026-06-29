@@ -26,8 +26,15 @@
 - **PostgreSQL** — dev/prod, alojada en **Neon.tech**
 - **H2** — tests, en modo PostgreSQL
 
+## Testing
+- **JUnit 5 + Mockito 5 + AssertJ** — Tests unitarios e integración del backend
+- **H2 (modo PostgreSQL)** — Base de datos embebida para tests
+- **Cypress 15** — Tests E2E del frontend (React)
+- **418 tests backend** (unitarios + integración) + **7 tests E2E frontend**
+
 ## DevOps
 - **Docker** + **Docker Compose** (3 perfiles: dev, test, prod)
+- **GitHub Actions** — CI en cada PR (backend tests, frontend lint, frontend E2E)
 - **Railway** — despliegue del backend
 - **Vercel** — despliegue del frontend
 

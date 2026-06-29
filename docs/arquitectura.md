@@ -41,14 +41,20 @@ controller/AuthController.java      ← POST /auth/login y /register (publicos)
 
 ## Flujo de autenticacion
 
-1. Login en `POST /api/v1/auth/login`
-2. AuthenticationManager chequea credenciales
+### Registro (`POST /api/v1/auth/register`)
+1. Valida email unico (409 si existe)
+2. BCrypt encodea el password
+3. `UsuarioService.create()` persiste el usuario + asigna rol `USER` en una sola transacción
+4. JwtTokenProvider genera JWT y retorna `201 Created` con `LoginResponse`
+
+### Login (`POST /api/v1/auth/login`)
+1. AuthenticationManager chequea credenciales
    - CustomUserDetailsService carga usuario con JOIN FETCH de roles y permisos
    - BCryptPasswordEncoder verifica el password
-3. JwtTokenProvider genera JWT HMAC-SHA512 con subject=email, userId, roles
-4. Cliente recibe token y lo envia en header `Authorization: Bearer <token>`
-5. JwtAuthenticationFilter valida token en cada request y setea SecurityContext
-6. @PreAuthorize evalua los permisos del contexto
+2. JwtTokenProvider genera JWT HMAC-SHA512 con subject=email, userId, roles
+3. Cliente recibe token y lo envia en header `Authorization: Bearer <token>`
+4. JwtAuthenticationFilter valida token en cada request y setea SecurityContext
+5. @PreAuthorize evalua los permisos del contexto
 
 ## Endpoints publicos
 
