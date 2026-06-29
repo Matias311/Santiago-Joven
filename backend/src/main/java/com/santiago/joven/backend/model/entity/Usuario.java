@@ -37,6 +37,8 @@ public class Usuario extends AuditableEntity {
   @Column(nullable = false)
   private String apellido;
 
+  private String telefono;
+
   @Column(nullable = false)
   private Boolean activo = true;
 
@@ -45,7 +47,7 @@ public class Usuario extends AuditableEntity {
       name = "usuarios_roles",
       joinColumns = @JoinColumn(name = "usuario_id"),
       inverseJoinColumns = @JoinColumn(name = "rol_id"))
-  private Set<Rol> roles;
+  private Set<Rol> roles = new java.util.HashSet<>();
 
   @OneToMany(mappedBy = "usuarioCreador")
   private Set<Asesoria> asesorias;

@@ -182,3 +182,12 @@
   filter: brightness(0.95);
   transform: translateY(0);
 }
+
+/* Fuerza el modo oscuro en la carta si esta activado el modo oscuro */
+.dark .ic-card {
+  background: #1e293b;
+}
+
+.dark .ic-section-text {
+  color: #cbd5e1;
+}
