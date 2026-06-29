@@ -46,8 +46,12 @@ public class InscripcionController {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  @Operation(summary = "Crear inscripcion", description = "Cualquier usuario autenticado puede inscribirse")
+  @Operation(
+      summary = "Crear inscripcion",
+      description = "Cualquier usuario autenticado puede inscribirse",
+      security = {@SecurityRequirement(name = "bearerAuth")})
   @PostMapping("")
+  @PreAuthorize("isAuthenticated()")
   public ResponseEntity<InscripcionResponse> create(
       @Valid @RequestBody InscripcionRequest request) {
     var response = service.create(request);

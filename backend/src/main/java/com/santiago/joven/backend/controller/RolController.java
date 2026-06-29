@@ -28,31 +28,31 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("/api/v1/roles")
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('PERMISSION_MANAGE_ROLES')")
-@Tag(name = "Roles", description = "Gestion de roles (solo admin)")
+@Tag(name = "Roles", description = "Gestion de roles (requiere PERMISSION_MANAGE_ROLES)")
 @SecurityRequirement(name = "bearerAuth")
 public class RolController {
 
   private final RolService service;
 
-  @Operation(summary = "Listar roles")
+  @Operation(summary = "Listar roles", description = "Requiere PERMISSION_MANAGE_ROLES")
   @GetMapping("")
   public ResponseEntity<List<RolResponse>> findAll() {
     return ResponseEntity.ok(service.findAll());
   }
 
-  @Operation(summary = "Buscar rol por ID")
+  @Operation(summary = "Buscar rol por ID", description = "Requiere PERMISSION_MANAGE_ROLES")
   @GetMapping("/{id}")
   public ResponseEntity<RolResponse> findById(@PathVariable UUID id) {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  @Operation(summary = "Buscar rol por nombre")
+  @Operation(summary = "Buscar rol por nombre", description = "Requiere PERMISSION_MANAGE_ROLES")
   @GetMapping("/por-nombre/{nombre}")
   public ResponseEntity<RolResponse> findByNombre(@PathVariable NombreRol nombre) {
     return ResponseEntity.ok(service.findByNombre(nombre));
   }
 
-  @Operation(summary = "Crear rol")
+  @Operation(summary = "Crear rol", description = "Requiere PERMISSION_MANAGE_ROLES")
   @PostMapping("")
   public ResponseEntity<RolResponse> create(@Valid @RequestBody RolRequest request) {
     var response = service.create(request);
@@ -64,14 +64,14 @@ public class RolController {
     return ResponseEntity.created(location).body(response);
   }
 
-  @Operation(summary = "Actualizar rol")
+  @Operation(summary = "Actualizar rol", description = "Requiere PERMISSION_MANAGE_ROLES")
   @PutMapping("/{id}")
   public ResponseEntity<RolResponse> update(
       @PathVariable UUID id, @Valid @RequestBody RolUpdate update) {
     return ResponseEntity.ok(service.update(id, update));
   }
 
-  @Operation(summary = "Eliminar rol")
+  @Operation(summary = "Eliminar rol", description = "Requiere PERMISSION_MANAGE_ROLES")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
     service.delete(id);

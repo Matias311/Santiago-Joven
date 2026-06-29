@@ -66,6 +66,19 @@ services:
       - ./frontend/eslint.config.js:/app/eslint.config.js
     command: ["npm", "run", "lint"]
 
+  frontend-e2e:
+    profiles: ["test"]
+    image: cypress/included:15.18.0
+    container_name: frontend-e2e
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    entrypoint: []
+    command:
+      - sh
+      - -c
+      - "npm ci && npx vite --host 0.0.0.0 --port 5173 & sleep 4 && cypress run"
+
   backend:
     profiles: ["prod"]
     build:

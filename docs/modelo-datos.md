@@ -9,9 +9,19 @@ TABLE: usuarios
 - password (VARCHAR, NOT NULL) [hasheada con BCrypt]
 - nombre (VARCHAR, NOT NULL)
 - apellido (VARCHAR, NOT NULL)
+- telefono (VARCHAR, NULLABLE)
 - activo (BOOLEAN, DEFAULT true)
 - fecha_creacion (TIMESTAMP, DEFAULT NOW())
 - fecha_actualizacion (TIMESTAMP, DEFAULT NOW())
+
+TABLE: codigos_recuperacion
+- id (UUID, PK)
+- email (VARCHAR, NOT NULL)
+- codigo (VARCHAR(5), NOT NULL) [OTP de 5 digitos]
+- expiracion (TIMESTAMP, NOT NULL) [5 minutos]
+- usado (BOOLEAN, DEFAULT false, NOT NULL)
+- fecha_creacion (TIMESTAMP, NOT NULL)
+- INDEX: (email, codigo)
 
 TABLE: roles
 - id (UUID, PK)
@@ -253,6 +263,7 @@ erDiagram
         string password
         string nombre
         string apellido
+        string telefono
         boolean activo
         timestamp fecha_creacion
         timestamp fecha_actualizacion
@@ -276,6 +287,15 @@ erDiagram
     USUARIOS_ROLES {
         UUID usuario_id FK
         UUID rol_id FK
+    }
+
+    CODIGOS_RECUPERACION {
+        UUID id PK
+        string email
+        string codigo
+        timestamp expiracion
+        boolean usado
+        timestamp fecha_creacion
     }
 
     ROLES_PERMISOS {
