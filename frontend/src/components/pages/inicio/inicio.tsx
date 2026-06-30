@@ -84,14 +84,10 @@ export default function Inicio() {
     // aquí se hace la primera verificación del rol
     updateAdmin();
 
-    // Se crea un intervalo que se ejecuta cada 300ms
-    // Esto permite detectar cambios en el login/logout
     const interval = setInterval(() => {
       updateAdmin();
     }, 300);
 
-    // Cuando el componente se desmonta, se elimina el intervalo
-    // para evitar consumo de memoria o procesos innecesarios
     return () => clearInterval(interval);
   }, []);
 
@@ -132,7 +128,6 @@ export default function Inicio() {
   }
   const [encuestaState, setEncuestaState] = useState<Survey[]>([]);
 
-  // IDs internos de la API para poder hacer PUT/DELETE (mapa titulo → id)
   const [idsAPI, setIdsAPI] = useState<{
     asesorias: Record<string, string>;
     cursos: Record<string, string>;
@@ -140,6 +135,7 @@ export default function Inicio() {
     programas: Record<string, string>;
     salud: Record<string, string>;
     actividades: Record<string, string>;
+    encuestas: Record<string, string>;
   }>({
     asesorias: {},
     cursos: {},
@@ -147,12 +143,32 @@ export default function Inicio() {
     programas: {},
     salud: {},
     actividades: {},
+    encuestas: {},
   });
 
+  // Mapa tipo de categoría (ASESORIA, CURSO, ACTIVIDAD, GENERAL) -> id de
+  // una categoría existente de ese tipo. Se necesita porque varios endpoints
+  // exigen un categoriaId válido al crear un nuevo registro.
+  const [categoriasPorTipo, setCategoriasPorTipo] = useState<
+    Record<string, string>
+  >({});
+
+  const updateIdsAPI = (
+    seccion: keyof typeof idsAPI,
+    titulo: string,
+    id: string,
+  ) => {
+    setIdsAPI((prev) => ({
+      ...prev,
+      [seccion]: {
+        ...prev[seccion],
+        [titulo]: id,
+      },
+    }));
+  };
+
   const [loading, setLoading] = useState(true);
-  /* -------------------------------------------------------
-     FETCH inicial: carga todos los datos desde la API
-  ------------------------------------------------------- */
+
   useEffect(() => {
     Promise.allSettled([
       fetch(`${API_BASE}/asesorias`).then((r) => r.json()),
@@ -162,7 +178,6 @@ export default function Inicio() {
       fetch(`${API_BASE}/salud-mental`).then((r) => r.json()),
       fetch(`${API_BASE}/actividades-talleres`).then((r) => r.json()),
       fetch(`${API_BASE}/tu-contribucion-cuenta`).then((r) => r.json()),
-      // Categorías reales para que el tag del calendario muestre el nombre correcto
       fetch(`${API_BASE}/categorias`).then((r) => r.json()),
     ]).then((results) => {
       const ok = (r: PromiseSettledResult<unknown>) =>
@@ -185,7 +200,6 @@ export default function Inicio() {
         categoriasData,
       ] = results.map(ok);
 
-      // Guardamos los IDs para poder hacer PUT/DELETE después
       const nuevosIds = { ...idsAPI };
 
       nuevosIds.asesorias = Object.fromEntries(
@@ -220,13 +234,18 @@ export default function Inicio() {
       );
       nuevosIds.actividades = Object.fromEntries(
         (actividadesData || []).map((i: Record<string, unknown>) => [
-          String(i.titulo),
+          String(i.titulo || i.texto || ""),
+          String(i.id),
+        ]),
+      );
+      nuevosIds.encuestas = Object.fromEntries(
+        (encuestasData || []).map((i: Record<string, unknown>) => [
+          String(i.titulo || ""),
           String(i.id),
         ]),
       );
       setIdsAPI(nuevosIds);
 
-      // Mapeo de datos de la API al formato CartaItem
       setAsesoriasState(
         (asesoriasData || []).map((item: Record<string, unknown>) => ({
           icono: "service_toolbox",
@@ -284,7 +303,6 @@ export default function Inicio() {
         })),
       );
 
-      // Actividades: items sin "taller" en el título → lista simple
       setActividadesState(
         (actividadesData || [])
           .filter(
@@ -297,7 +315,6 @@ export default function Inicio() {
           })),
       );
 
-      // Talleres: items con "taller" en el título → lista simple
       setTalleresState(
         (actividadesData || [])
           .filter((item: Record<string, unknown>) =>
@@ -309,7 +326,6 @@ export default function Inicio() {
           })),
       );
 
-      // Mapa id de categoría → nombre real, igual que en ConexionComunitaria.tsx
       const categoriaMap: Record<string, string> = Object.fromEntries(
         (categoriasData || []).map((c: Record<string, unknown>) => [
           String(c.id),
@@ -317,8 +333,18 @@ export default function Inicio() {
         ]),
       );
 
-      // Calendario: todas las actividades mapeadas a CalendarEvent,
-      // usando el nombre real de la categoría (no un valor fijo)
+      // Para cada tipo de categoría guardamos el id de la PRIMERA categoría
+      // de ese tipo que exista, para poder usarla como categoriaId por
+      // defecto al crear nuevos registros (asesorías, cursos, actividades).
+      const nuevasCategoriasPorTipo: Record<string, string> = {};
+      (categoriasData || []).forEach((c: Record<string, unknown>) => {
+        const tipo = String(c.tipo || "");
+        if (tipo && !nuevasCategoriasPorTipo[tipo]) {
+          nuevasCategoriasPorTipo[tipo] = String(c.id);
+        }
+      });
+      setCategoriasPorTipo(nuevasCategoriasPorTipo);
+
       setCalendarioState(
         (actividadesData || []).map(
           (item: Record<string, unknown>, index: number) => {
@@ -337,15 +363,16 @@ export default function Inicio() {
         ),
       );
 
-      // Encuestas desde tu-contribucion-cuenta
       setEncuestaState(
-        (encuestasData || []).map((item: Record<string, unknown>) => ({
-          id: Number(item.id) || Date.now(),
-          title: String(item.titulo || ""),
-          desde: "",
-          hasta: "",
-          url: String(item.linkGoogleForms || ""),
-        })),
+        (encuestasData || []).map(
+          (item: Record<string, unknown>, index: number) => ({
+            id: index + 1,
+            title: String(item.titulo || ""),
+            desde: "",
+            hasta: "",
+            url: String(item.linkGoogleForms || ""),
+          }),
+        ),
       );
 
       setLoading(false);
@@ -358,9 +385,6 @@ export default function Inicio() {
       evt.categoria.toLowerCase() === filtro.toLowerCase().replace(/s$/, "s"),
   );
 
-  {
-    /** Actualizar carta (local + API) */
-  }
   const updateItem = <Carta,>(
     list: Carta[],
     setList: React.Dispatch<React.SetStateAction<Carta[]>>,
@@ -372,9 +396,6 @@ export default function Inicio() {
     setList(updatedList);
   };
 
-  {
-    /** Eliminar carta (local + API) */
-  }
   const deleteItem = <Carta,>(
     list: Carta[],
     setList: React.Dispatch<React.SetStateAction<Carta[]>>,
@@ -384,22 +405,11 @@ export default function Inicio() {
     setList(updatedList);
   };
 
-  {
-    /** Añadir carta */
-  }
-  const addCard = <T,>(
-    state: T[],
-    setState: React.Dispatch<React.SetStateAction<T[]>>,
-    template?: T,
-  ) => {
-    const base: any =
-      state.length > 0
-        ? { ...state[state.length - 1] }
-        : template
-          ? { ...template }
-          : null;
-
-    if (!base) return;
+  const getPreparedTemplate = <T extends Record<string, any>>(
+    template: T,
+    currentLength: number,
+  ): T => {
+    const base = { ...template };
 
     const ignorar = [
       "icono",
@@ -410,55 +420,60 @@ export default function Inicio() {
       "botoncolor",
     ];
 
-    Object.keys(base).forEach((key) => {
+    (Object.keys(base) as Array<keyof T>).forEach((key) => {
+      const value = base[key];
       if (
-        !ignorar.includes(key) &&
-        typeof base[key] === "string" &&
-        base[key].trim() !== ""
+        !ignorar.includes(key as string) &&
+        typeof value === "string" &&
+        value.trim() !== ""
       ) {
-        base[key] = "Insertar datos";
+        (base as any)[key] = "Insertar datos";
       }
     });
 
-    if ("id" in base) {
-      base.id = Date.now();
-    }
+    if ("id" in base) (base as any).id = Date.now();
+    if ("title" in base)
+      (base as any).title = `Nueva carta ${currentLength + 1}`;
+    if ("titulo" in base)
+      (base as any).titulo = `Nueva carta ${currentLength + 1}`;
+    if ("texto" in base)
+      (base as any).texto = `Nuevo elemento ${currentLength + 1}`;
+    if ("date" in base)
+      (base as any).date = new Date().toISOString().split("T")[0];
 
-    if ("title" in base) {
-      base.title = `Nueva carta ${state.length + 1}`;
-    }
-
-    if ("titulo" in base) {
-      base.titulo = `Nueva carta ${state.length + 1}`;
-    }
-
-    if ("texto" in base) {
-      base.texto = `Nuevo elemento ${state.length + 1}`;
-    }
-
-    setState([...state, base]);
+    return base;
   };
 
-  /* -------------------------------------------------------
-     Helpers de API para cada entidad
-  ------------------------------------------------------- */
   const {
+    createAsesoria,
     saveAsesoria,
     deleteAsesoria,
+    createCurso,
     saveCurso,
     deleteCurso,
+    createAccion,
     saveAccion,
     deleteAccion,
+    createPrograma,
     savePrograma,
     deletePrograma,
+    createSalud,
     saveSalud,
     deleteSalud,
+    createActividad,
     saveActividad,
     deleteActividad,
+    createCalendario,
     saveCalendario,
     deleteCalendario,
+    createEncuesta,
+    saveEncuesta,
+    deleteEncuesta,
   } = inicioApi({
     idsAPI,
+    updateIdsAPI,
+
+    categoriasPorTipo,
 
     asesoriasState,
     setAsesoriasState,
@@ -475,15 +490,24 @@ export default function Inicio() {
     saludState,
     setSaludState,
 
+    actividadesState,
+    setActividadesState,
+
+    talleresState,
+    setTalleresState,
+
     calendarioState,
     setCalendarioState,
+
+    encuestaState,
+    setEncuestaState,
 
     updateItem,
     deleteItem,
   });
+
   return (
     <>
-      {/* encabezado de la pagina principal */}
       <header id="inicio" className="inicio-section">
         <div className="inicio-texto">
           <h1>Santiago Joven: Crece, participa y aprende</h1>
@@ -503,7 +527,6 @@ export default function Inicio() {
         </div>
       </header>
 
-      {/* contenido principal */}
       <main className="contenido-principal">
         {/* apoyo joven */}
         <section id="apoyo" className="seccion-informativa">
@@ -527,13 +550,13 @@ export default function Inicio() {
             {isAdmin && (
               <button
                 className="card_edit_btn"
-                onClick={() =>
-                  addCard(
-                    asesoriasState,
-                    setAsesoriasState,
+                onClick={() => {
+                  const preparado = getPreparedTemplate(
                     templates.asesorias,
-                  )
-                }
+                    asesoriasState.length,
+                  );
+                  createAsesoria(preparado);
+                }}
               >
                 Agregar
               </button>
@@ -552,9 +575,7 @@ export default function Inicio() {
                   isAdmin={isAdmin}
                   onSave={(updated) => saveAsesoria(updated, index)}
                   onDelete={() => deleteAsesoria(index)}
-                  onAdd={(newCard) =>
-                    setAsesoriasState([...asesoriasState, { ...newCard }])
-                  }
+                  onAdd={(newCard) => createAsesoria(newCard)}
                 />
               ))}
             </div>
@@ -566,13 +587,16 @@ export default function Inicio() {
             {isAdmin && (
               <button
                 className="card_edit_btn"
-                onClick={() =>
-                  addCard(
-                    preuniversitarioState,
-                    setPreuniversitarioState,
-                    templates.preuniversitario,
-                  )
-                }
+                onClick={() => {
+                  const updatedList = [
+                    ...preuniversitarioState,
+                    getPreparedTemplate(
+                      templates.preuniversitario,
+                      preuniversitarioState.length,
+                    ),
+                  ];
+                  setPreuniversitarioState(updatedList);
+                }}
               >
                 Agregar
               </button>
@@ -604,13 +628,13 @@ export default function Inicio() {
                       index,
                     )
                   }
-                  onAdd={() =>
-                    addCard(
-                      preuniversitarioState,
-                      setPreuniversitarioState,
+                  onAdd={() => {
+                    const nuevo = getPreparedTemplate(
                       templates.preuniversitario,
-                    )
-                  }
+                      preuniversitarioState.length,
+                    );
+                    setPreuniversitarioState([...preuniversitarioState, nuevo]);
+                  }}
                 />
               ))}
             </div>
@@ -638,9 +662,13 @@ export default function Inicio() {
           {isAdmin && (
             <button
               className="card_edit_btn"
-              onClick={() =>
-                addCard(cursosState, setCursosState, templates.cursos)
-              }
+              onClick={() => {
+                const preparado = getPreparedTemplate(
+                  templates.cursos,
+                  cursosState.length,
+                );
+                createCurso(preparado);
+              }}
             >
               Agregar
             </button>
@@ -650,7 +678,13 @@ export default function Inicio() {
             isAdmin={isAdmin}
             onSave={(updated, index) => saveCurso(updated, index)}
             onDelete={(index) => deleteCurso(index)}
-            onAdd={() => addCard(cursosState, setCursosState, templates.cursos)}
+            onAdd={() => {
+              const preparado = getPreparedTemplate(
+                templates.cursos,
+                cursosState.length,
+              );
+              createCurso(preparado);
+            }}
           />
         </section>
 
@@ -672,9 +706,13 @@ export default function Inicio() {
               {isAdmin && (
                 <button
                   className="card_edit_btn"
-                  onClick={() =>
-                    addCard(accionState, setAccionState, templates.accion)
-                  }
+                  onClick={() => {
+                    const preparado = getPreparedTemplate(
+                      templates.accion,
+                      accionState.length,
+                    );
+                    createAccion(preparado);
+                  }}
                 >
                   Agregar
                 </button>
@@ -685,9 +723,13 @@ export default function Inicio() {
               isAdmin={isAdmin}
               onSave={(updated, index) => saveAccion(updated, index)}
               onDelete={(index) => deleteAccion(index)}
-              onAdd={() =>
-                addCard(accionState, setAccionState, templates.accion)
-              }
+              onAdd={() => {
+                const preparado = getPreparedTemplate(
+                  templates.accion,
+                  accionState.length,
+                );
+                createAccion(preparado);
+              }}
             />
           </section>
         </div>
@@ -709,13 +751,13 @@ export default function Inicio() {
             {isAdmin && (
               <button
                 className="card_edit_btn"
-                onClick={() =>
-                  addCard(
-                    programasState,
-                    setProgramasState,
+                onClick={() => {
+                  const preparado = getPreparedTemplate(
                     templates.programas,
-                  )
-                }
+                    programasState.length,
+                  );
+                  createPrograma(preparado);
+                }}
               >
                 Agregar
               </button>
@@ -726,9 +768,13 @@ export default function Inicio() {
             isAdmin={isAdmin}
             onSave={(updated, index) => savePrograma(updated, index)}
             onDelete={(index) => deletePrograma(index)}
-            onAdd={() =>
-              addCard(programasState, setProgramasState, templates.programas)
-            }
+            onAdd={() => {
+              const preparado = getPreparedTemplate(
+                templates.programas,
+                programasState.length,
+              );
+              createPrograma(preparado);
+            }}
           />
         </section>
 
@@ -753,9 +799,13 @@ export default function Inicio() {
               {isAdmin && (
                 <button
                   className="card_edit_btn"
-                  onClick={() =>
-                    addCard(saludState, setSaludState, templates.salud)
-                  }
+                  onClick={() => {
+                    const preparado = getPreparedTemplate(
+                      templates.salud,
+                      saludState.length,
+                    );
+                    createSalud(preparado);
+                  }}
                 >
                   Agregar
                 </button>
@@ -776,9 +826,13 @@ export default function Inicio() {
                   isAdmin={isAdmin}
                   onSave={(updated) => saveSalud(updated, index)}
                   onDelete={() => deleteSalud(index)}
-                  onAdd={() =>
-                    addCard(saludState, setSaludState, templates.salud)
-                  }
+                  onAdd={() => {
+                    const preparado = getPreparedTemplate(
+                      templates.salud,
+                      saludState.length,
+                    );
+                    createSalud(preparado);
+                  }}
                 />
               ))}
             </div>
@@ -810,13 +864,13 @@ export default function Inicio() {
                 {isAdmin && (
                   <button
                     className="card_edit_btn"
-                    onClick={() =>
-                      addCard(
-                        actividadesState,
-                        setActividadesState,
+                    onClick={() => {
+                      const preparado = getPreparedTemplate(
                         templates.actividades,
-                      )
-                    }
+                        actividadesState.length,
+                      );
+                      createActividad(preparado);
+                    }}
                   >
                     Agregar
                   </button>
@@ -839,7 +893,6 @@ export default function Inicio() {
                           ),
                         );
                       } else {
-                        // Mover de actividades a talleres: elimina de actividades y agrega a talleres
                         deleteActividad(item.texto).then(() => {
                           setActividadesState(
                             actividadesState.filter((_, i) => i !== index),
@@ -857,24 +910,8 @@ export default function Inicio() {
                         ),
                       );
                     }}
-                    onAdd={(newItem, seccion) => {
-                      const state =
-                        seccion === "actividades"
-                          ? actividadesState
-                          : talleresState;
-                      const setState =
-                        seccion === "actividades"
-                          ? setActividadesState
-                          : setTalleresState;
-                      const template =
-                        seccion === "actividades"
-                          ? templates.actividades
-                          : templates.talleres;
-                      if (state.length === 0) {
-                        addCard(state, setState, template);
-                      } else {
-                        setState([...state, { ...newItem }]);
-                      }
+                    onAdd={(newItem) => {
+                      createActividad(newItem);
                     }}
                   />
                 ))}
@@ -886,13 +923,13 @@ export default function Inicio() {
                 {isAdmin && (
                   <button
                     className="card_edit_btn"
-                    onClick={() =>
-                      addCard(
-                        talleresState,
-                        setTalleresState,
+                    onClick={() => {
+                      const preparado = getPreparedTemplate(
                         templates.talleres,
-                      )
-                    }
+                        talleresState.length,
+                      );
+                      createActividad(preparado, "talleres");
+                    }}
                   >
                     Agregar
                   </button>
@@ -919,24 +956,8 @@ export default function Inicio() {
                         deleteItem(talleresState, setTalleresState, index),
                       );
                     }}
-                    onAdd={(newItem, seccion) => {
-                      const state =
-                        seccion === "actividades"
-                          ? actividadesState
-                          : talleresState;
-                      const setState =
-                        seccion === "actividades"
-                          ? setActividadesState
-                          : setTalleresState;
-                      const template =
-                        seccion === "actividades"
-                          ? templates.actividades
-                          : templates.talleres;
-                      if (state.length === 0) {
-                        addCard(state, setState, template);
-                      } else {
-                        setState([...state, { ...newItem }]);
-                      }
+                    onAdd={(newItem) => {
+                      createActividad(newItem, "talleres");
                     }}
                   />
                 ))}
@@ -960,13 +981,13 @@ export default function Inicio() {
                 {isAdmin && (
                   <button
                     className="card_edit_btn"
-                    onClick={() =>
-                      addCard(
-                        calendarioState,
-                        setCalendarioState,
+                    onClick={() => {
+                      const preparado = getPreparedTemplate(
                         templates.calendario,
-                      )
-                    }
+                        calendarioState.length,
+                      );
+                      createCalendario(preparado);
+                    }}
                   >
                     Agregar
                   </button>
@@ -1005,7 +1026,6 @@ export default function Inicio() {
                     isAdmin={isAdmin}
                     onSave={(updated) => saveCalendario(updated, index)}
                     onDelete={() => deleteCalendario(index)}
-                    // "Ver más detalles" redirige a Conexión Comunitaria
                     onDetailClick={() => navigate("/conexioncomunitaria")}
                   />
                 ))}
@@ -1046,9 +1066,13 @@ export default function Inicio() {
             {isAdmin && (
               <button
                 className="card_edit_btn"
-                onClick={() =>
-                  addCard(encuestaState, setEncuestaState, templates.encuesta)
-                }
+                onClick={() => {
+                  const preparado = getPreparedTemplate(
+                    templates.encuesta,
+                    encuestaState.length,
+                  );
+                  createEncuesta(preparado);
+                }}
               >
                 Agregar
               </button>
@@ -1071,24 +1095,11 @@ export default function Inicio() {
                   key={evento.id}
                   eventProps={evento}
                   isAdmin={isAdmin}
-                  onSave={(updated) =>
-                    updateItem(encuestaState, setEncuestaState, index, updated)
-                  }
-                  onDelete={() =>
-                    deleteItem(encuestaState, setEncuestaState, index)
-                  }
-                  onAdd={(newSurvey) =>
-                    encuestaState.length === 0
-                      ? addCard(
-                          encuestaState,
-                          setEncuestaState,
-                          templates.encuesta,
-                        )
-                      : setEncuestaState([
-                          ...encuestaState,
-                          { ...newSurvey, id: Date.now() },
-                        ])
-                  }
+                  onSave={(updated) => saveEncuesta(updated, index)}
+                  onDelete={() => deleteEncuesta(index)}
+                  onAdd={(newSurvey) => {
+                    createEncuesta(newSurvey);
+                  }}
                 />
               ))}
             </div>

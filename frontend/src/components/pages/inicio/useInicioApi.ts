@@ -2,6 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { CartaItem } from "../../types/CartaItem";
 import type { ConexionItem } from "../../types/ConexionItem";
 import type { CalendarEvent } from "../../cartas/CalendarCard";
+import type { Survey } from "../../cartas/SurveyCard";
 import { obtenerToken } from "../../utils/sessionStorage";
 
 const API_BASE =
@@ -27,10 +28,17 @@ interface IdsAPI {
   programas: Record<string, string>;
   salud: Record<string, string>;
   actividades: Record<string, string>;
+  encuestas: Record<string, string>;
 }
 
 interface ApiHelpersProps {
   idsAPI: IdsAPI;
+  updateIdsAPI: (seccion: keyof IdsAPI, titulo: string, id: string) => void;
+
+  // Mapa tipo de categoría -> id de una categoría existente de ese tipo.
+  // Se usa porque /asesorias, /cursos-destacados y /actividades-talleres
+  // EXIGEN un categoriaId válido (uuid) en el backend; mandar null las rechaza.
+  categoriasPorTipo: Record<string, string>;
 
   asesoriasState: CartaItem[];
   setAsesoriasState: Dispatch<SetStateAction<CartaItem[]>>;
@@ -47,8 +55,17 @@ interface ApiHelpersProps {
   saludState: CartaItem[];
   setSaludState: Dispatch<SetStateAction<CartaItem[]>>;
 
+  actividadesState: ConexionItem[];
+  setActividadesState: Dispatch<SetStateAction<ConexionItem[]>>;
+
+  talleresState: ConexionItem[];
+  setTalleresState: Dispatch<SetStateAction<ConexionItem[]>>;
+
   calendarioState: CalendarEvent[];
   setCalendarioState: Dispatch<SetStateAction<CalendarEvent[]>>;
+
+  encuestaState: Survey[];
+  setEncuestaState: Dispatch<SetStateAction<Survey[]>>;
 
   updateItem: <T>(
     list: T[],
@@ -64,8 +81,20 @@ interface ApiHelpersProps {
   ) => void;
 }
 
+// Lanza un error legible si la API responde con código de error,
+// en vez de seguir leyendo .json() de un cuerpo de error silenciosamente
+async function checkResponse(res: Response, contexto: string) {
+  if (!res.ok) {
+    const texto = await res.text();
+    throw new Error(`${contexto} falló (${res.status}): ${texto}`);
+  }
+}
+
 export function inicioApi({
   idsAPI,
+  updateIdsAPI,
+
+  categoriasPorTipo,
 
   asesoriasState,
   setAsesoriasState,
@@ -82,19 +111,56 @@ export function inicioApi({
   saludState,
   setSaludState,
 
+  actividadesState,
+  setActividadesState,
+
+  talleresState,
+  setTalleresState,
+
   calendarioState,
   setCalendarioState,
+
+  encuestaState,
+  setEncuestaState,
 
   updateItem,
   deleteItem,
 }: ApiHelpersProps) {
   // ---------------- Asesorías ----------------
+  // AsesoriaRequest requiere: categoriaId, definicion, objetivos, metodologia
+
+  const createAsesoria = async (newItem: CartaItem) => {
+    const categoriaId = categoriasPorTipo["ASESORIA"];
+    if (!categoriaId) {
+      throw new Error(
+        "No hay ninguna categoría de tipo ASESORIA creada. Crea una categoría con tipo ASESORIA antes de agregar asesorías.",
+      );
+    }
+
+    const res = await fetch(`${API_BASE}/asesorias`, {
+      method: "POST",
+      headers: getAuthHeader(),
+      body: JSON.stringify({
+        titulo: newItem.titulo,
+        definicion: newItem.descripcion,
+        objetivos: "Insertar datos",
+        metodologia: "Insertar datos",
+        categoriaId,
+      }),
+    });
+    await checkResponse(res, "Crear asesoría");
+    const data = await res.json();
+    if (data?.id) {
+      updateIdsAPI("asesorias", newItem.titulo, data.id);
+    }
+    setAsesoriasState((prev) => [...prev, newItem]);
+  };
 
   const saveAsesoria = async (updated: CartaItem, index: number) => {
     const id = idsAPI.asesorias[asesoriasState[index]?.titulo ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/asesorias/${id}`, {
+    const res = await fetch(`${API_BASE}/asesorias/${id}`, {
       method: "PUT",
       headers: getAuthHeader(),
       body: JSON.stringify({
@@ -102,6 +168,7 @@ export function inicioApi({
         definicion: updated.descripcion,
       }),
     });
+    await checkResponse(res, "Actualizar asesoría");
 
     updateItem(asesoriasState, setAsesoriasState, index, updated);
   };
@@ -110,21 +177,50 @@ export function inicioApi({
     const id = idsAPI.asesorias[asesoriasState[index]?.titulo ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/asesorias/${id}`, {
+    const res = await fetch(`${API_BASE}/asesorias/${id}`, {
       method: "DELETE",
       headers: getAuthHeader(),
     });
+    await checkResponse(res, "Eliminar asesoría");
 
     deleteItem(asesoriasState, setAsesoriasState, index);
   };
 
   // ---------------- Cursos ----------------
+  // CursoDestacadoRequest requiere: categoriaId, objetivo
+
+  const createCurso = async (newItem: CartaItem) => {
+    const categoriaId = categoriasPorTipo["CURSO"];
+    if (!categoriaId) {
+      throw new Error(
+        "No hay ninguna categoría de tipo CURSO creada. Crea una categoría con tipo CURSO antes de agregar cursos.",
+      );
+    }
+
+    const res = await fetch(`${API_BASE}/cursos-destacados`, {
+      method: "POST",
+      headers: getAuthHeader(),
+      body: JSON.stringify({
+        titulo: newItem.titulo,
+        descripcion: newItem.descripcion,
+        objetivo: "Insertar datos",
+        eslogan: "Insertar datos",
+        categoriaId,
+      }),
+    });
+    await checkResponse(res, "Crear curso");
+    const data = await res.json();
+    if (data?.id) {
+      updateIdsAPI("cursos", newItem.titulo, data.id);
+    }
+    setCursosState((prev) => [...prev, newItem]);
+  };
 
   const saveCurso = async (updated: CartaItem, index: number) => {
     const id = idsAPI.cursos[cursosState[index]?.titulo ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/cursos-destacados/${id}`, {
+    const res = await fetch(`${API_BASE}/cursos-destacados/${id}`, {
       method: "PUT",
       headers: getAuthHeader(),
       body: JSON.stringify({
@@ -132,6 +228,7 @@ export function inicioApi({
         descripcion: updated.descripcion,
       }),
     });
+    await checkResponse(res, "Actualizar curso");
 
     updateItem(cursosState, setCursosState, index, updated);
   };
@@ -140,21 +237,40 @@ export function inicioApi({
     const id = idsAPI.cursos[cursosState[index]?.titulo ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/cursos-destacados/${id}`, {
+    const res = await fetch(`${API_BASE}/cursos-destacados/${id}`, {
       method: "DELETE",
       headers: getAuthHeader(),
     });
+    await checkResponse(res, "Eliminar curso");
 
     deleteItem(cursosState, setCursosState, index);
   };
 
   // ---------------- Acción ----------------
+  // AccionJovenRequest no tiene campos requeridos extra
+
+  const createAccion = async (newItem: CartaItem) => {
+    const res = await fetch(`${API_BASE}/acciones-joven`, {
+      method: "POST",
+      headers: getAuthHeader(),
+      body: JSON.stringify({
+        titulo: newItem.titulo,
+        descripcion: newItem.descripcion,
+      }),
+    });
+    await checkResponse(res, "Crear acción");
+    const data = await res.json();
+    if (data?.id) {
+      updateIdsAPI("acciones", newItem.titulo, data.id);
+    }
+    setAccionState((prev) => [...prev, newItem]);
+  };
 
   const saveAccion = async (updated: CartaItem, index: number) => {
     const id = idsAPI.acciones[accionState[index]?.titulo ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/acciones-joven/${id}`, {
+    const res = await fetch(`${API_BASE}/acciones-joven/${id}`, {
       method: "PUT",
       headers: getAuthHeader(),
       body: JSON.stringify({
@@ -162,6 +278,7 @@ export function inicioApi({
         descripcion: updated.descripcion,
       }),
     });
+    await checkResponse(res, "Actualizar acción");
 
     updateItem(accionState, setAccionState, index, updated);
   };
@@ -170,21 +287,43 @@ export function inicioApi({
     const id = idsAPI.acciones[accionState[index]?.titulo ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/acciones-joven/${id}`, {
+    const res = await fetch(`${API_BASE}/acciones-joven/${id}`, {
       method: "DELETE",
       headers: getAuthHeader(),
     });
+    await checkResponse(res, "Eliminar acción");
 
     deleteItem(accionState, setAccionState, index);
   };
 
   // ---------------- Programas ----------------
+  // ProgramaRequest requiere: definicion, objetivos, metodologia
+
+  const createPrograma = async (newItem: CartaItem) => {
+    const res = await fetch(`${API_BASE}/programas`, {
+      method: "POST",
+      headers: getAuthHeader(),
+      body: JSON.stringify({
+        titulo: newItem.titulo,
+        descripcion: newItem.descripcion,
+        definicion: "Insertar datos",
+        objetivos: "Insertar datos",
+        metodologia: "Insertar datos",
+      }),
+    });
+    await checkResponse(res, "Crear programa");
+    const data = await res.json();
+    if (data?.id) {
+      updateIdsAPI("programas", newItem.titulo, data.id);
+    }
+    setProgramasState((prev) => [...prev, newItem]);
+  };
 
   const savePrograma = async (updated: CartaItem, index: number) => {
     const id = idsAPI.programas[programasState[index]?.titulo ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/programas/${id}`, {
+    const res = await fetch(`${API_BASE}/programas/${id}`, {
       method: "PUT",
       headers: getAuthHeader(),
       body: JSON.stringify({
@@ -192,6 +331,7 @@ export function inicioApi({
         descripcion: updated.descripcion,
       }),
     });
+    await checkResponse(res, "Actualizar programa");
 
     updateItem(programasState, setProgramasState, index, updated);
   };
@@ -200,21 +340,40 @@ export function inicioApi({
     const id = idsAPI.programas[programasState[index]?.titulo ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/programas/${id}`, {
+    const res = await fetch(`${API_BASE}/programas/${id}`, {
       method: "DELETE",
       headers: getAuthHeader(),
     });
+    await checkResponse(res, "Eliminar programa");
 
     deleteItem(programasState, setProgramasState, index);
   };
 
   // ---------------- Salud ----------------
+  // SaludMentalRequest no tiene campos requeridos extra (ya funcionaba)
+
+  const createSalud = async (newItem: CartaItem) => {
+    const res = await fetch(`${API_BASE}/salud-mental`, {
+      method: "POST",
+      headers: getAuthHeader(),
+      body: JSON.stringify({
+        titulo: newItem.titulo,
+        descripcion: newItem.descripcion,
+      }),
+    });
+    await checkResponse(res, "Crear recurso de salud");
+    const data = await res.json();
+    if (data?.id) {
+      updateIdsAPI("salud", newItem.titulo, data.id);
+    }
+    setSaludState((prev) => [...prev, newItem]);
+  };
 
   const saveSalud = async (updated: CartaItem, index: number) => {
     const id = idsAPI.salud[saludState[index]?.titulo ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/salud-mental/${id}`, {
+    const res = await fetch(`${API_BASE}/salud-mental/${id}`, {
       method: "PUT",
       headers: getAuthHeader(),
       body: JSON.stringify({
@@ -222,6 +381,7 @@ export function inicioApi({
         descripcion: updated.descripcion,
       }),
     });
+    await checkResponse(res, "Actualizar recurso de salud");
 
     updateItem(saludState, setSaludState, index, updated);
   };
@@ -230,46 +390,111 @@ export function inicioApi({
     const id = idsAPI.salud[saludState[index]?.titulo ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/salud-mental/${id}`, {
+    const res = await fetch(`${API_BASE}/salud-mental/${id}`, {
       method: "DELETE",
       headers: getAuthHeader(),
     });
+    await checkResponse(res, "Eliminar recurso de salud");
 
     deleteItem(saludState, setSaludState, index);
   };
 
   // ---------------- Actividades ----------------
+  // ActividadTallerRequest requiere: categoriaId, fechaHora
+
+  const createActividad = async (
+    newItem: ConexionItem,
+    destino: "actividades" | "talleres" = "actividades",
+  ) => {
+    const categoriaId = categoriasPorTipo["ACTIVIDAD"];
+    if (!categoriaId) {
+      throw new Error(
+        "No hay ninguna categoría de tipo ACTIVIDAD creada. Crea una categoría con tipo ACTIVIDAD antes de agregar actividades o talleres.",
+      );
+    }
+
+    const res = await fetch(`${API_BASE}/actividades-talleres`, {
+      method: "POST",
+      headers: getAuthHeader(),
+      body: JSON.stringify({
+        titulo: newItem.texto,
+        descripcion: "Insertar datos",
+        categoriaId,
+        fechaHora: new Date().toISOString(),
+      }),
+    });
+    await checkResponse(res, "Crear actividad");
+    const data = await res.json();
+    if (data?.id) {
+      updateIdsAPI("actividades", newItem.texto, data.id);
+    }
+
+    if (destino === "talleres") {
+      setTalleresState((prev) => [...prev, newItem]);
+    } else {
+      setActividadesState((prev) => [...prev, newItem]);
+    }
+  };
 
   const saveActividad = async (updated: ConexionItem, titulo: string) => {
     const id = idsAPI.actividades[titulo];
     if (!id) return;
 
-    await fetch(`${API_BASE}/actividades-talleres/${id}`, {
+    const res = await fetch(`${API_BASE}/actividades-talleres/${id}`, {
       method: "PUT",
       headers: getAuthHeader(),
       body: JSON.stringify({
         titulo: updated.texto,
       }),
     });
+    await checkResponse(res, "Actualizar actividad");
   };
 
   const deleteActividad = async (titulo: string) => {
     const id = idsAPI.actividades[titulo];
     if (!id) return;
 
-    await fetch(`${API_BASE}/actividades-talleres/${id}`, {
+    const res = await fetch(`${API_BASE}/actividades-talleres/${id}`, {
       method: "DELETE",
       headers: getAuthHeader(),
     });
+    await checkResponse(res, "Eliminar actividad");
   };
 
   // ---------------- Calendario ----------------
+  // Comparte el mismo endpoint que Actividades: requiere categoriaId, fechaHora
+
+  const createCalendario = async (newItem: CalendarEvent) => {
+    const categoriaId = categoriasPorTipo["ACTIVIDAD"];
+    if (!categoriaId) {
+      throw new Error(
+        "No hay ninguna categoría de tipo ACTIVIDAD creada. Crea una categoría con tipo ACTIVIDAD antes de agregar eventos.",
+      );
+    }
+
+    const res = await fetch(`${API_BASE}/actividades-talleres`, {
+      method: "POST",
+      headers: getAuthHeader(),
+      body: JSON.stringify({
+        titulo: newItem.title,
+        fechaHora: newItem.date + "T00:00:00",
+        descripcion: "Insertar datos",
+        categoriaId,
+      }),
+    });
+    await checkResponse(res, "Crear evento de calendario");
+    const data = await res.json();
+    if (data?.id) {
+      updateIdsAPI("actividades", newItem.title, data.id);
+    }
+    setCalendarioState((prev) => [...prev, newItem]);
+  };
 
   const saveCalendario = async (updated: CalendarEvent, index: number) => {
     const id = idsAPI.actividades[calendarioState[index]?.title ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/actividades-talleres/${id}`, {
+    const res = await fetch(`${API_BASE}/actividades-talleres/${id}`, {
       method: "PUT",
       headers: getAuthHeader(),
       body: JSON.stringify({
@@ -277,6 +502,7 @@ export function inicioApi({
         fechaHora: updated.date + "T00:00:00",
       }),
     });
+    await checkResponse(res, "Actualizar evento de calendario");
 
     updateItem(calendarioState, setCalendarioState, index, updated);
   };
@@ -285,34 +511,100 @@ export function inicioApi({
     const id = idsAPI.actividades[calendarioState[index]?.title ?? ""];
     if (!id) return;
 
-    await fetch(`${API_BASE}/actividades-talleres/${id}`, {
+    const res = await fetch(`${API_BASE}/actividades-talleres/${id}`, {
       method: "DELETE",
       headers: getAuthHeader(),
     });
+    await checkResponse(res, "Eliminar evento de calendario");
 
     deleteItem(calendarioState, setCalendarioState, index);
   };
 
+  // ---------------- Encuestas (Tu Contribución Cuenta) ----------------
+  // TuContribucionCuentaRequest requiere: titulo, descripcion, linkGoogleForms
+
+  const createEncuesta = async (newItem: Survey) => {
+    const res = await fetch(`${API_BASE}/tu-contribucion-cuenta`, {
+      method: "POST",
+      headers: getAuthHeader(),
+      body: JSON.stringify({
+        titulo: newItem.title,
+        descripcion: "Insertar datos",
+        linkGoogleForms: newItem.url || "Insertar datos",
+      }),
+    });
+    await checkResponse(res, "Crear encuesta");
+    const data = await res.json();
+    if (data?.id) {
+      updateIdsAPI("encuestas", newItem.title, data.id);
+    }
+    setEncuestaState((prev) => [
+      ...prev,
+      { ...newItem, id: data?.id ? prev.length + 1 : Date.now() },
+    ]);
+  };
+
+  const saveEncuesta = async (updated: Survey, index: number) => {
+    const id = idsAPI.encuestas?.[encuestaState[index]?.title ?? ""];
+    if (!id) return;
+
+    const res = await fetch(`${API_BASE}/tu-contribucion-cuenta/${id}`, {
+      method: "PUT",
+      headers: getAuthHeader(),
+      body: JSON.stringify({
+        titulo: updated.title,
+        linkGoogleForms: updated.url,
+      }),
+    });
+    await checkResponse(res, "Actualizar encuesta");
+
+    updateItem(encuestaState, setEncuestaState, index, updated);
+  };
+
+  const deleteEncuesta = async (index: number) => {
+    const id = idsAPI.encuestas?.[encuestaState[index]?.title ?? ""];
+    if (!id) return;
+
+    const res = await fetch(`${API_BASE}/tu-contribucion-cuenta/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeader(),
+    });
+    await checkResponse(res, "Eliminar encuesta");
+
+    deleteItem(encuestaState, setEncuestaState, index);
+  };
+
   return {
+    createAsesoria,
     saveAsesoria,
     deleteAsesoria,
 
+    createCurso,
     saveCurso,
     deleteCurso,
 
+    createAccion,
     saveAccion,
     deleteAccion,
 
+    createPrograma,
     savePrograma,
     deletePrograma,
 
+    createSalud,
     saveSalud,
     deleteSalud,
 
+    createActividad,
     saveActividad,
     deleteActividad,
 
+    createCalendario,
     saveCalendario,
     deleteCalendario,
+
+    createEncuesta,
+    saveEncuesta,
+    deleteEncuesta,
   };
 }
