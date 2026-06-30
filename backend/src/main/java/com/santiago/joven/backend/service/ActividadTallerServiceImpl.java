@@ -6,6 +6,8 @@ import com.santiago.joven.backend.dto.ActividadTallerUpdate;
 import com.santiago.joven.backend.mapper.ActividadTallerMapper;
 import com.santiago.joven.backend.model.enums.EstadoActividad;
 import com.santiago.joven.backend.repository.ActividadTallerRepository;
+import com.santiago.joven.backend.repository.CategoriaRepository;
+import com.santiago.joven.backend.repository.UbicacionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +24,8 @@ public class ActividadTallerServiceImpl implements ActividadTallerService {
 
   private final ActividadTallerRepository repository;
   private final ActividadTallerMapper mapper;
+  private final CategoriaRepository categoriaRepository;
+  private final UbicacionRepository ubicacionRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -75,6 +79,24 @@ public class ActividadTallerServiceImpl implements ActividadTallerService {
   @Override
   public ActividadTallerResponse create(ActividadTallerRequest request) {
     var entity = mapper.toEntity(request);
+    var categoria =
+        categoriaRepository
+            .findById(request.categoriaId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Categoria no encontrada con id: " + request.categoriaId()));
+    entity.setCategoria(categoria);
+    if (request.ubicacionId() != null) {
+      var ubicacion =
+          ubicacionRepository
+              .findById(request.ubicacionId())
+              .orElseThrow(
+                  () ->
+                      new EntityNotFoundException(
+                          "Ubicacion no encontrada con id: " + request.ubicacionId()));
+      entity.setUbicacion(ubicacion);
+    }
     entity = repository.save(entity);
     return mapper.toResponse(entity);
   }
@@ -87,6 +109,26 @@ public class ActividadTallerServiceImpl implements ActividadTallerService {
             .orElseThrow(
                 () -> new EntityNotFoundException("ActividadTaller no encontrada con id: " + id));
     mapper.updateEntity(update, entity);
+    if (update.categoriaId() != null) {
+      var categoria =
+          categoriaRepository
+              .findById(update.categoriaId())
+              .orElseThrow(
+                  () ->
+                      new EntityNotFoundException(
+                          "Categoria no encontrada con id: " + update.categoriaId()));
+      entity.setCategoria(categoria);
+    }
+    if (update.ubicacionId() != null) {
+      var ubicacion =
+          ubicacionRepository
+              .findById(update.ubicacionId())
+              .orElseThrow(
+                  () ->
+                      new EntityNotFoundException(
+                          "Ubicacion no encontrada con id: " + update.ubicacionId()));
+      entity.setUbicacion(ubicacion);
+    }
     entity = repository.save(entity);
     return mapper.toResponse(entity);
   }

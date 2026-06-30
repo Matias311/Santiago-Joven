@@ -20,6 +20,7 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
 
   private String adminToken;
   private UUID adminUserId;
+  private String testUserToken;
   private UUID testUserId;
   private String testUserEmail;
 
@@ -27,6 +28,7 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
   void setUp() {
     adminToken = null;
     adminUserId = null;
+    testUserToken = null;
     testUserId = null;
     testUserEmail = null;
 
@@ -65,6 +67,7 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
         .retrieve()
         .toEntity(com.santiago.joven.backend.dto.LoginResponse.class);
     testUserId = testReg.getBody().userId();
+    testUserToken = testReg.getBody().token();
   }
 
   @Test
@@ -112,6 +115,30 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().id()).isEqualTo(testUserId);
+  }
+
+  @Test
+  void obtenerUsuarioPropio_conUsuarioComun_retornaUsuario() {
+    var response = authClient(testUserToken).get()
+        .uri("/api/v1/usuarios/{id}", testUserId)
+        .retrieve()
+        .toEntity(UsuarioResponse.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().id()).isEqualTo(testUserId);
+    assertThat(response.getBody().email()).isEqualTo(testUserEmail);
+  }
+
+  @Test
+  void obtenerUsuarioAjeno_conUsuarioComun_retorna403() {
+    var response = authClient(testUserToken).get()
+        .uri("/api/v1/usuarios/{id}", adminUserId)
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
   @Test
@@ -231,6 +258,57 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody().nombre()).isEqualTo("NombreActualizado");
     assertThat(response.getBody().apellido()).isEqualTo("ApellidoActualizado");
+  }
+
+  @Test
+  void actualizarUsuarioPropio_conUsuarioComun_retorna200() {
+    var update = UsuarioUpdate.builder()
+        .nombre("NombrePropio")
+        .apellido("ApellidoPropio")
+        .telefono("987654321")
+        .build();
+
+    var response = authClient(testUserToken).put()
+        .uri("/api/v1/usuarios/{id}", testUserId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(update)
+        .retrieve()
+        .toEntity(UsuarioResponse.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody().nombre()).isEqualTo("NombrePropio");
+    assertThat(response.getBody().apellido()).isEqualTo("ApellidoPropio");
+    assertThat(response.getBody().telefono()).isEqualTo("987654321");
+  }
+
+  @Test
+  void actualizarActivoPropio_conUsuarioComun_noModificaActivo() {
+    var update = UsuarioUpdate.builder().activo(false).build();
+
+    var response = authClient(testUserToken).put()
+        .uri("/api/v1/usuarios/{id}", testUserId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(update)
+        .retrieve()
+        .toEntity(UsuarioResponse.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody().activo()).isTrue();
+  }
+
+  @Test
+  void actualizarUsuarioAjeno_conUsuarioComun_retorna403() {
+    var update = UsuarioUpdate.builder().nombre("NoPermitido").build();
+
+    var response = authClient(testUserToken).put()
+        .uri("/api/v1/usuarios/{id}", adminUserId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(update)
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
   @Test

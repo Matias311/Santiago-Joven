@@ -29,6 +29,9 @@ public interface UsuarioService {
   /** Actualiza un registro existente. */
   UsuarioResponse update(UUID id, UsuarioUpdate update);
 
+  /** Actualiza datos propios sin permitir cambios administrativos. */
+  UsuarioResponse updateOwnProfile(UUID id, UsuarioUpdate update);
+
   /** Elimina un registro por ID. */
   void delete(UUID id);
 

@@ -4,6 +4,7 @@ import com.santiago.joven.backend.dto.GaleriaFotoRequest;
 import com.santiago.joven.backend.dto.GaleriaFotoResponse;
 import com.santiago.joven.backend.dto.GaleriaFotoUpdate;
 import com.santiago.joven.backend.mapper.GaleriaFotoMapper;
+import com.santiago.joven.backend.repository.ActividadTallerRepository;
 import com.santiago.joven.backend.repository.GaleriaFotoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -20,6 +21,7 @@ public class GaleriaFotoServiceImpl implements GaleriaFotoService {
 
   private final GaleriaFotoRepository repository;
   private final GaleriaFotoMapper mapper;
+  private final ActividadTallerRepository actividadTallerRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -39,6 +41,14 @@ public class GaleriaFotoServiceImpl implements GaleriaFotoService {
   @Override
   public GaleriaFotoResponse create(GaleriaFotoRequest request) {
     var entity = mapper.toEntity(request);
+    var actividad =
+        actividadTallerRepository
+            .findById(request.actividadId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "ActividadTaller no encontrada con id: " + request.actividadId()));
+    entity.setActividad(actividad);
     entity = repository.save(entity);
     return mapper.toResponse(entity);
   }
