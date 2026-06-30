@@ -5,111 +5,180 @@ import Slider from "../../sliders/slider";
 import type { CartaItem } from "../../types/CartaItem";
 import type { ConexionItem } from "../../types/ConexionItem";
 
+interface DatosInicio {
+  encabezado: CartaItem[];
+  asesorias: CartaItem[];
+  preuniversitario: CartaItem[];
+  cursos: CartaItem[];
+  accion: CartaItem[];
+  programas: CartaItem[];
+  salud: CartaItem[];
+  actividades: ConexionItem[];
+  talleres: ConexionItem[];
+  contacto: { direccion: string; horario: string; email: string };
+}
+
 export default function Inicio() {
-  const [datosInicio, setDatosInicio] = useState<Record<string, unknown> | null>(null);
+  const [datosInicio, setDatosInicio] = useState<DatosInicio | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [actividadesCalendario, setActividadesCalendario] = useState<any[]>([]);
+  const [filtroActivo, setFiltroActivo] = useState("Todos");
+  const [categorias, setCategorias] = useState<any[]>([]);
 
   useEffect(() => {
-    const rawUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "";
-    const apiBase = `${rawUrl}/api/v1`;
+    const cargarDatos = async () => {
+      setLoading(true);
+      setError(null);
 
-    Promise.allSettled([
-      fetch(`${apiBase}/asesorias`).then((r) => r.json()),
-      fetch(`${apiBase}/cursos-destacados`).then((r) => r.json()),
-      fetch(`${apiBase}/acciones-joven`).then((r) => r.json()),
-      fetch(`${apiBase}/programas`).then((r) => r.json()),
-      fetch(`${apiBase}/salud-mental`).then((r) => r.json()),
-      fetch(`${apiBase}/actividades-talleres`).then((r) => r.json()),
-      fetch(`${apiBase}/ubicaciones`).then((r) => r.json()),
-    ]).then((results) => {
-      const ok = (r: PromiseSettledResult<unknown>) =>
-        r.status === "fulfilled" ? (r.value as Record<string, unknown>[]) : [];
+      const rawUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "";
 
-      results.forEach((r, i) => {
-        if (r.status === "rejected") {
-          console.error(`Fetch #${i} falló:`, r.reason);
-        }
-      });
+      if (!rawUrl) {
+        console.error("VITE_API_URL no está definida.");
+        setError("No se pudo determinar la URL del servidor.");
+        setLoading(false);
+        return;
+      }
 
-      const [
-        asesoriasData,
-        cursosData,
-        accionData,
-        programasData,
-        saludData,
-        actividadesData,
-        ubicacionesData,
-      ] = results.map(ok);
+      const apiBase = `${rawUrl}/api/v1`;
 
-      const actividades: ConexionItem[] = (actividadesData || [])
-        .filter((item: Record<string, unknown>) => !/taller/i.test(String(item.titulo || "")))
-        .map((item: Record<string, unknown>) => ({
-          icono: "sports_soccer",
-          texto: String(item.titulo || ""),
-        }));
+      try {
+        const endpoints = [
+          "asesorias",
+          "cursos-destacados",
+          "acciones-joven",
+          "programas",
+          "salud-mental",
+          "actividades-talleres",
+          "ubicaciones",
+          "categorias",
+        ];
 
-      const talleres: ConexionItem[] = (actividadesData || [])
-        .filter((item: Record<string, unknown>) => /taller/i.test(String(item.titulo || "")))
-        .map((item: Record<string, unknown>) => ({
-          icono: "work_outline",
-          texto: String(item.titulo || ""),
-        }));
+        const results = await Promise.allSettled(
+          endpoints.map((ep) =>
+            fetch(`${apiBase}/${ep}`).then((r) => {
+              if (!r.ok) {
+                throw new Error(`Error ${r.status} al consultar ${ep}`);
+              }
+              return r.json();
+            })
+          )
+        );
 
-      setDatosInicio({
-        encabezado: [],
-        asesorias: (asesoriasData || []).map((item: Record<string, unknown>) => ({
-          titulo: String(item.titulo || ""),
-          descripcion: String(item.definicion || item.objetivos || ""),
-          icono: "support",
-        })),
-        preuniversitario: [],
-        cursos: (cursosData || []).map((item: Record<string, unknown>) => ({
-          titulo: String(item.titulo || ""),
-          descripcion: String(item.eslogan || item.descripcion || ""),
-          icono: "school",
-        })),
-        accion: (accionData || []).map((item: Record<string, unknown>) => ({
-          titulo: String(item.titulo || ""),
-          descripcion: String(item.descripcion || ""),
-          boton: "Ver más",
-        })),
-        programas: (programasData || []).map((item: Record<string, unknown>) => ({
-          titulo: String(item.titulo || ""),
-          descripcion: String(item.descripcion || ""),
-          icono: "groups",
-        })),
-        salud: (saludData || []).map((item: Record<string, unknown>) => ({
-          titulo: String(item.titulo || ""),
-          descripcion: String(item.descripcion || ""),
-          icono: String(item.icono || "health_and_safety"),
-        })),
-        actividades,
-        talleres,
-        contacto: {
-          direccion: String((ubicacionesData?.[0] as Record<string, unknown>)?.direccion ?? ""),
-          horario: "",
-          email: "",
-        },
-      });
-      setLoading(false);
-    });
+        const ok = (r: PromiseSettledResult<unknown>) =>
+          r.status === "fulfilled" ? (r.value as Record<string, unknown>[]) : [];
+
+        results.forEach((r, i) => {
+          if (r.status === "rejected") {
+            console.error(`Fetch "${endpoints[i]}" falló:`, r.reason);
+          }
+        });
+
+        const [
+          asesoriasData,
+          cursosData,
+          accionData,
+          programasData,
+          saludData,
+          actividadesData,
+          ubicacionesData,
+          categoriasData,
+        ] = results.map(ok);
+
+        setCategorias(categoriasData || []);
+        setActividadesCalendario(actividadesData || []);
+
+        const actividades: ConexionItem[] = (actividadesData || [])
+          .filter((item: Record<string, unknown>) => !/taller/i.test(String(item.titulo || "")))
+          .map((item: Record<string, unknown>) => ({
+            icono: "sports_soccer",
+            texto: String(item.titulo || ""),
+          }));
+
+        const talleres: ConexionItem[] = (actividadesData || [])
+          .filter((item: Record<string, unknown>) => /taller/i.test(String(item.titulo || "")))
+          .map((item: Record<string, unknown>) => ({
+            icono: "work_outline",
+            texto: String(item.titulo || ""),
+          }));
+
+        const datosParseados: DatosInicio = {
+          encabezado: [],
+          asesorias: (asesoriasData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.definicion || item.objetivos || ""),
+            icono: "support",
+          })),
+          preuniversitario: [],
+          cursos: (cursosData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.eslogan || item.descripcion || ""),
+            icono: "school",
+          })),
+          accion: (accionData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
+            boton: "Ver más",
+          })),
+          programas: (programasData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
+            icono: "groups",
+          })),
+          salud: (saludData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
+            icono: String(item.icono || "health_and_safety"),
+          })),
+          actividades,
+          talleres,
+          contacto: {
+            direccion: String((ubicacionesData?.[0] as Record<string, unknown>)?.direccion ?? ""),
+            horario: "",
+            email: "",
+          },
+        };
+
+        setDatosInicio(datosParseados);
+      } catch (err) {
+        console.error("Error al cargar los datos de inicio:", err);
+        setError("Ocurrió un error al cargar la información. Intenta nuevamente más tarde.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarDatos();
   }, []);
+
+  const actividadesFiltradas = filtroActivo === "Todos"
+    ? actividadesCalendario
+    : actividadesCalendario.filter((actividad) => {
+        const categoria = categorias.find(
+          (cat) => cat.id === actividad.categoriaId
+        );
+        return categoria?.nombre?.toLowerCase().includes(filtroActivo.toLowerCase());
+      });
 
   if (loading)
     return <div className="cargando">Cargando Santiago Joven...</div>;
+  if (error)
+    return <div className="error">{error}</div>;
   if (!datosInicio)
     return <div className="error">No se pudo cargar la información.</div>;
 
-  const encabezado = (datosInicio.encabezado as CartaItem[]) || [];
-  const asesorias = (datosInicio.asesorias as CartaItem[]) || [];
-  const preuniversitario = (datosInicio.preuniversitario as CartaItem[]) || [];
-  const cursos = (datosInicio.cursos as CartaItem[]) || [];
-  const accion = (datosInicio.accion as CartaItem[]) || [];
-  const programas = (datosInicio.programas as CartaItem[]) || [];
-  const salud = (datosInicio.salud as CartaItem[]) || [];
-  const actividades = (datosInicio.actividades as ConexionItem[]) || [];
-  const talleres = (datosInicio.talleres as ConexionItem[]) || [];
-  const contacto = datosInicio.contacto as Record<string, string>;
+  const {
+    encabezado,
+    asesorias,
+    preuniversitario,
+    cursos,
+    accion,
+    programas,
+    salud,
+    actividades,
+    talleres,
+    contacto,
+  } = datosInicio;
 
   return (
     <>
@@ -447,21 +516,38 @@ export default function Inicio() {
               </p>
             </div>
             <div className="calendario-contenido">
-              <button className="filtro-eventos">Todos</button>
-              <button className="filtro-eventos">Ferias</button>
-              <button className="filtro-eventos">Talleres</button>
-              <button className="filtro-eventos">Cursos</button>
-              <button className="filtro-eventos">Campañas</button>
+              {["Todos", "Ferias", "Talleres", "Cursos", "Campañas"].map((filtro) => (
+                <button
+                  key={filtro}
+                  className={`filtro-eventos ${filtroActivo === filtro ? "activo" : ""}`}
+                  onClick={() => setFiltroActivo(filtro)}
+                >
+                  {filtro}
+                </button>
+              ))}
             </div>
-            <div className="sin-actividades">
-              <span
-                className="material-symbols-outlined seccion-icono"
-                style={{ color: "#AFB0B1", fontSize: "160px" }}
-              >
-                schedule
-              </span>
-              <p>No hay actividades programadas en esta categoría.</p>
-            </div>
+            {actividadesFiltradas.length === 0 ? (
+              <div className="sin-actividades">
+                <span
+                  className="material-symbols-outlined seccion-icono"
+                  style={{ color: "#AFB0B1", fontSize: "160px" }}
+                >
+                  schedule
+                </span>
+                <p>No hay actividades programadas en esta categoría.</p>
+              </div>
+            ) : (
+              <div className="contenedor-flex">
+                {actividadesFiltradas.map((actividad: any) => (
+                  <Card
+                    key={actividad.id}
+                    titulo={actividad.titulo}
+                    descripcion={actividad.descripcion || ""}
+                    icono="calendar_month"
+                  />
+                ))}
+              </div>
+            )}
           </section>
         </div>
 
