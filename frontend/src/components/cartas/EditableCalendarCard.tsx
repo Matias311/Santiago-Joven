@@ -56,7 +56,8 @@ export default function EditableCalendarCard({
   return (
     <>
       <div className="editable_calendar_wrapper">
-        <CalendarCard eventProps={eventProps} />
+        {/* onClick vacío porque en inicio.tsx no hay modal de detalle */}
+        <CalendarCard eventProps={eventProps} onClick={() => {}} />
 
         {isAdmin && (
           <button className="card_edit_btn" onClick={() => setEditing(true)}>

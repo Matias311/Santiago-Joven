@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "./inicio.css";
 import Card from "../../cartas/Card";
 import EditableSlider from "../../sliders/EditableSlider";
@@ -5,7 +6,7 @@ import type { CartaItem } from "../../types/CartaItem";
 import type { ConexionItem } from "../../types/ConexionItem";
 import EditableCard from "../../cartas/EditableCard";
 import EditableListItem from "../../cartas/EditableListItem";
-import React, { useState } from "react";
+import React from "react";
 import { type CalendarEvent } from "../../cartas/CalendarCard";
 import EditableCalendarCard from "../../cartas/EditableCalendarCard";
 import type { Survey } from "../../cartas/SurveyCard";
@@ -13,161 +14,13 @@ import EditableSurveyCard from "../../cartas/EditableSurveyCard";
 /* LAS TEMPLATES DE LAS CARD PARA QUE AGREGUE LAS CARD NUEVAS */
 import { templates } from "../../types/cardTemplate";
 
-const asesorias: CartaItem[] = [
-  {
-    icono: "service_toolbox",
-    iconoColor: "#78A75A",
-    iconoTamaño: "42px",
-    titulo: "Capacitación Adulto",
-    descripcion:
-      "Programas de alfabetización digital y capacitación tecnológica para adultos.",
-  },
-  {
-    icono: "school",
-    iconoColor: "#78A75A",
-    iconoTamaño: "42px",
-    titulo: "Asesoría a Jóvenes",
-    descripcion:
-      "¿Dudas con la TNE, el FUAS o el Servicio Militar? Te orientamos paso a paso.",
-  },
-];
+/* importa las funciones de admin */
+import { inicioApi } from "./useInicioApi";
 
-const preuniversitario: CartaItem[] = [
-  {
-    icono: "book_ribbon",
-    iconoColor: "#DA954B",
-    iconoTamaño: "40px",
-    titulo: "Competencia Lectora",
-    descripcion: "Potencia tu comprensión y análisis de textos.",
-  },
-  {
-    icono: "calculate",
-    iconoColor: "#DA954B",
-    iconoTamaño: "40px",
-    titulo: "M1 (Matemáticas)",
-    descripcion: "Refuerza tus habilidades numéricas para la PAES.",
-  },
-  {
-    icono: "account_balance",
-    iconoColor: "#DA954B",
-    iconoTamaño: "40px",
-    titulo: "Ciencias Sociales",
-    descripcion: "Prepárate para la prueba de Historia y Cs. Sociales.",
-  },
-];
-
-const cursos: CartaItem[] = [
-  {
-    icono: "smart_toy",
-    iconoColor: "#789DE5",
-    iconoFondo: "rgba(56,189,248,0.15)",
-    botoncolor: "#0ea5e9",
-    tituloColor: "#0ea5e9",
-    sliderSombra: "0 16px 40px rgba(56,189,248,0.2)",
-    titulo: "Introducción a la Inteligencia Artificial",
-    descripcion:
-      "Descubre los fundamentos de la IA, aprende sobre machine learning y cómo esta tecnología está cambiando el mundo.",
-  },
-  {
-    icono: "content_copy",
-    iconoColor: "#78A75A",
-    iconoFondo: "rgba(32,197,141,0.15)",
-    botoncolor: "#3f7d44",
-    tituloColor: "#3f7d44",
-    sliderSombra: "0 16px 40px rgba(32,197,141,0.2)",
-    titulo: "Excel: Básico e Intermedio",
-    descripcion:
-      "Domina la planilla de cálculo más usada. Desde fórmulas básicas hasta tablas dinámicas.",
-  },
-];
-
-const accion: CartaItem[] = [
-  {
-    titulo: "Proyectos de Impacto Social",
-    descripcion:
-      "Participa en campañas de reforestación, visitas a hogares de ancianos, colectas de alimentos y más. Conecta con otros jóvenes que, como tú, quieren dejar una huella positiva.",
-    boton: "¡Quiero ser voluntario!",
-    botoncolor: "",
-    icono: "",
-    iconoFondo: "",
-    tituloColor: "inherit",
-  },
-];
-
-const programas: CartaItem[] = [
-  {
-    icono: "family_group",
-    iconoColor: "#789DE5",
-    iconoFondo: "rgba(56,189,248,0.15)",
-    botoncolor: "#0ea5e9",
-    tituloColor: "#0ea5e9",
-    sliderSombra: "0 16px 40px rgba(56,189,248,0.2)",
-    titulo: "Programa Lazos",
-    descripcion:
-      "El Programa Lazos es una iniciativa del Gobierno de Chile que busca prevenir conductas de riesgo en jóvenes.",
-    boton: "¡Conócenos aquí!",
-    clase: "programa-lazos",
-  },
-  {
-    icono: "potted_plant",
-    iconoColor: "#B15330",
-    iconoFondo: "rgba(197, 120, 32, 0.15)",
-    botoncolor: "#B15330",
-    tituloColor: "#B15330",
-    sliderSombra: "0 16px 40px rgba(197, 120, 32, 0.15)",
-    titulo: "Programa Senda",
-    descripcion:
-      "El Programa Senda es una iniciativa del Gobierno de Chile que busca prevenir conductas de riesgo en jóvenes.",
-    boton: "¡Conócenos aquí!",
-    clase: "programa-senda",
-  },
-];
-
-const salud: CartaItem[] = [
-  {
-    icono: "call",
-    titulo: "Fono *4141",
-    subtitulo: "Prevención del Suicidio",
-    descripcion:
-      "No estás solo, no estás sola. Línea gratuita, confidencial y disponible las 24 horas.",
-  },
-  {
-    icono: "home_health",
-    titulo: "SAMU 131",
-    subtitulo: "Emergencias Vitales",
-    descripcion:
-      "Llama a la Ambulancia (SAMU) en caso de riesgo vital inmediato o emergencia grave.",
-  },
-  {
-    icono: "record_voice_over",
-    titulo: "Salud Responde",
-    subtitulo: "Orientación 24/7",
-    descripcion:
-      "Llama al 600 360 77 77 para recibir orientación de profesionales de salud.",
-  },
-];
-
-const actividades: ConexionItem[] = [
-  {
-    icono: "event_available",
-    texto: "Ferias vocacionales y de emprendimiento.",
-  },
-  { icono: "account_balance", texto: "Viaje cultural al Museo." },
-  { icono: "conversation", texto: "Reuniones y círculos de conversación." },
-];
-
-const talleres: ConexionItem[] = [
-  { icono: "mic", texto: "Taller de liderazgo y oratoria." },
-  { icono: "draw", texto: "Talleres creativos (Música, dibujo, teatro)." },
-  { icono: "lightbulb", texto: "Taller de debate y pensamiento crítico." },
-];
-
-const contacto = {
-  direccion:
-    "Herrera 360, Comuna de Santiago. (Centro Comunitario Santiago en Compañía)",
-  horario: "Lunes a jueves [09:00 - 18:00 hrs] - Viernes [09:00 a 17:00 hrs]",
-  email: "stgojoven@munistgo.cl",
-};
+/* importa la verificacion de rol del user */
+import { tieneRol } from "../../utils/sessionStorage";
+const API_BASE =
+  (import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "") + "/api/v1";
 
 const encabezado: CartaItem[] = [
   {
@@ -196,62 +49,43 @@ const encabezado: CartaItem[] = [
   },
 ];
 
-const eventosCalendario: CalendarEvent[] = [
-  {
-    id: 1,
-    categoria: "Ferias",
-    tagClass: "ferias",
-    title: "Feria Vocacional 2026",
-    detail: "Ver más detalles",
-    date: "2026-11-15",
-  },
-  {
-    id: 2,
-    categoria: "Talleres",
-    tagClass: "talleres",
-    title: "Taller Vocacional 2026",
-    detail: "Ver más detalles",
-    date: "2026-01-10",
-  },
-  {
-    id: 3,
-    categoria: "Campañas",
-    tagClass: "campañas",
-    title: "Campaña Vocacional 2026",
-    detail: "Ver más detalles",
-    date: "2026-05-30",
-  },
-];
-
-const encuesta: Survey[] = [
-  {
-    id: 101,
-    title: "Encuesta Vacacional 2026",
-    desde: "2026-12-10",
-    hasta: "2026-11-15",
-    url: "https://media1.tenor.com/m/RLthQ6DcOSQAAAAd/cat-dog-roblox-dance-el-gato-y-papu-perro-bailando.gif",
-  },
-  {
-    id: 102,
-    title: "Encuesta medio ambiente",
-    desde: "2026-01-10",
-    hasta: "2026-03-05",
-    url: "https://media1.tenor.com/m/RLthQ6DcOSQAAAAd/cat-dog-roblox-dance-el-gato-y-papu-perro-bailando.gif",
-  },
-  {
-    id: 103,
-    title: "Encuesta opinion",
-    desde: "2026-05-30",
-    hasta: "2026-06-11",
-    url: "https://media1.tenor.com/m/RLthQ6DcOSQAAAAd/cat-dog-roblox-dance-el-gato-y-papu-perro-bailando.gif",
-  },
-];
+const contacto = {
+  direccion:
+    "Herrera 360, Comuna de Santiago. (Centro Comunitario Santiago en Compañía)",
+  horario: "Lunes a jueves [09:00 - 18:00 hrs] - Viernes [09:00 a 17:00 hrs]",
+  email: "stgojoven@munistgo.cl",
+};
 
 export default function Inicio() {
   {
     /* Acá debería de ir el auth de si es admin o no, pero mientras pongo esto */
   }
-  const [isAdmin, setIsAdmin] = useState(true);
+
+  // Estado que guarda si el usuario es admin o no
+  // false por defecto no es admin hasta verificarlo
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Función que revisa en localStorage si el usuario tiene rol ADMIN
+  // y actualiza el estado de React
+  const updateAdmin = () => {
+    setIsAdmin(tieneRol("ADMIN"));
+  };
+
+  useEffect(() => {
+    // Se ejecuta una vez cuando el componente se monta
+    // aquí se hace la primera verificación del rol
+    updateAdmin();
+
+    // Se crea un intervalo que se ejecuta cada 300ms
+    // Esto permite detectar cambios en el login/logout
+    const interval = setInterval(() => {
+      updateAdmin();
+    }, 300);
+
+    // Cuando el componente se desmonta, se elimina el intervalo
+    // para evitar consumo de memoria o procesos innecesarios
+    return () => clearInterval(interval);
+  }, []);
 
   {
     /* -- Convierte las listas en estados para que puedan ser editables -- */
@@ -260,36 +94,238 @@ export default function Inicio() {
   {
     /* listas que usan el elemento Card normal */
   }
-  const [asesoriasState, setAsesoriasState] = useState<CartaItem[]>(asesorias);
-  const [preuniversitarioState, setPreuniversitarioState] =
-    useState<CartaItem[]>(preuniversitario);
-  const [saludState, setSaludState] = useState<CartaItem[]>(salud);
+  const [asesoriasState, setAsesoriasState] = useState<CartaItem[]>([]);
+  const [preuniversitarioState, setPreuniversitarioState] = useState<
+    CartaItem[]
+  >([]);
+  const [saludState, setSaludState] = useState<CartaItem[]>([]);
 
   {
     /* listas que usan el elemento List */
   }
-  const [actividadesState, setActividadesState] =
-    useState<ConexionItem[]>(actividades);
-  const [talleresState, setTalleresState] = useState<ConexionItem[]>(talleres);
+  const [actividadesState, setActividadesState] = useState<ConexionItem[]>([]);
+  const [talleresState, setTalleresState] = useState<ConexionItem[]>([]);
 
   {
     /* listas que usan el elemento Slider */
   }
-  const [accionState, setAccionState] = useState<CartaItem[]>(accion);
-  const [programasState, setProgramasState] = useState<CartaItem[]>(programas);
-  const [cursosState, setCursosState] = useState<CartaItem[]>(cursos);
+  const [accionState, setAccionState] = useState<CartaItem[]>([]);
+  const [programasState, setProgramasState] = useState<CartaItem[]>([]);
+  const [cursosState, setCursosState] = useState<CartaItem[]>([]);
 
   {
     /* listas que usan el elemento Calendar */
   }
-  const [calendarioState, setCalendarioState] =
-    useState<CalendarEvent[]>(eventosCalendario);
+  const [calendarioState, setCalendarioState] = useState<CalendarEvent[]>([]);
   const [filtro, setFiltro] = useState<string>("Todos");
 
   {
     /* listas que usan el elemento Survey */
   }
-  const [encuestaState, setEncuestaState] = useState<Survey[]>(encuesta);
+  const [encuestaState, setEncuestaState] = useState<Survey[]>([]);
+
+  // IDs internos de la API para poder hacer PUT/DELETE (mapa titulo → id)
+  const [idsAPI, setIdsAPI] = useState<{
+    asesorias: Record<string, string>;
+    cursos: Record<string, string>;
+    acciones: Record<string, string>;
+    programas: Record<string, string>;
+    salud: Record<string, string>;
+    actividades: Record<string, string>;
+  }>({
+    asesorias: {},
+    cursos: {},
+    acciones: {},
+    programas: {},
+    salud: {},
+    actividades: {},
+  });
+
+  const [loading, setLoading] = useState(true);
+  /* -------------------------------------------------------
+     FETCH inicial: carga todos los datos desde la API
+  ------------------------------------------------------- */
+  useEffect(() => {
+    Promise.allSettled([
+      fetch(`${API_BASE}/asesorias`).then((r) => r.json()),
+      fetch(`${API_BASE}/cursos-destacados`).then((r) => r.json()),
+      fetch(`${API_BASE}/acciones-joven`).then((r) => r.json()),
+      fetch(`${API_BASE}/programas`).then((r) => r.json()),
+      fetch(`${API_BASE}/salud-mental`).then((r) => r.json()),
+      fetch(`${API_BASE}/actividades-talleres`).then((r) => r.json()),
+      fetch(`${API_BASE}/tu-contribucion-cuenta`).then((r) => r.json()),
+    ]).then((results) => {
+      const ok = (r: PromiseSettledResult<unknown>) =>
+        r.status === "fulfilled" ? (r.value as Record<string, unknown>[]) : [];
+
+      results.forEach((r, i) => {
+        if (r.status === "rejected") {
+          console.error(`Fetch #${i} falló:`, r.reason);
+        }
+      });
+
+      const [
+        asesoriasData,
+        cursosData,
+        accionData,
+        programasData,
+        saludData,
+        actividadesData,
+        encuestasData,
+      ] = results.map(ok);
+
+      // Guardamos los IDs para poder hacer PUT/DELETE después
+      const nuevosIds = { ...idsAPI };
+
+      nuevosIds.asesorias = Object.fromEntries(
+        (asesoriasData || []).map((i: Record<string, unknown>) => [
+          String(i.titulo),
+          String(i.id),
+        ]),
+      );
+      nuevosIds.cursos = Object.fromEntries(
+        (cursosData || []).map((i: Record<string, unknown>) => [
+          String(i.titulo),
+          String(i.id),
+        ]),
+      );
+      nuevosIds.acciones = Object.fromEntries(
+        (accionData || []).map((i: Record<string, unknown>) => [
+          String(i.titulo),
+          String(i.id),
+        ]),
+      );
+      nuevosIds.programas = Object.fromEntries(
+        (programasData || []).map((i: Record<string, unknown>) => [
+          String(i.titulo),
+          String(i.id),
+        ]),
+      );
+      nuevosIds.salud = Object.fromEntries(
+        (saludData || []).map((i: Record<string, unknown>) => [
+          String(i.titulo),
+          String(i.id),
+        ]),
+      );
+      nuevosIds.actividades = Object.fromEntries(
+        (actividadesData || []).map((i: Record<string, unknown>) => [
+          String(i.titulo),
+          String(i.id),
+        ]),
+      );
+      setIdsAPI(nuevosIds);
+
+      // Mapeo de datos de la API al formato CartaItem
+      setAsesoriasState(
+        (asesoriasData || []).map((item: Record<string, unknown>) => ({
+          icono: "service_toolbox",
+          iconoColor: "#78A75A",
+          iconoTamaño: "42px",
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.definicion || item.objetivos || ""),
+        })),
+      );
+
+      setCursosState(
+        (cursosData || []).map((item: Record<string, unknown>) => ({
+          icono: "smart_toy",
+          iconoColor: "#789DE5",
+          iconoFondo: "rgba(56,189,248,0.15)",
+          botoncolor: "#0ea5e9",
+          tituloColor: "#0ea5e9",
+          sliderSombra: "0 16px 40px rgba(56,189,248,0.2)",
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.eslogan || item.descripcion || ""),
+        })),
+      );
+
+      setAccionState(
+        (accionData || []).map((item: Record<string, unknown>) => ({
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.descripcion || ""),
+          boton: "¡Quiero ser voluntario!",
+          botoncolor: "",
+          icono: "",
+          iconoFondo: "",
+          tituloColor: "inherit",
+        })),
+      );
+
+      setProgramasState(
+        (programasData || []).map((item: Record<string, unknown>) => ({
+          icono: "family_group",
+          iconoColor: "#789DE5",
+          iconoFondo: "rgba(56,189,248,0.15)",
+          botoncolor: "#0ea5e9",
+          tituloColor: "#0ea5e9",
+          sliderSombra: "0 16px 40px rgba(56,189,248,0.2)",
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.descripcion || ""),
+          boton: "¡Conócenos aquí!",
+        })),
+      );
+
+      setSaludState(
+        (saludData || []).map((item: Record<string, unknown>) => ({
+          icono: String(item.icono || "health_and_safety"),
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.descripcion || ""),
+        })),
+      );
+
+      // Actividades: items sin "taller" en el título → lista simple
+      setActividadesState(
+        (actividadesData || [])
+          .filter(
+            (item: Record<string, unknown>) =>
+              !/taller/i.test(String(item.titulo || "")),
+          )
+          .map((item: Record<string, unknown>) => ({
+            icono: "sports_soccer",
+            texto: String(item.titulo || ""),
+          })),
+      );
+
+      // Talleres: items con "taller" en el título → lista simple
+      setTalleresState(
+        (actividadesData || [])
+          .filter((item: Record<string, unknown>) =>
+            /taller/i.test(String(item.titulo || "")),
+          )
+          .map((item: Record<string, unknown>) => ({
+            icono: "work_outline",
+            texto: String(item.titulo || ""),
+          })),
+      );
+
+      // Calendario: todas las actividades mapeadas a CalendarEvent
+      setCalendarioState(
+        (actividadesData || []).map(
+          (item: Record<string, unknown>, index: number) => ({
+            id: index + 1,
+            categoria: "Ferias" as CalendarEvent["categoria"],
+            tagClass: "ferias" as CalendarEvent["tagClass"],
+            title: String(item.titulo || ""),
+            detail: "Ver más detalles",
+            date: String(item.fechaHora || "").split("T")[0],
+          }),
+        ),
+      );
+
+      // Encuestas desde tu-contribucion-cuenta
+      setEncuestaState(
+        (encuestasData || []).map((item: Record<string, unknown>) => ({
+          id: Number(item.id) || Date.now(),
+          title: String(item.titulo || ""),
+          desde: "",
+          hasta: "",
+          url: String(item.linkGoogleForms || ""),
+        })),
+      );
+
+      setLoading(false);
+    });
+  }, []);
 
   const eventosFiltrados = calendarioState.filter(
     (evt) =>
@@ -298,7 +334,7 @@ export default function Inicio() {
   );
 
   {
-    /** Actualizar carta */
+    /** Actualizar carta (local + API) */
   }
   const updateItem = <Carta,>(
     list: Carta[],
@@ -307,14 +343,12 @@ export default function Inicio() {
     updated: Carta,
   ) => {
     const updatedList = [...list];
-
     updatedList[index] = updated;
-
     setList(updatedList);
   };
 
   {
-    /** Eliminar carta */
+    /** Eliminar carta (local + API) */
   }
   const deleteItem = <Carta,>(
     list: Carta[],
@@ -322,7 +356,6 @@ export default function Inicio() {
     index: number,
   ) => {
     const updatedList = list.filter((_, i) => i !== index);
-
     setList(updatedList);
   };
 
@@ -380,6 +413,49 @@ export default function Inicio() {
 
     setState([...state, base]);
   };
+
+  /* -------------------------------------------------------
+     Helpers de API para cada entidad
+  ------------------------------------------------------- */
+  const {
+    saveAsesoria,
+    deleteAsesoria,
+    saveCurso,
+    deleteCurso,
+    saveAccion,
+    deleteAccion,
+    savePrograma,
+    deletePrograma,
+    saveSalud,
+    deleteSalud,
+    saveActividad,
+    deleteActividad,
+    saveCalendario,
+    deleteCalendario,
+  } = inicioApi({
+    idsAPI,
+
+    asesoriasState,
+    setAsesoriasState,
+
+    cursosState,
+    setCursosState,
+
+    accionState,
+    setAccionState,
+
+    programasState,
+    setProgramasState,
+
+    saludState,
+    setSaludState,
+
+    calendarioState,
+    setCalendarioState,
+
+    updateItem,
+    deleteItem,
+  });
   return (
     <>
       {/* encabezado de la pagina principal */}
@@ -404,14 +480,6 @@ export default function Inicio() {
 
       {/* contenido principal */}
       <main className="contenido-principal">
-        <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <input
-            type="checkbox"
-            checked={isAdmin}
-            onChange={(e) => setIsAdmin(e.target.checked)}
-          />
-          Modo administrador
-        </label>
         {/* apoyo joven */}
         <section id="apoyo" className="seccion-informativa">
           <div className="seccion-encabezado">
@@ -430,21 +498,21 @@ export default function Inicio() {
           <div className="grupo-cartas">
             <div className="titulo-con-btnAdd">
               <h3>Asesoría</h3>
-              {isAdmin && (
-                <button
-                  className="card_edit_btn"
-                  onClick={() =>
-                    addCard(
-                      asesoriasState,
-                      setAsesoriasState,
-                      templates.asesorias,
-                    )
-                  }
-                >
-                  Agregar
-                </button>
-              )}
             </div>
+            {isAdmin && (
+              <button
+                className="card_edit_btn"
+                onClick={() =>
+                  addCard(
+                    asesoriasState,
+                    setAsesoriasState,
+                    templates.asesorias,
+                  )
+                }
+              >
+                Agregar
+              </button>
+            )}
             <div className="contenedor-flex">
               {asesoriasState.map((carta, index) => (
                 <EditableCard
@@ -457,17 +525,8 @@ export default function Inicio() {
                     descripcion: carta.descripcion,
                   }}
                   isAdmin={isAdmin}
-                  onSave={(updated) =>
-                    updateItem(
-                      asesoriasState,
-                      setAsesoriasState,
-                      index,
-                      updated,
-                    )
-                  }
-                  onDelete={() =>
-                    deleteItem(asesoriasState, setAsesoriasState, index)
-                  }
+                  onSave={(updated) => saveAsesoria(updated, index)}
+                  onDelete={() => deleteAsesoria(index)}
                   onAdd={(newCard) =>
                     setAsesoriasState([...asesoriasState, { ...newCard }])
                   }
@@ -478,21 +537,21 @@ export default function Inicio() {
           <div className="grupo-cartas">
             <div className="titulo-con-btnAdd">
               <h3>Preuniversitario</h3>
-              {isAdmin && (
-                <button
-                  className="card_edit_btn"
-                  onClick={() =>
-                    addCard(
-                      preuniversitarioState,
-                      setPreuniversitarioState,
-                      templates.preuniversitario,
-                    )
-                  }
-                >
-                  Agregar
-                </button>
-              )}
             </div>
+            {isAdmin && (
+              <button
+                className="card_edit_btn"
+                onClick={() =>
+                  addCard(
+                    preuniversitarioState,
+                    setPreuniversitarioState,
+                    templates.preuniversitario,
+                  )
+                }
+              >
+                Agregar
+              </button>
+            )}
             <div className="contenedor-flex">
               {preuniversitarioState.map((carta, index) => (
                 <EditableCard
@@ -564,10 +623,8 @@ export default function Inicio() {
           <EditableSlider
             cartas={cursosState}
             isAdmin={isAdmin}
-            onSave={(updated, index) =>
-              updateItem(cursosState, setCursosState, index, updated)
-            }
-            onDelete={(index) => deleteItem(cursosState, setCursosState, index)}
+            onSave={(updated, index) => saveCurso(updated, index)}
+            onDelete={(index) => deleteCurso(index)}
             onAdd={() => addCard(cursosState, setCursosState, templates.cursos)}
           />
         </section>
@@ -587,7 +644,6 @@ export default function Inicio() {
                 ¡Tu energía puede cambiar las cosas! Súmate a nuestras
                 iniciativas sociales y proyectos de voluntariado.
               </p>
-
               {isAdmin && (
                 <button
                   className="card_edit_btn"
@@ -602,12 +658,8 @@ export default function Inicio() {
             <EditableSlider
               cartas={accionState}
               isAdmin={isAdmin}
-              onSave={(updated, index) =>
-                updateItem(accionState, setAccionState, index, updated)
-              }
-              onDelete={(index) =>
-                deleteItem(accionState, setAccionState, index)
-              }
+              onSave={(updated, index) => saveAccion(updated, index)}
+              onDelete={(index) => deleteAccion(index)}
               onAdd={() =>
                 addCard(accionState, setAccionState, templates.accion)
               }
@@ -647,12 +699,8 @@ export default function Inicio() {
           <EditableSlider
             cartas={programasState}
             isAdmin={isAdmin}
-            onSave={(updated, index) =>
-              updateItem(programasState, setProgramasState, index, updated)
-            }
-            onDelete={(index) =>
-              deleteItem(programasState, setProgramasState, index)
-            }
+            onSave={(updated, index) => savePrograma(updated, index)}
+            onDelete={(index) => deletePrograma(index)}
             onAdd={() =>
               addCard(programasState, setProgramasState, templates.programas)
             }
@@ -701,10 +749,8 @@ export default function Inicio() {
                     descripcion: carta.descripcion,
                   }}
                   isAdmin={isAdmin}
-                  onSave={(updated) =>
-                    updateItem(saludState, setSaludState, index, updated)
-                  }
-                  onDelete={() => deleteItem(saludState, setSaludState, index)}
+                  onSave={(updated) => saveSalud(updated, index)}
+                  onDelete={() => deleteSalud(index)}
                   onAdd={() =>
                     addCard(saludState, setSaludState, templates.salud)
                   }
@@ -737,21 +783,21 @@ export default function Inicio() {
               <div className="btn-con-btnAdd">
                 <div className="titulo-con-btnAdd">
                   <h3>Actividades</h3>
-                  {isAdmin && (
-                    <button
-                      className="card_edit_btn"
-                      onClick={() =>
-                        addCard(
-                          actividadesState,
-                          setActividadesState,
-                          templates.actividades,
-                        )
-                      }
-                    >
-                      Agregar
-                    </button>
-                  )}
                 </div>
+                {isAdmin && (
+                  <button
+                    className="card_edit_btn"
+                    onClick={() =>
+                      addCard(
+                        actividadesState,
+                        setActividadesState,
+                        templates.actividades,
+                      )
+                    }
+                  >
+                    Agregar
+                  </button>
+                )}
               </div>
               <ul>
                 {actividadesState.map((item, index) => (
@@ -761,39 +807,46 @@ export default function Inicio() {
                     isAdmin={isAdmin}
                     onSave={(updated, seccion) => {
                       if (seccion === "actividades") {
-                        updateItem(
+                        saveActividad(updated, item.texto).then(() =>
+                          updateItem(
+                            actividadesState,
+                            setActividadesState,
+                            index,
+                            updated,
+                          ),
+                        );
+                      } else {
+                        // Mover de actividades a talleres: elimina de actividades y agrega a talleres
+                        deleteActividad(item.texto).then(() => {
+                          setActividadesState(
+                            actividadesState.filter((_, i) => i !== index),
+                          );
+                          setTalleresState((prev) => [...prev, updated]);
+                        });
+                      }
+                    }}
+                    onDelete={() => {
+                      deleteActividad(item.texto).then(() =>
+                        deleteItem(
                           actividadesState,
                           setActividadesState,
                           index,
-                          updated,
-                        );
-                      } else {
-                        setActividadesState(
-                          actividadesState.filter((_, i) => i !== index),
-                        );
-
-                        setTalleresState((prev) => [...prev, updated]);
-                      }
+                        ),
+                      );
                     }}
-                    onDelete={() =>
-                      deleteItem(actividadesState, setActividadesState, index)
-                    }
                     onAdd={(newItem, seccion) => {
                       const state =
                         seccion === "actividades"
                           ? actividadesState
                           : talleresState;
-
                       const setState =
                         seccion === "actividades"
                           ? setActividadesState
                           : setTalleresState;
-
                       const template =
                         seccion === "actividades"
                           ? templates.actividades
                           : templates.talleres;
-
                       if (state.length === 0) {
                         addCard(state, setState, template);
                       } else {
@@ -807,55 +860,51 @@ export default function Inicio() {
             <div className="lista-conexion">
               <div className="titulo-con-btnAdd">
                 <h3>Talleres</h3>
-                {isAdmin && (
-                  <button
-                    className="card_edit_btn"
-                    onClick={() =>
-                      addCard(
-                        talleresState,
-                        setTalleresState,
-                        templates.talleres,
-                      )
-                    }
-                  >
-                    Agregar
-                  </button>
-                )}
               </div>
-
+              {isAdmin && (
+                <button
+                  className="card_edit_btn"
+                  onClick={() =>
+                    addCard(talleresState, setTalleresState, templates.talleres)
+                  }
+                >
+                  Agregar
+                </button>
+              )}
               <ul>
                 {talleresState.map((item, index) => (
                   <EditableListItem
                     key={`${item.texto}-${index}`}
                     item={item}
                     isAdmin={isAdmin}
-                    onSave={(updated) =>
-                      updateItem(
-                        talleresState,
-                        setTalleresState,
-                        index,
-                        updated,
-                      )
-                    }
-                    onDelete={() =>
-                      deleteItem(talleresState, setTalleresState, index)
-                    }
+                    onSave={(updated) => {
+                      saveActividad(updated, item.texto).then(() =>
+                        updateItem(
+                          talleresState,
+                          setTalleresState,
+                          index,
+                          updated,
+                        ),
+                      );
+                    }}
+                    onDelete={() => {
+                      deleteActividad(item.texto).then(() =>
+                        deleteItem(talleresState, setTalleresState, index),
+                      );
+                    }}
                     onAdd={(newItem, seccion) => {
                       const state =
                         seccion === "actividades"
                           ? actividadesState
                           : talleresState;
-
                       const setState =
                         seccion === "actividades"
                           ? setActividadesState
                           : setTalleresState;
-
                       const template =
                         seccion === "actividades"
                           ? templates.actividades
                           : templates.talleres;
-
                       if (state.length === 0) {
                         addCard(state, setState, template);
                       } else {
@@ -927,17 +976,8 @@ export default function Inicio() {
                     key={evento.id || index}
                     eventProps={evento}
                     isAdmin={isAdmin}
-                    onSave={(updated) => {
-                      const newCalendarCard = [...calendarioState];
-                      newCalendarCard[index] = updated;
-                      setCalendarioState(newCalendarCard);
-                    }}
-                    onDelete={() => {
-                      const newCalendarCard = calendarioState.filter(
-                        (_, i) => i !== index,
-                      );
-                      setCalendarioState(newCalendarCard);
-                    }}
+                    onSave={(updated) => saveCalendario(updated, index)}
+                    onDelete={() => deleteCalendario(index)}
                   />
                 ))}
               </div>
@@ -1017,10 +1057,7 @@ export default function Inicio() {
                         )
                       : setEncuestaState([
                           ...encuestaState,
-                          {
-                            ...newSurvey,
-                            id: Date.now(),
-                          },
+                          { ...newSurvey, id: Date.now() },
                         ])
                   }
                 />
