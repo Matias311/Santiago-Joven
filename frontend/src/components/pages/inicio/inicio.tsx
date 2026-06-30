@@ -62,7 +62,6 @@ const contacto = {
 };
 
 export default function Inicio() {
-  // Hook de navegación para redirigir desde "Ver más detalles" del calendario
   const navigate = useNavigate();
 
   {
@@ -80,8 +79,6 @@ export default function Inicio() {
   };
 
   useEffect(() => {
-    // Se ejecuta una vez cuando el componente se monta
-    // aquí se hace la primera verificación del rol
     updateAdmin();
 
     const interval = setInterval(() => {
