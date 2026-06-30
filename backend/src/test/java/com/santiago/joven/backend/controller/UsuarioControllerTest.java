@@ -49,9 +49,11 @@ class UsuarioControllerTest {
           .activo(true)
           .build();
 
+  /* ======== GET / ======== */
+
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void findAll_debeRetornar200() throws Exception {
+  @WithMockUser(roles = "ADMIN")
+  void findAll_comoAdmin_debeRetornar200() throws Exception {
     when(service.findAll()).thenReturn(List.of(response));
 
     mockMvc
@@ -61,8 +63,28 @@ class UsuarioControllerTest {
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void findById_cuandoExiste_debeRetornar200() throws Exception {
+  @WithMockUser(roles = "MODERATOR")
+  void findAll_comoModerador_debeRetornar200() throws Exception {
+    when(service.findAll()).thenReturn(List.of(response));
+
+    mockMvc
+        .perform(get("/api/v1/usuarios"))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  @WithMockUser(roles = "USER")
+  void findAll_comoUser_debeRetornar403() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/usuarios"))
+        .andExpect(status().isForbidden());
+  }
+
+  /* ======== GET /{id} ======== */
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  void findById_comoAdmin_cuandoExiste_debeRetornar200() throws Exception {
     when(service.findById(id)).thenReturn(response);
 
     mockMvc
@@ -72,8 +94,8 @@ class UsuarioControllerTest {
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void findById_cuandoNoExiste_debeRetornar404() throws Exception {
+  @WithMockUser(roles = "ADMIN")
+  void findById_comoAdmin_cuandoNoExiste_debeRetornar404() throws Exception {
     when(service.findById(id)).thenThrow(new EntityNotFoundException("not found"));
 
     mockMvc
@@ -83,8 +105,18 @@ class UsuarioControllerTest {
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void findByEmail_debeRetornar200() throws Exception {
+  @WithMockUser(roles = "USER")
+  void findById_comoUser_ajeno_debeRetornar403() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/usuarios/{id}", id))
+        .andExpect(status().isForbidden());
+  }
+
+  /* ======== GET /por-email/{email} ======== */
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  void findByEmail_comoAdmin_debeRetornar200() throws Exception {
     when(service.findByEmail("test@example.com")).thenReturn(response);
 
     mockMvc
@@ -94,8 +126,8 @@ class UsuarioControllerTest {
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void findByEmail_cuandoNoExiste_debeRetornar404() throws Exception {
+  @WithMockUser(roles = "ADMIN")
+  void findByEmail_comoAdmin_cuandoNoExiste_debeRetornar404() throws Exception {
     when(service.findByEmail("notfound@example.com"))
         .thenThrow(new EntityNotFoundException("not found"));
 
@@ -105,8 +137,18 @@ class UsuarioControllerTest {
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void existsByEmail_debeRetornarTrue() throws Exception {
+  @WithMockUser(roles = "USER")
+  void findByEmail_comoUser_debeRetornar403() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/usuarios/por-email/{email}", "test@example.com"))
+        .andExpect(status().isForbidden());
+  }
+
+  /* ======== GET /exists-email/{email} ======== */
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  void existsByEmail_comoAdmin_debeRetornarTrue() throws Exception {
     when(service.existsByEmail("test@example.com")).thenReturn(true);
 
     mockMvc
@@ -116,8 +158,8 @@ class UsuarioControllerTest {
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void existsByEmail_debeRetornarFalse() throws Exception {
+  @WithMockUser(roles = "ADMIN")
+  void existsByEmail_comoAdmin_debeRetornarFalse() throws Exception {
     when(service.existsByEmail("notfound@example.com")).thenReturn(false);
 
     mockMvc
@@ -127,8 +169,18 @@ class UsuarioControllerTest {
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void create_debeRetornar201_conLocationHeader() throws Exception {
+  @WithMockUser(roles = "USER")
+  void existsByEmail_comoUser_debeRetornar403() throws Exception {
+    mockMvc
+        .perform(get("/api/v1/usuarios/exists-email/{email}", "test@example.com"))
+        .andExpect(status().isForbidden());
+  }
+
+  /* ======== POST / ======== */
+
+  @Test
+  @WithMockUser(roles = "MODERATOR")
+  void create_comoModerador_debeRetornar201_conLocationHeader() throws Exception {
     when(service.create(any(UsuarioRequest.class))).thenReturn(response);
 
     mockMvc
@@ -150,8 +202,8 @@ class UsuarioControllerTest {
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void create_cuandoErrorDeValidacion_debeRetornar400() throws Exception {
+  @WithMockUser(roles = "MODERATOR")
+  void create_comoModerador_cuandoErrorDeValidacion_debeRetornar400() throws Exception {
     mockMvc
         .perform(
             post("/api/v1/usuarios")
@@ -163,36 +215,121 @@ class UsuarioControllerTest {
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void update_debeRetornar200() throws Exception {
-    when(service.update(any(UUID.class), any(UsuarioUpdate.class))).thenReturn(response);
+  @WithMockUser(roles = "ADMIN")
+  void create_comoAdmin_debeRetornar403() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"email": "nuevo@test.cl", "password": "pass1234",
+                         "nombre": "N", "apellido": "U"}
+                        """))
+        .andExpect(status().isForbidden());
+  }
 
+  /* ======== PUT /{id} ======== */
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  void update_comoAdmin_ajeno_debeRetornar403() throws Exception {
     mockMvc
         .perform(
             put("/api/v1/usuarios/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-                        {"nombre": "Actualizado"}
+                        {"nombre": "Hack"}
                         """))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(id.toString()));
+        .andExpect(status().isForbidden());
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void delete_debeRetornar204() throws Exception {
+  @WithMockUser(roles = "MODERATOR")
+  void update_comoModerador_ajeno_debeRetornar403() throws Exception {
+    mockMvc
+        .perform(
+            put("/api/v1/usuarios/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"nombre": "Hack"}
+                        """))
+        .andExpect(status().isForbidden());
+  }
+
+  /* ======== DELETE /{id} ======== */
+
+  @Test
+  @WithMockUser(roles = "MODERATOR")
+  void delete_comoModerador_debeRetornar204() throws Exception {
     mockMvc
         .perform(delete("/api/v1/usuarios/{id}", id))
         .andExpect(status().isNoContent());
   }
 
   @Test
-  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
-  void delete_cuandoNoExiste_debeRetornar404() throws Exception {
+  @WithMockUser(roles = "MODERATOR")
+  void delete_comoModerador_cuandoNoExiste_debeRetornar404() throws Exception {
     doThrow(new EntityNotFoundException("not found")).when(service).delete(id);
 
     mockMvc
         .perform(delete("/api/v1/usuarios/{id}", id))
         .andExpect(status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  void delete_comoAdmin_debeRetornar403() throws Exception {
+    mockMvc
+        .perform(delete("/api/v1/usuarios/{id}", id))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  @WithMockUser(roles = "USER")
+  void delete_comoUser_debeRetornar403() throws Exception {
+    mockMvc
+        .perform(delete("/api/v1/usuarios/{id}", id))
+        .andExpect(status().isForbidden());
+  }
+
+  /* ======== PUT /{id}/roles ======== */
+
+  @Test
+  @WithMockUser(roles = "MODERATOR")
+  void asignarRoles_comoModerador_debeRetornar204() throws Exception {
+    mockMvc
+        .perform(
+            put("/api/v1/usuarios/{id}/roles", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"rolIds": ["00000000-0000-0000-0000-000000000001"]}
+                        """))
+        .andExpect(status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  void asignarRoles_comoAdmin_debeRetornar403() throws Exception {
+    mockMvc
+        .perform(
+            put("/api/v1/usuarios/{id}/roles", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"rolIds": ["00000000-0000-0000-0000-000000000001"]}
+                        """))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  @WithMockUser(roles = "USER")
+  void asignarRoles_comoUser_debeRetornar403() throws Exception {
+    mockMvc
+        .perform(
+            put("/api/v1/usuarios/{id}/roles", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"rolIds": ["00000000-0000-0000-0000-000000000001"]}
+                        """))
+        .andExpect(status().isForbidden());
   }
 }

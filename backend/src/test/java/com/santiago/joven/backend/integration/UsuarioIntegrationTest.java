@@ -2,6 +2,9 @@ package com.santiago.joven.backend.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.santiago.joven.backend.dto.AsignarRolesRequest;
+import com.santiago.joven.backend.dto.LoginRequest;
+import com.santiago.joven.backend.dto.LoginResponse;
 import com.santiago.joven.backend.dto.UsuarioRequest;
 import com.santiago.joven.backend.dto.UsuarioResponse;
 import com.santiago.joven.backend.dto.UsuarioUpdate;
@@ -23,6 +26,8 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
   private String testUserToken;
   private UUID testUserId;
   private String testUserEmail;
+  private String moderatorToken;
+  private UUID moderatorUserId;
 
   @BeforeEach
   void setUp() {
@@ -31,6 +36,8 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
     testUserToken = null;
     testUserId = null;
     testUserEmail = null;
+    moderatorToken = null;
+    moderatorUserId = null;
 
     var adminEmail = "admin-" + UUID.randomUUID() + "@santiagojoven.org";
     var adminReg = client().post()
@@ -39,21 +46,18 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
         .body(UsuarioRequest.builder()
             .email(adminEmail).password("password123").nombre("Admin").apellido("User").build())
         .retrieve()
-        .toEntity(com.santiago.joven.backend.dto.LoginResponse.class);
-
+        .toEntity(LoginResponse.class);
     var adminRolId = jdbc.queryForObject(
         "SELECT id FROM roles WHERE nombre = ?", UUID.class, "ADMIN");
     jdbc.update(
         "INSERT INTO usuarios_roles (usuario_id, rol_id) VALUES (?, ?)",
         adminReg.getBody().userId(), adminRolId);
-
     var adminLogin = client().post()
         .uri("/api/v1/auth/login")
         .contentType(MediaType.APPLICATION_JSON)
-        .body(new com.santiago.joven.backend.dto.LoginRequest(adminEmail, "password123"))
+        .body(new LoginRequest(adminEmail, "password123"))
         .retrieve()
-        .toEntity(com.santiago.joven.backend.dto.LoginResponse.class);
-
+        .toEntity(LoginResponse.class);
     adminToken = adminLogin.getBody().token();
     adminUserId = adminLogin.getBody().userId();
 
@@ -65,10 +69,34 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
             .email(testUserEmail)
             .password("password123").nombre("Test").apellido("Subject").build())
         .retrieve()
-        .toEntity(com.santiago.joven.backend.dto.LoginResponse.class);
+        .toEntity(LoginResponse.class);
     testUserId = testReg.getBody().userId();
     testUserToken = testReg.getBody().token();
+
+    var modEmail = "mod-" + UUID.randomUUID() + "@santiagojoven.org";
+    var modReg = client().post()
+        .uri("/api/v1/auth/register")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(UsuarioRequest.builder()
+            .email(modEmail).password("password123").nombre("Mod").apellido("User").build())
+        .retrieve()
+        .toEntity(LoginResponse.class);
+    var modRolId = jdbc.queryForObject(
+        "SELECT id FROM roles WHERE nombre = ?", UUID.class, "MODERATOR");
+    jdbc.update(
+        "INSERT INTO usuarios_roles (usuario_id, rol_id) VALUES (?, ?)",
+        modReg.getBody().userId(), modRolId);
+    var modLogin = client().post()
+        .uri("/api/v1/auth/login")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new LoginRequest(modEmail, "password123"))
+        .retrieve()
+        .toEntity(LoginResponse.class);
+    moderatorToken = modLogin.getBody().token();
+    moderatorUserId = modLogin.getBody().userId();
   }
+
+  /* ======== ADMIN: solo lectura ======== */
 
   @Test
   void listarUsuarios_comoAdmin_retornaLista() {
@@ -82,30 +110,6 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  void listarUsuarios_sinToken_retorna403() {
-    var response = client().get()
-        .uri("/api/v1/usuarios")
-        .retrieve()
-        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
-        .toBodilessEntity();
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-  }
-
-  @Test
-  void listarUsuarios_conUsuarioComun_retorna403() {
-    var userToken = registrarUsuarioComun();
-
-    var response = authClient(userToken).get()
-        .uri("/api/v1/usuarios")
-        .retrieve()
-        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
-        .toBodilessEntity();
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-  }
-
-  @Test
   void obtenerUsuarioPorId_comoAdmin_retornaUsuario() {
     var response = authClient(adminToken).get()
         .uri("/api/v1/usuarios/{id}", testUserId)
@@ -115,41 +119,6 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().id()).isEqualTo(testUserId);
-  }
-
-  @Test
-  void obtenerUsuarioPropio_conUsuarioComun_retornaUsuario() {
-    var response = authClient(testUserToken).get()
-        .uri("/api/v1/usuarios/{id}", testUserId)
-        .retrieve()
-        .toEntity(UsuarioResponse.class);
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).isNotNull();
-    assertThat(response.getBody().id()).isEqualTo(testUserId);
-    assertThat(response.getBody().email()).isEqualTo(testUserEmail);
-  }
-
-  @Test
-  void obtenerUsuarioAjeno_conUsuarioComun_retorna403() {
-    var response = authClient(testUserToken).get()
-        .uri("/api/v1/usuarios/{id}", adminUserId)
-        .retrieve()
-        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
-        .toBodilessEntity();
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-  }
-
-  @Test
-  void obtenerUsuarioPorId_noExistente_retorna404() {
-    var response = authClient(adminToken).get()
-        .uri("/api/v1/usuarios/{id}", UUID.randomUUID())
-        .retrieve()
-        .onStatus(s -> s == HttpStatus.NOT_FOUND, (req, res) -> {})
-        .toBodilessEntity();
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
   @Test
@@ -189,7 +158,8 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
   @Test
   void existsEmail_noExistente_retornaFalse() {
     var response = authClient(adminToken).get()
-        .uri("/api/v1/usuarios/exists-email/{email}", "no-existe-" + UUID.randomUUID() + "@santiagojoven.org")
+        .uri("/api/v1/usuarios/exists-email/{email}",
+            "no-existe-" + UUID.randomUUID() + "@santiagojoven.org")
         .retrieve()
         .toEntity(Boolean.class);
 
@@ -197,7 +167,20 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  void crearUsuario_comoAdmin_retorna201() {
+  void obtenerUsuarioPorId_noExistente_retorna404() {
+    var response = authClient(adminToken).get()
+        .uri("/api/v1/usuarios/{id}", UUID.randomUUID())
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.NOT_FOUND, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  /* ======== ADMIN: NO puede mutar ======== */
+
+  @Test
+  void crearUsuario_comoAdmin_retorna403() {
     var request = UsuarioRequest.builder()
         .email("nuevo-" + UUID.randomUUID() + "@santiagojoven.org")
         .password("password123")
@@ -206,6 +189,93 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
         .build();
 
     var response = authClient(adminToken).post()
+        .uri("/api/v1/usuarios")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(request)
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  void actualizarUsuarioAjeno_comoAdmin_retorna403() {
+    var update = UsuarioUpdate.builder().nombre("AdminHack").build();
+
+    var response = authClient(adminToken).put()
+        .uri("/api/v1/usuarios/{id}", testUserId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(update)
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  void eliminarUsuario_comoAdmin_retorna403() {
+    var response = authClient(adminToken).delete()
+        .uri("/api/v1/usuarios/{id}", testUserId)
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  void asignarRoles_comoAdmin_retorna403() {
+    var moderatorRolId = jdbc.queryForObject(
+        "SELECT id FROM roles WHERE nombre = ?", UUID.class, "MODERATOR");
+
+    var response = authClient(adminToken).put()
+        .uri("/api/v1/usuarios/{id}/roles", testUserId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new AsignarRolesRequest(Set.of(moderatorRolId)))
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  /* ======== MODERADOR: solo NO puede mutar datos personales ======== */
+
+  @Test
+  void listarUsuarios_comoModerador_retornaLista() {
+    var response = authClient(moderatorToken).get()
+        .uri("/api/v1/usuarios")
+        .retrieve()
+        .toEntity(UsuarioResponse[].class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotEmpty();
+  }
+
+  @Test
+  void obtenerUsuarioPorId_comoModerador_retornaUsuario() {
+    var response = authClient(moderatorToken).get()
+        .uri("/api/v1/usuarios/{id}", testUserId)
+        .retrieve()
+        .toEntity(UsuarioResponse.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().id()).isEqualTo(testUserId);
+  }
+
+  @Test
+  void crearUsuario_comoModerador_retorna201() {
+    var request = UsuarioRequest.builder()
+        .email("mod-create-" + UUID.randomUUID() + "@santiagojoven.org")
+        .password("password123")
+        .nombre("Creado")
+        .apellido("PorMod")
+        .build();
+
+    var response = authClient(moderatorToken).post()
         .uri("/api/v1/usuarios")
         .contentType(MediaType.APPLICATION_JSON)
         .body(request)
@@ -219,45 +289,78 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  void crearUsuario_emailDuplicado_retorna409() {
-    var email = "dup-" + UUID.randomUUID() + "@santiagojoven.org";
-    adminCreaUsuario(email);
+  void eliminarUsuario_comoModerador_retorna204() {
+    var creado = moderadorCreaUsuario("delete-by-mod-" + UUID.randomUUID() + "@santiagojoven.org");
 
-    var request = UsuarioRequest.builder()
-        .email(email)
-        .password("password456")
-        .nombre("Duplicado")
-        .apellido("Email")
-        .build();
-
-    var response = authClient(adminToken).post()
-        .uri("/api/v1/usuarios")
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(request)
+    var response = authClient(moderatorToken).delete()
+        .uri("/api/v1/usuarios/{id}", creado.id())
         .retrieve()
-        .onStatus(s -> s == HttpStatus.CONFLICT, (req, res) -> {})
         .toBodilessEntity();
 
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   @Test
-  void actualizarUsuario_comoAdmin_retorna200() {
-    var update = UsuarioUpdate.builder()
-        .nombre("NombreActualizado")
-        .apellido("ApellidoActualizado")
-        .build();
+  void asignarRoles_comoModerador_retorna204() {
+    var moderatorRolId = jdbc.queryForObject(
+        "SELECT id FROM roles WHERE nombre = ?", UUID.class, "MODERATOR");
 
-    var response = authClient(adminToken).put()
+    var response = authClient(moderatorToken).put()
+        .uri("/api/v1/usuarios/{id}/roles", testUserId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new AsignarRolesRequest(Set.of(moderatorRolId)))
+        .retrieve()
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+    var roles = jdbc.queryForList(
+        "SELECT r.nombre FROM roles r "
+            + "JOIN usuarios_roles ur ON ur.rol_id = r.id "
+            + "WHERE ur.usuario_id = ?",
+        String.class, testUserId);
+    assertThat(roles).contains("MODERATOR");
+  }
+
+  @Test
+  void actualizarUsuarioAjeno_comoModerador_retorna403() {
+    var update = UsuarioUpdate.builder().nombre("ModHack").build();
+
+    var response = authClient(moderatorToken).put()
         .uri("/api/v1/usuarios/{id}", testUserId)
         .contentType(MediaType.APPLICATION_JSON)
         .body(update)
         .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  /* ======== USUARIO COMUN: solo propio perfil ======== */
+
+  @Test
+  void obtenerUsuarioPropio_conUsuarioComun_retornaUsuario() {
+    var response = authClient(testUserToken).get()
+        .uri("/api/v1/usuarios/{id}", testUserId)
+        .retrieve()
         .toEntity(UsuarioResponse.class);
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody().nombre()).isEqualTo("NombreActualizado");
-    assertThat(response.getBody().apellido()).isEqualTo("ApellidoActualizado");
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().id()).isEqualTo(testUserId);
+    assertThat(response.getBody().email()).isEqualTo(testUserEmail);
+  }
+
+  @Test
+  void obtenerUsuarioAjeno_conUsuarioComun_retorna403() {
+    var response = authClient(testUserToken).get()
+        .uri("/api/v1/usuarios/{id}", adminUserId)
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
   @Test
@@ -312,71 +415,26 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  void actualizarUsuario_noExistente_retorna404() {
+  void actualizarUsuarioRandom_conUsuarioComun_retorna403() {
     var update = UsuarioUpdate.builder().nombre("Nadie").build();
 
-    var response = authClient(adminToken).put()
+    var response = authClient(testUserToken).put()
         .uri("/api/v1/usuarios/{id}", UUID.randomUUID())
         .contentType(MediaType.APPLICATION_JSON)
         .body(update)
         .retrieve()
-        .onStatus(s -> s == HttpStatus.NOT_FOUND, (req, res) -> {})
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
         .toBodilessEntity();
 
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
-  @Test
-  void eliminarUsuario_comoAdmin_retorna204() {
-    var creado = adminCreaUsuario("delete-" + UUID.randomUUID() + "@santiagojoven.org");
-
-    var response = authClient(adminToken).delete()
-        .uri("/api/v1/usuarios/{id}", creado.id())
-        .retrieve()
-        .toBodilessEntity();
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-  }
+  /* ======== SIN TOKEN / USUARIO COMUN ======== */
 
   @Test
-  void eliminarUsuario_noExistente_retorna404() {
-    var response = authClient(adminToken).delete()
-        .uri("/api/v1/usuarios/{id}", UUID.randomUUID())
-        .retrieve()
-        .onStatus(s -> s == HttpStatus.NOT_FOUND, (req, res) -> {})
-        .toBodilessEntity();
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-  }
-
-  @Test
-  void asignarRoles_comoAdmin_retorna204() {
-    var moderatorRolId = jdbc.queryForObject(
-        "SELECT id FROM roles WHERE nombre = ?", UUID.class, "MODERATOR");
-
-    var response = authClient(adminToken).put()
-        .uri("/api/v1/usuarios/{id}/roles", testUserId)
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(new com.santiago.joven.backend.dto.AsignarRolesRequest(Set.of(moderatorRolId)))
-        .retrieve()
-        .toBodilessEntity();
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-
-    var roles = jdbc.queryForList(
-        "SELECT r.nombre FROM roles r "
-            + "JOIN usuarios_roles ur ON ur.rol_id = r.id "
-            + "WHERE ur.usuario_id = ?",
-        String.class, testUserId);
-    assertThat(roles).contains("MODERATOR");
-  }
-
-  @Test
-  void asignarRoles_sinToken_retorna403() {
-    var response = client().put()
-        .uri("/api/v1/usuarios/{id}/roles", UUID.randomUUID())
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(new com.santiago.joven.backend.dto.AsignarRolesRequest(Set.of(UUID.randomUUID())))
+  void listarUsuarios_sinToken_retorna403() {
+    var response = client().get()
+        .uri("/api/v1/usuarios")
         .retrieve()
         .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
         .toBodilessEntity();
@@ -385,13 +443,11 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  void asignarRoles_conUsuarioComun_retorna403() {
+  void listarUsuarios_conUsuarioComun_retorna403() {
     var userToken = registrarUsuarioComun();
 
-    var response = authClient(userToken).put()
-        .uri("/api/v1/usuarios/{id}/roles", UUID.randomUUID())
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(new com.santiago.joven.backend.dto.AsignarRolesRequest(Set.of(UUID.randomUUID())))
+    var response = authClient(userToken).get()
+        .uri("/api/v1/usuarios")
         .retrieve()
         .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
         .toBodilessEntity();
@@ -412,6 +468,34 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
   }
 
+  @Test
+  void asignarRoles_sinToken_retorna403() {
+    var response = client().put()
+        .uri("/api/v1/usuarios/{id}/roles", UUID.randomUUID())
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new AsignarRolesRequest(Set.of(UUID.randomUUID())))
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
+  @Test
+  void asignarRoles_conUsuarioComun_retorna403() {
+    var userToken = registrarUsuarioComun();
+
+    var response = authClient(userToken).put()
+        .uri("/api/v1/usuarios/{id}/roles", UUID.randomUUID())
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(new AsignarRolesRequest(Set.of(UUID.randomUUID())))
+        .retrieve()
+        .onStatus(s -> s == HttpStatus.FORBIDDEN, (req, res) -> {})
+        .toBodilessEntity();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+  }
+
   private String registrarUsuarioComun() {
     var email = "user-" + UUID.randomUUID() + "@santiagojoven.org";
     var res = client().post()
@@ -420,18 +504,18 @@ class UsuarioIntegrationTest extends BaseIntegrationTest {
         .body(UsuarioRequest.builder()
             .email(email).password("password123").nombre("User").apellido("Normal").build())
         .retrieve()
-        .toEntity(com.santiago.joven.backend.dto.LoginResponse.class);
+        .toEntity(LoginResponse.class);
     return res.getBody().token();
   }
 
-  private UsuarioResponse adminCreaUsuario(String email) {
+  private UsuarioResponse moderadorCreaUsuario(String email) {
     var request = UsuarioRequest.builder()
         .email(email)
         .password("password123")
         .nombre("Temp")
         .apellido("User")
         .build();
-    return authClient(adminToken).post()
+    return authClient(moderatorToken).post()
         .uri("/api/v1/usuarios")
         .contentType(MediaType.APPLICATION_JSON)
         .body(request)

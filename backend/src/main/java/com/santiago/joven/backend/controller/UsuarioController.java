@@ -17,7 +17,6 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,23 +34,28 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 @Tag(
     name = "Usuarios",
-    description = "Gestion administrativa de usuarios y acceso a datos propios")
+    description = "Gestion de usuarios: administradores solo lectura, moderadores gestionan permisos, usuarios acceden a sus propios datos")
 @SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
 
   private final UsuarioService service;
   private final UsuarioSecurity usuarioSecurity;
 
-  @Operation(summary = "Listar usuarios", description = "Requiere PERMISSION_MANAGE_USERS")
-  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
+  @Operation(
+      summary = "Listar usuarios",
+      description = "Requiere rol ADMIN o MODERATOR (solo lectura)")
   @GetMapping("")
   public ResponseEntity<List<UsuarioResponse>> findAll() {
+    var auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!usuarioSecurity.canViewUsers(auth)) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
     return ResponseEntity.ok(service.findAll());
   }
 
   @Operation(
       summary = "Buscar usuario por ID",
-      description = "Requiere PERMISSION_MANAGE_USERS o que el ID corresponda al usuario autenticado")
+      description = "Requiere rol ADMIN/MODERATOR, o que el ID corresponda al propio usuario")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
@@ -61,30 +65,52 @@ public class UsuarioController {
   @GetMapping("/{id}")
   public ResponseEntity<UsuarioResponse> findById(@PathVariable UUID id) {
     var auth = SecurityContextHolder.getContext().getAuthentication();
-    if (!usuarioSecurity.canManageUsers(auth) && !usuarioSecurity.isSelf(id, auth)) {
+    if (!usuarioSecurity.canViewUsers(auth) && !usuarioSecurity.isSelf(id, auth)) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
     return ResponseEntity.ok(service.findById(id));
   }
 
-  @Operation(summary = "Buscar usuario por email", description = "Requiere PERMISSION_MANAGE_USERS")
-  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
+  @Operation(
+      summary = "Buscar usuario por email",
+      description = "Requiere rol ADMIN o MODERATOR (solo lectura)")
   @GetMapping("/por-email/{email}")
   public ResponseEntity<UsuarioResponse> findByEmail(@PathVariable String email) {
+    var auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!usuarioSecurity.canViewUsers(auth)) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
     return ResponseEntity.ok(service.findByEmail(email));
   }
 
-  @Operation(summary = "Verificar si el email existe", description = "Requiere PERMISSION_MANAGE_USERS")
-  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
+  @Operation(
+      summary = "Verificar si el email existe",
+      description = "Requiere rol ADMIN o MODERATOR (solo lectura)")
   @GetMapping("/exists-email/{email}")
   public ResponseEntity<Boolean> existsByEmail(@PathVariable String email) {
+    var auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!usuarioSecurity.canViewUsers(auth)) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
     return ResponseEntity.ok(service.existsByEmail(email));
   }
 
-  @Operation(summary = "Crear usuario", description = "Requiere PERMISSION_MANAGE_USERS")
-  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
+  @Operation(
+      summary = "Crear usuario",
+      description = "Requiere rol MODERATOR")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "201", description = "Usuario creado"),
+        @ApiResponse(responseCode = "400", description = "Datos invalidos"),
+        @ApiResponse(responseCode = "403", description = "No autorizado"),
+        @ApiResponse(responseCode = "409", description = "Email duplicado")
+      })
   @PostMapping("")
   public ResponseEntity<UsuarioResponse> create(@Valid @RequestBody UsuarioRequest request) {
+    var auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!usuarioSecurity.canManageRoles(auth)) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
     var response = service.create(request);
     var location =
         ServletUriComponentsBuilder.fromCurrentRequest()
@@ -95,11 +121,11 @@ public class UsuarioController {
   }
 
   @Operation(
-      summary = "Actualizar usuario",
+      summary = "Actualizar perfil propio",
       description =
-          "Requiere PERMISSION_MANAGE_USERS o que el ID corresponda al usuario autenticado. "
-              + "Los usuarios comunes solo pueden cambiar email, password, nombre, apellido y telefono; "
-              + "el campo activo se ignora para actualizaciones propias.")
+          "Cada usuario puede actualizar sus propios datos (nombre, apellido, telefono, email, password). "
+              + "El campo activo se ignora en actualizaciones propias. "
+              + "Ni ADMIN ni MODERATOR pueden modificar datos de otros usuarios.")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200", description = "Usuario actualizado"),
@@ -112,28 +138,35 @@ public class UsuarioController {
   public ResponseEntity<UsuarioResponse> update(
       @PathVariable UUID id, @Valid @RequestBody UsuarioUpdate update) {
     var auth = SecurityContextHolder.getContext().getAuthentication();
-    if (!usuarioSecurity.canManageUsers(auth) && !usuarioSecurity.isSelf(id, auth)) {
+    if (!usuarioSecurity.isSelf(id, auth)) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    }
-    if (usuarioSecurity.canManageUsers(auth)) {
-      return ResponseEntity.ok(service.update(id, update));
     }
     return ResponseEntity.ok(service.updateOwnProfile(id, update));
   }
 
-  @Operation(summary = "Asignar roles a un usuario", description = "Requiere PERMISSION_MANAGE_USERS")
-  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
+  @Operation(
+      summary = "Asignar roles a un usuario",
+      description = "Requiere rol MODERATOR (gestion de permisos)")
   @PutMapping("/{id}/roles")
   public ResponseEntity<Void> asignarRoles(
       @PathVariable UUID id, @Valid @RequestBody AsignarRolesRequest request) {
+    var auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!usuarioSecurity.canManageRoles(auth)) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
     service.asignarRoles(id, request.rolIds());
     return ResponseEntity.noContent().build();
   }
 
-  @Operation(summary = "Eliminar usuario", description = "Requiere PERMISSION_MANAGE_USERS")
-  @PreAuthorize("hasAuthority('PERMISSION_MANAGE_USERS')")
+  @Operation(
+      summary = "Eliminar usuario",
+      description = "Requiere rol MODERATOR")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    var auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!usuarioSecurity.canManageRoles(auth)) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
     service.delete(id);
     return ResponseEntity.noContent().build();
   }
