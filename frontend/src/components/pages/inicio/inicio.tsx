@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./inicio.css";
 import Card from "../../cartas/Card";
 import Slider from "../../sliders/slider";
@@ -18,25 +18,27 @@ interface DatosInicio {
   contacto: { direccion: string; horario: string; email: string };
 }
 
-interface Categoria {
-  id: string;
+interface CategoriaItem {
+  id: string | number;
   nombre: string;
 }
 
-interface ActividadCalendario {
-  id: string;
+interface ActividadCalendarioItem {
+  id: string | number;
   titulo: string;
   descripcion?: string;
-  categoriaId?: string;
+  categoriaId: string | number;
 }
 
 export default function Inicio() {
   const [datosInicio, setDatosInicio] = useState<DatosInicio | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [actividadesCalendario, setActividadesCalendario] = useState<ActividadCalendario[]>([]);
+  const [actividadesCalendario, setActividadesCalendario] = useState<
+    ActividadCalendarioItem[]
+  >([]);
   const [filtroActivo, setFiltroActivo] = useState("Todos");
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [categorias, setCategorias] = useState<CategoriaItem[]>([]);
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -45,6 +47,7 @@ export default function Inicio() {
 
       const rawUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "";
 
+      // Validamos que exista la URL base antes de construir apiBase.
       if (!rawUrl) {
         console.error("VITE_API_URL no está definida.");
         setError("No se pudo determinar la URL del servidor.");
@@ -73,12 +76,14 @@ export default function Inicio() {
                 throw new Error(`Error ${r.status} al consultar ${ep}`);
               }
               return r.json();
-            })
-          )
+            }),
+          ),
         );
 
         const ok = (r: PromiseSettledResult<unknown>) =>
-          r.status === "fulfilled" ? (r.value as Record<string, unknown>[]) : [];
+          r.status === "fulfilled"
+            ? (r.value as Record<string, unknown>[])
+            : [];
 
         results.forEach((r, i) => {
           if (r.status === "rejected") {
@@ -97,57 +102,39 @@ export default function Inicio() {
           categoriasData,
         ] = results.map(ok);
 
-        const categoriasParseadas: Categoria[] = (categoriasData || []).map(
-          (item: Record<string, unknown>) => ({
-            id: String(item.id ?? ""),
-            nombre: String(item.nombre ?? ""),
-          })
+        setCategorias((categoriasData || []) as unknown as CategoriaItem[]);
+        setActividadesCalendario(
+          (actividadesData || []) as unknown as ActividadCalendarioItem[],
         );
 
-        // Una sola pasada sobre actividadesData: arma a la vez el listado
-        // para el calendario, las actividades y los talleres (antes eran
-        // 3 recorridos independientes del mismo array).
-        const {
-          actividadesCalendarioParseadas,
-          actividades,
-          talleres,
-        } = (actividadesData || []).reduce<{
-          actividadesCalendarioParseadas: ActividadCalendario[];
-          actividades: ConexionItem[];
-          talleres: ConexionItem[];
-        }>(
-          (acc, item: Record<string, unknown>) => {
-            const titulo = String(item.titulo ?? "");
-            const esTaller = /taller/i.test(titulo);
+        const actividades: ConexionItem[] = (actividadesData || [])
+          .filter(
+            (item: Record<string, unknown>) =>
+              !/taller/i.test(String(item.titulo || "")),
+          )
+          .map((item: Record<string, unknown>) => ({
+            icono: "sports_soccer",
+            texto: String(item.titulo || ""),
+          }));
 
-            acc.actividadesCalendarioParseadas.push({
-              id: String(item.id ?? ""),
-              titulo,
-              descripcion: item.descripcion ? String(item.descripcion) : undefined,
-              categoriaId: item.categoriaId != null ? String(item.categoriaId) : undefined,
-            });
-
-            if (esTaller) {
-              acc.talleres.push({ icono: "work_outline", texto: titulo });
-            } else {
-              acc.actividades.push({ icono: "sports_soccer", texto: titulo });
-            }
-
-            return acc;
-          },
-          { actividadesCalendarioParseadas: [], actividades: [], talleres: [] }
-        );
-
-        setCategorias(categoriasParseadas);
-        setActividadesCalendario(actividadesCalendarioParseadas);
+        const talleres: ConexionItem[] = (actividadesData || [])
+          .filter((item: Record<string, unknown>) =>
+            /taller/i.test(String(item.titulo || "")),
+          )
+          .map((item: Record<string, unknown>) => ({
+            icono: "work_outline",
+            texto: String(item.titulo || ""),
+          }));
 
         const datosParseados: DatosInicio = {
           encabezado: [],
-          asesorias: (asesoriasData || []).map((item: Record<string, unknown>) => ({
-            titulo: String(item.titulo || ""),
-            descripcion: String(item.definicion || item.objetivos || ""),
-            icono: "support",
-          })),
+          asesorias: (asesoriasData || []).map(
+            (item: Record<string, unknown>) => ({
+              titulo: String(item.titulo || ""),
+              descripcion: String(item.definicion || item.objetivos || ""),
+              icono: "support",
+            }),
+          ),
           preuniversitario: [],
           cursos: (cursosData || []).map((item: Record<string, unknown>) => ({
             titulo: String(item.titulo || ""),
@@ -159,11 +146,13 @@ export default function Inicio() {
             descripcion: String(item.descripcion || ""),
             boton: "Ver más",
           })),
-          programas: (programasData || []).map((item: Record<string, unknown>) => ({
-            titulo: String(item.titulo || ""),
-            descripcion: String(item.descripcion || ""),
-            icono: "groups",
-          })),
+          programas: (programasData || []).map(
+            (item: Record<string, unknown>) => ({
+              titulo: String(item.titulo || ""),
+              descripcion: String(item.descripcion || ""),
+              icono: "groups",
+            }),
+          ),
           salud: (saludData || []).map((item: Record<string, unknown>) => ({
             titulo: String(item.titulo || ""),
             descripcion: String(item.descripcion || ""),
@@ -172,7 +161,10 @@ export default function Inicio() {
           actividades,
           talleres,
           contacto: {
-            direccion: String((ubicacionesData?.[0] as Record<string, unknown>)?.direccion ?? ""),
+            direccion: String(
+              (ubicacionesData?.[0] as Record<string, unknown>)?.direccion ??
+                "",
+            ),
             horario: "",
             email: "",
           },
@@ -181,7 +173,9 @@ export default function Inicio() {
         setDatosInicio(datosParseados);
       } catch (err) {
         console.error("Error al cargar los datos de inicio:", err);
-        setError("Ocurrió un error al cargar la información. Intenta nuevamente más tarde.");
+        setError(
+          "Ocurrió un error al cargar la información. Intenta nuevamente más tarde.",
+        );
       } finally {
         setLoading(false);
       }
@@ -190,22 +184,29 @@ export default function Inicio() {
     cargarDatos();
   }, []);
 
-  const actividadesFiltradas = filtroActivo === "Todos"
-    ? actividadesCalendario
-    : actividadesCalendario.filter((actividad) => {
-        const categoria = categorias.find(
-          (cat) => cat.id === actividad.categoriaId
-        );
-        return categoria?.nombre?.toLowerCase().includes(filtroActivo.toLowerCase());
-      });
+  // Memoizado para no recalcular el filtro en cada render, solo cuando
+  // cambian el filtro activo o los datos de origen.
+  const actividadesFiltradas = useMemo(() => {
+    return filtroActivo === "Todos"
+      ? actividadesCalendario
+      : actividadesCalendario.filter((actividad) => {
+          const categoria = categorias.find(
+            (cat) => cat.id === actividad.categoriaId,
+          );
+          return categoria?.nombre
+            ?.toLowerCase()
+            .includes(filtroActivo.toLowerCase());
+        });
+  }, [filtroActivo, actividadesCalendario, categorias]);
 
   if (loading)
     return <div className="cargando">Cargando Santiago Joven...</div>;
-  if (error)
-    return <div className="error">{error}</div>;
+  if (error) return <div className="error">{error}</div>;
   if (!datosInicio)
     return <div className="error">No se pudo cargar la información.</div>;
 
+  // Ya no es necesario volver a castear/parsear nada acá: datosInicio
+  // viene completamente tipado desde el useEffect.
   const {
     encabezado,
     asesorias,
@@ -295,7 +296,9 @@ export default function Inicio() {
                 >
                   schedule
                 </span>
-                <p>No hay cursos preuniversitarios disponibles por el momento.</p>
+                <p>
+                  No hay cursos preuniversitarios disponibles por el momento.
+                </p>
               </div>
             ) : (
               <div className="contenedor-flex">
@@ -444,7 +447,9 @@ export default function Inicio() {
                   >
                     schedule
                   </span>
-                  <p>No hay recursos de salud mental disponibles por el momento.</p>
+                  <p>
+                    No hay recursos de salud mental disponibles por el momento.
+                  </p>
                 </div>
               ) : (
                 salud.map((carta: CartaItem) => (
@@ -555,15 +560,17 @@ export default function Inicio() {
               </p>
             </div>
             <div className="calendario-contenido">
-              {["Todos", "Ferias", "Talleres", "Cursos", "Campañas"].map((filtro) => (
-                <button
-                  key={filtro}
-                  className={`filtro-eventos ${filtroActivo === filtro ? "activo" : ""}`}
-                  onClick={() => setFiltroActivo(filtro)}
-                >
-                  {filtro}
-                </button>
-              ))}
+              {["Todos", "Ferias", "Talleres", "Cursos", "Campañas"].map(
+                (filtro) => (
+                  <button
+                    key={filtro}
+                    className={`filtro-eventos ${filtroActivo === filtro ? "activo" : ""}`}
+                    onClick={() => setFiltroActivo(filtro)}
+                  >
+                    {filtro}
+                  </button>
+                ),
+              )}
             </div>
             {actividadesFiltradas.length === 0 ? (
               <div className="sin-actividades">
@@ -577,14 +584,16 @@ export default function Inicio() {
               </div>
             ) : (
               <div className="contenedor-flex">
-                {actividadesFiltradas.map((actividad: ActividadCalendario) => (
-                  <Card
-                    key={actividad.id}
-                    titulo={actividad.titulo}
-                    descripcion={actividad.descripcion || ""}
-                    icono="calendar_month"
-                  />
-                ))}
+                {actividadesFiltradas.map(
+                  (actividad: ActividadCalendarioItem) => (
+                    <Card
+                      key={actividad.id}
+                      titulo={actividad.titulo}
+                      descripcion={actividad.descripcion || ""}
+                      icono="calendar_month"
+                    />
+                  ),
+                )}
               </div>
             )}
           </section>
