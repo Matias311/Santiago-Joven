@@ -123,10 +123,8 @@ export default function Inicio() {
           categoriasData,
         ] = results.map(ok);
 
-        setCategorias(categoriasData as CategoriaItem[]);
-        setActividadesCalendario(
-          actividadesData as ActividadCalendarioItem[],
-        );
+        setCategorias(categoriasData as unknown as CategoriaItem[]);
+        setActividadesCalendario(actividadesData as unknown as ActividadCalendarioItem[]);
 
         const actividades: ConexionItem[] = (actividadesData || [])
           .filter((item) => !/taller/i.test(String(item.titulo || "")))
@@ -152,20 +150,16 @@ export default function Inicio() {
             }),
           ),
           preuniversitario: [],
-          cursos: (cursosData || []).map(
-            (item: Record<string, unknown>) => ({
-              titulo: String(item.titulo || ""),
-              descripcion: String(item.eslogan || item.descripcion || ""),
-              icono: "school",
-            }),
-          ),
-          accion: (accionData || []).map(
-            (item: Record<string, unknown>) => ({
-              titulo: String(item.titulo || ""),
-              descripcion: String(item.descripcion || ""),
-              boton: "Ver más",
-            }),
-          ),
+          cursos: (cursosData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.eslogan || item.descripcion || ""),
+            icono: "school",
+          })),
+          accion: (accionData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
+            boton: "Ver más",
+          })),
           programas: (programasData || []).map(
             (item: Record<string, unknown>) => ({
               titulo: String(item.titulo || ""),
@@ -173,13 +167,11 @@ export default function Inicio() {
               icono: "groups",
             }),
           ),
-          salud: (saludData || []).map(
-            (item: Record<string, unknown>) => ({
-              titulo: String(item.titulo || ""),
-              descripcion: String(item.descripcion || ""),
-              icono: String(item.icono || "health_and_safety"),
-            }),
-          ),
+          salud: (saludData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
+            icono: String(item.icono || "health_and_safety"),
+          })),
           actividades,
           talleres,
           contacto: {
