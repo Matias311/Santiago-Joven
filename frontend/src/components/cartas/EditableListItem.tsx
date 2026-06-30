@@ -32,9 +32,10 @@ export default function EditableListItem({
   return (
     <>
       <li>
-        <span className="material-symbols-outlined">{item.icono}</span>
-
-        {item.texto}
+        <div className="li-contenido">
+          <span className="material-symbols-outlined">{item.icono}</span>
+          {item.texto}
+        </div>
 
         {isAdmin && (
           <button onClick={() => setEditing(true)} className="card_edit_btn">

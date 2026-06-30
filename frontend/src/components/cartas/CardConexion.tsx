@@ -6,6 +6,7 @@ export interface CardData {
   description: string;
   date: string;
   lugar: string;
+  ciudad: string;
   cupos_disponibles: number;
   cupos: number;
   btn: string;
@@ -50,7 +51,10 @@ export function Modal({ card, onClose }: ModalProps) {
           </ul>
 
           <div className="modal-section-title">
-            Ubicación: <span>{card.lugar}</span>
+            Ubicación:{" "}
+            <span>
+              {card.lugar}, {card.ciudad}
+            </span>
             <br />
             Cupos disponibles para este evento:
             <span>

@@ -509,7 +509,23 @@ body {
   box-shadow: var(--sombra);
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+
+.li-contenido {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
+}
+
+.titulo-con-btnAdd {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  margin-bottom: 16px;
 }
 
 .lista-conexion button {

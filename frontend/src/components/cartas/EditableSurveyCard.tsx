@@ -57,26 +57,6 @@ export default function EditableSurveyCard({
             </div>
 
             <div className="container">
-              <p>Fecha del Evento</p>
-              <input
-                type="date"
-                name="desde"
-                value={formData.desde}
-                onChange={handleChange}
-                className="modal_calendar_select"
-                style={{ width: "100%", boxSizing: "border-box" }}
-              />
-              <input
-                type="date"
-                name="hasta"
-                value={formData.hasta}
-                onChange={handleChange}
-                className="modal_calendar_select"
-                style={{ width: "100%", boxSizing: "border-box" }}
-              />
-            </div>
-
-            <div className="container">
               <p>URL de la encuesta</p>
               <input name="url" value={formData.url} onChange={handleChange} />
             </div>

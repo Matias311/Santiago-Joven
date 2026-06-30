@@ -7,6 +7,8 @@ interface EditableCalendarCardProps {
   isAdmin: boolean;
   onSave: (updated: CalendarEvent) => void;
   onDelete: () => void;
+  // Acción al presionar "Ver más detalles" dentro de CalendarCard
+  onDetailClick: () => void;
 }
 
 export default function EditableCalendarCard({
@@ -14,6 +16,7 @@ export default function EditableCalendarCard({
   isAdmin,
   onSave,
   onDelete,
+  onDetailClick,
 }: EditableCalendarCardProps) {
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState<CalendarEvent>({ ...eventProps });
@@ -56,8 +59,8 @@ export default function EditableCalendarCard({
   return (
     <>
       <div className="editable_calendar_wrapper">
-        {/* onClick vacío porque en inicio.tsx no hay modal de detalle */}
-        <CalendarCard eventProps={eventProps} onClick={() => {}} />
+        {/* "Ver más detalles" redirige a Conexión Comunitaria via onDetailClick */}
+        <CalendarCard eventProps={eventProps} onClick={onDetailClick} />
 
         {isAdmin && (
           <button className="card_edit_btn" onClick={() => setEditing(true)}>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./inicio.css";
 import Card from "../../cartas/Card";
 import EditableSlider from "../../sliders/EditableSlider";
@@ -7,7 +8,11 @@ import type { ConexionItem } from "../../types/ConexionItem";
 import EditableCard from "../../cartas/EditableCard";
 import EditableListItem from "../../cartas/EditableListItem";
 import React from "react";
-import { type CalendarEvent } from "../../cartas/CalendarCard";
+import {
+  type CalendarEvent,
+  type CategoriaCalendario,
+  categoriaToTagClass,
+} from "../../cartas/CalendarCard";
 import EditableCalendarCard from "../../cartas/EditableCalendarCard";
 import type { Survey } from "../../cartas/SurveyCard";
 import EditableSurveyCard from "../../cartas/EditableSurveyCard";
@@ -57,6 +62,9 @@ const contacto = {
 };
 
 export default function Inicio() {
+  // Hook de navegación para redirigir desde "Ver más detalles" del calendario
+  const navigate = useNavigate();
+
   {
     /* Acá debería de ir el auth de si es admin o no, pero mientras pongo esto */
   }
@@ -154,6 +162,8 @@ export default function Inicio() {
       fetch(`${API_BASE}/salud-mental`).then((r) => r.json()),
       fetch(`${API_BASE}/actividades-talleres`).then((r) => r.json()),
       fetch(`${API_BASE}/tu-contribucion-cuenta`).then((r) => r.json()),
+      // Categorías reales para que el tag del calendario muestre el nombre correcto
+      fetch(`${API_BASE}/categorias`).then((r) => r.json()),
     ]).then((results) => {
       const ok = (r: PromiseSettledResult<unknown>) =>
         r.status === "fulfilled" ? (r.value as Record<string, unknown>[]) : [];
@@ -172,6 +182,7 @@ export default function Inicio() {
         saludData,
         actividadesData,
         encuestasData,
+        categoriasData,
       ] = results.map(ok);
 
       // Guardamos los IDs para poder hacer PUT/DELETE después
@@ -298,17 +309,31 @@ export default function Inicio() {
           })),
       );
 
-      // Calendario: todas las actividades mapeadas a CalendarEvent
+      // Mapa id de categoría → nombre real, igual que en ConexionComunitaria.tsx
+      const categoriaMap: Record<string, string> = Object.fromEntries(
+        (categoriasData || []).map((c: Record<string, unknown>) => [
+          String(c.id),
+          String(c.nombre),
+        ]),
+      );
+
+      // Calendario: todas las actividades mapeadas a CalendarEvent,
+      // usando el nombre real de la categoría (no un valor fijo)
       setCalendarioState(
         (actividadesData || []).map(
-          (item: Record<string, unknown>, index: number) => ({
-            id: index + 1,
-            categoria: "Ferias" as CalendarEvent["categoria"],
-            tagClass: "ferias" as CalendarEvent["tagClass"],
-            title: String(item.titulo || ""),
-            detail: "Ver más detalles",
-            date: String(item.fechaHora || "").split("T")[0],
-          }),
+          (item: Record<string, unknown>, index: number) => {
+            const nombreCategoria =
+              categoriaMap[String(item.categoriaId)] ?? "Talleres";
+            const categoria = nombreCategoria as CategoriaCalendario;
+            return {
+              id: index + 1,
+              categoria,
+              tagClass: categoriaToTagClass[categoria] ?? "talleres",
+              title: String(item.titulo || ""),
+              detail: "Ver más detalles",
+              date: String(item.fechaHora || "").split("T")[0],
+            };
+          },
         ),
       );
 
@@ -780,10 +805,8 @@ export default function Inicio() {
           </div>
           <div className="contenedor-flex">
             <div className="lista-conexion">
-              <div className="btn-con-btnAdd">
-                <div className="titulo-con-btnAdd">
-                  <h3>Actividades</h3>
-                </div>
+              <div className="titulo-con-btnAdd">
+                <h3>Actividades</h3>
                 {isAdmin && (
                   <button
                     className="card_edit_btn"
@@ -860,17 +883,21 @@ export default function Inicio() {
             <div className="lista-conexion">
               <div className="titulo-con-btnAdd">
                 <h3>Talleres</h3>
+                {isAdmin && (
+                  <button
+                    className="card_edit_btn"
+                    onClick={() =>
+                      addCard(
+                        talleresState,
+                        setTalleresState,
+                        templates.talleres,
+                      )
+                    }
+                  >
+                    Agregar
+                  </button>
+                )}
               </div>
-              {isAdmin && (
-                <button
-                  className="card_edit_btn"
-                  onClick={() =>
-                    addCard(talleresState, setTalleresState, templates.talleres)
-                  }
-                >
-                  Agregar
-                </button>
-              )}
               <ul>
                 {talleresState.map((item, index) => (
                   <EditableListItem
@@ -978,6 +1005,8 @@ export default function Inicio() {
                     isAdmin={isAdmin}
                     onSave={(updated) => saveCalendario(updated, index)}
                     onDelete={() => deleteCalendario(index)}
+                    // "Ver más detalles" redirige a Conexión Comunitaria
+                    onDetailClick={() => navigate("/conexioncomunitaria")}
                   />
                 ))}
               </div>

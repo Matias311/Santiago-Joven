@@ -14,12 +14,9 @@ import CalendarCard, {
   type CategoriaCalendario,
 } from "../../cartas/CalendarCard.tsx";
 
-// IDs de categorías para separar actividades y talleres (llenar con UUIDs reales)
-const CATEGORIA_ACTIVIDADES_IDS: string[] = [];
-const CATEGORIA_TALLERES_IDS: string[] = [];
-
-// Mientras los IDs estén vacíos, divide los resultados a la mitad
-const USAR_MODO_FALLBACK = true;
+// Nombres de categoría (tal como están en la BD) que definen cada sección
+const NOMBRE_CATEGORIA_ACTIVIDADES = "Campañas";
+const NOMBRE_CATEGORIA_TALLERES = "Talleres";
 
 const API_BASE = "http://localhost:8080/api/v1";
 
@@ -117,10 +114,12 @@ function formatFecha(iso: string): string {
 }
 
 // Transforma un item de la API al formato que usa CardConexion
+// Recibe dos mapas separados porque dirección y ciudad son campos distintos de Ubicacion
 function apiToCardData(
   item: ActividadTallerAPI,
   esTaller: boolean,
-  ubicacionMap: Record<string, string> = {},
+  direccionMap: Record<string, string> = {},
+  ciudadMap: Record<string, string> = {},
 ): CardData {
   const btnClass = resolveBtnClass(item);
   return {
@@ -130,7 +129,8 @@ function apiToCardData(
     title: item.titulo,
     description: item.descripcion,
     date: formatFecha(item.fechaHora),
-    lugar: ubicacionMap[item.ubicacionId] ?? "Ubicación no disponible",
+    lugar: direccionMap[item.ubicacionId] ?? "Ubicación no disponible",
+    ciudad: ciudadMap[item.ubicacionId] ?? "",
     cupos: item.cantidadMaximaParticipantes,
     cupos_disponibles: item.cantidadMaximaParticipantes - item.inscritos,
     btnClass,
@@ -202,40 +202,34 @@ export default function ConexionComunitaria() {
         const categorias: { id: string; nombre: string }[] =
           await resCategorias.json();
 
-        // Mapas de ID → valor para lookup rápido
-        const ubicacionMap: Record<string, string> = Object.fromEntries(
+        // Mapas de ID → valor para lookup rápido (uno por cada campo de Ubicacion)
+        const direccionMap: Record<string, string> = Object.fromEntries(
           ubicaciones.map((u) => [u.id, u.direccion]),
+        );
+        const ciudadMap: Record<string, string> = Object.fromEntries(
+          ubicaciones.map((u) => [u.id, u.ciudad]),
         );
         const categoriaMap: Record<string, string> = Object.fromEntries(
           categorias.map((c) => [c.id, c.nombre]),
         );
 
-        // Separación por categoría (o fallback por mitad)
-        let itemsActividades: ActividadTallerAPI[];
-        let itemsTalleres: ActividadTallerAPI[];
-
-        if (
-          USAR_MODO_FALLBACK &&
-          CATEGORIA_ACTIVIDADES_IDS.length === 0 &&
-          CATEGORIA_TALLERES_IDS.length === 0
-        ) {
-          const mitad = Math.ceil(data.length / 2);
-          itemsActividades = data.slice(0, mitad);
-          itemsTalleres = data.slice(mitad);
-        } else {
-          itemsActividades = data.filter((d) =>
-            CATEGORIA_ACTIVIDADES_IDS.includes(d.categoriaId),
-          );
-          itemsTalleres = data.filter((d) =>
-            CATEGORIA_TALLERES_IDS.includes(d.categoriaId),
-          );
-        }
+        // Separación por nombre real de la categoría (no por estado ni mitad)
+        const itemsActividades = data.filter(
+          (d) => categoriaMap[d.categoriaId] === NOMBRE_CATEGORIA_ACTIVIDADES,
+        );
+        const itemsTalleres = data.filter(
+          (d) => categoriaMap[d.categoriaId] === NOMBRE_CATEGORIA_TALLERES,
+        );
 
         setActividades(
-          itemsActividades.map((d) => apiToCardData(d, false, ubicacionMap)),
+          itemsActividades.map((d) =>
+            apiToCardData(d, false, direccionMap, ciudadMap),
+          ),
         );
         setTalleres(
-          itemsTalleres.map((d) => apiToCardData(d, true, ubicacionMap)),
+          itemsTalleres.map((d) =>
+            apiToCardData(d, true, direccionMap, ciudadMap),
+          ),
         );
 
         // Calendario: todos los items + mapa para abrir el modal correcto
@@ -244,10 +238,13 @@ export default function ConexionComunitaria() {
         );
         const mapa: Record<number, CardData> = {};
         data.forEach((item, index) => {
+          const esTaller =
+            categoriaMap[item.categoriaId] === NOMBRE_CATEGORIA_TALLERES;
           mapa[index + 1] = apiToCardData(
             item,
-            CATEGORIA_TALLERES_IDS.includes(item.categoriaId),
-            ubicacionMap,
+            esTaller,
+            direccionMap,
+            ciudadMap,
           );
         });
         setEventosCalendario(eventos);
@@ -330,9 +327,15 @@ export default function ConexionComunitaria() {
           <div className="section">
             <h2>Actividades</h2>
             {actividades.length === 0 ? (
-              <p className="no-events-message">
-                No hay actividades disponibles.
-              </p>
+              <div className="sin-encuestas">
+                <span
+                  className="material-symbols-outlined seccion-icono"
+                  style={{ color: "#AFB0B1", fontSize: "160px" }}
+                >
+                  schedule
+                </span>
+                <p>No hay encuestas recientes.</p>
+              </div>
             ) : (
               <Swiper
                 modules={[Pagination, Scrollbar]}
@@ -362,7 +365,15 @@ export default function ConexionComunitaria() {
           <div className="section">
             <h2>Talleres</h2>
             {talleres.length === 0 ? (
-              <p className="no-events-message">No hay talleres disponibles.</p>
+              <div className="sin-encuestas">
+                <span
+                  className="material-symbols-outlined seccion-icono"
+                  style={{ color: "#AFB0B1", fontSize: "160px" }}
+                >
+                  schedule
+                </span>
+                <p>No hay encuestas recientes.</p>
+              </div>
             ) : (
               <Swiper
                 modules={[Pagination, Scrollbar]}
