@@ -7,7 +7,9 @@ import com.santiago.joven.backend.dto.GaleriaFotoRequest;
 import com.santiago.joven.backend.dto.GaleriaFotoResponse;
 import com.santiago.joven.backend.dto.GaleriaFotoUpdate;
 import com.santiago.joven.backend.mapper.GaleriaFotoMapper;
+import com.santiago.joven.backend.model.entity.ActividadTaller;
 import com.santiago.joven.backend.model.entity.GaleriaFoto;
+import com.santiago.joven.backend.repository.ActividadTallerRepository;
 import com.santiago.joven.backend.repository.GaleriaFotoRepository;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,7 @@ class GaleriaFotoServiceImplTest {
 
   @Mock private GaleriaFotoRepository repository;
   @Mock private GaleriaFotoMapper mapper;
+  @Mock private ActividadTallerRepository actividadTallerRepository;
   @InjectMocks private GaleriaFotoServiceImpl service;
 
   private UUID id;
@@ -55,7 +58,11 @@ class GaleriaFotoServiceImplTest {
 
   @Test
   void create_debeGuardar() {
-    var request = new GaleriaFotoRequest(UUID.randomUUID(), "https://i.santiagojoven.org/foto.jpg", "Titulo", "Desc", 1);
+    var actividadId = UUID.randomUUID();
+    var request = new GaleriaFotoRequest(actividadId, "https://i.santiagojoven.org/foto.jpg", "Titulo", "Desc", 1);
+    var actividad = new ActividadTaller();
+    actividad.setId(actividadId);
+    when(actividadTallerRepository.findById(actividadId)).thenReturn(Optional.of(actividad));
     when(mapper.toEntity(request)).thenReturn(entity);
     when(repository.save(entity)).thenReturn(entity);
     when(mapper.toResponse(entity)).thenReturn(response);
