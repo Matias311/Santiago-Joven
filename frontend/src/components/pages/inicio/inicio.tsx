@@ -18,13 +18,25 @@ interface DatosInicio {
   contacto: { direccion: string; horario: string; email: string };
 }
 
+interface Categoria {
+  id: string;
+  nombre: string;
+}
+
+interface ActividadCalendario {
+  id: string;
+  titulo: string;
+  descripcion?: string;
+  categoriaId?: string;
+}
+
 export default function Inicio() {
   const [datosInicio, setDatosInicio] = useState<DatosInicio | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [actividadesCalendario, setActividadesCalendario] = useState<any[]>([]);
+  const [actividadesCalendario, setActividadesCalendario] = useState<ActividadCalendario[]>([]);
   const [filtroActivo, setFiltroActivo] = useState("Todos");
-  const [categorias, setCategorias] = useState<any[]>([]);
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -85,22 +97,49 @@ export default function Inicio() {
           categoriasData,
         ] = results.map(ok);
 
-        setCategorias(categoriasData || []);
-        setActividadesCalendario(actividadesData || []);
+        const categoriasParseadas: Categoria[] = (categoriasData || []).map(
+          (item: Record<string, unknown>) => ({
+            id: String(item.id ?? ""),
+            nombre: String(item.nombre ?? ""),
+          })
+        );
 
-        const actividades: ConexionItem[] = (actividadesData || [])
-          .filter((item: Record<string, unknown>) => !/taller/i.test(String(item.titulo || "")))
-          .map((item: Record<string, unknown>) => ({
-            icono: "sports_soccer",
-            texto: String(item.titulo || ""),
-          }));
+        // Una sola pasada sobre actividadesData: arma a la vez el listado
+        // para el calendario, las actividades y los talleres (antes eran
+        // 3 recorridos independientes del mismo array).
+        const {
+          actividadesCalendarioParseadas,
+          actividades,
+          talleres,
+        } = (actividadesData || []).reduce<{
+          actividadesCalendarioParseadas: ActividadCalendario[];
+          actividades: ConexionItem[];
+          talleres: ConexionItem[];
+        }>(
+          (acc, item: Record<string, unknown>) => {
+            const titulo = String(item.titulo ?? "");
+            const esTaller = /taller/i.test(titulo);
 
-        const talleres: ConexionItem[] = (actividadesData || [])
-          .filter((item: Record<string, unknown>) => /taller/i.test(String(item.titulo || "")))
-          .map((item: Record<string, unknown>) => ({
-            icono: "work_outline",
-            texto: String(item.titulo || ""),
-          }));
+            acc.actividadesCalendarioParseadas.push({
+              id: String(item.id ?? ""),
+              titulo,
+              descripcion: item.descripcion ? String(item.descripcion) : undefined,
+              categoriaId: item.categoriaId != null ? String(item.categoriaId) : undefined,
+            });
+
+            if (esTaller) {
+              acc.talleres.push({ icono: "work_outline", texto: titulo });
+            } else {
+              acc.actividades.push({ icono: "sports_soccer", texto: titulo });
+            }
+
+            return acc;
+          },
+          { actividadesCalendarioParseadas: [], actividades: [], talleres: [] }
+        );
+
+        setCategorias(categoriasParseadas);
+        setActividadesCalendario(actividadesCalendarioParseadas);
 
         const datosParseados: DatosInicio = {
           encabezado: [],
@@ -538,7 +577,7 @@ export default function Inicio() {
               </div>
             ) : (
               <div className="contenedor-flex">
-                {actividadesFiltradas.map((actividad: any) => (
+                {actividadesFiltradas.map((actividad: ActividadCalendario) => (
                   <Card
                     key={actividad.id}
                     titulo={actividad.titulo}
