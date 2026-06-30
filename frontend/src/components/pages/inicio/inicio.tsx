@@ -30,8 +30,6 @@ interface ActividadCalendarioItem {
   categoriaId: string | number;
 }
 
-// Accesos rápidos del hero. Se definen fuera del componente para no
-// recrear el array en cada render (su contenido es estático).
 const ACCESOS_HERO = [
   { href: "#apoyo", icono: "handshake", titulo: "Apoyo Joven" },
   { href: "#proyeccion", icono: "rocket_launch", titulo: "Proyección" },
@@ -39,9 +37,19 @@ const ACCESOS_HERO = [
   { href: "#conexion", icono: "groups", titulo: "Conexión" },
 ];
 
-// Bloque reutilizable para los mensajes de "no hay datos disponibles".
-// Mantiene exactamente el mismo markup, clases y estilos que se repetían
-// 7 veces en el archivo original.
+const DATOS_VACIOS: DatosInicio = {
+  encabezado: [],
+  asesorias: [],
+  preuniversitario: [],
+  cursos: [],
+  accion: [],
+  programas: [],
+  salud: [],
+  actividades: [],
+  talleres: [],
+  contacto: { direccion: "", horario: "", email: "" },
+};
+
 function SinDatos({ mensaje }: { mensaje: string }) {
   return (
     <div className="sin-actividades">
@@ -57,9 +65,7 @@ function SinDatos({ mensaje }: { mensaje: string }) {
 }
 
 export default function Inicio() {
-  const [datosInicio, setDatosInicio] = useState<DatosInicio | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [datosInicio, setDatosInicio] = useState<DatosInicio>(DATOS_VACIOS);
   const [actividadesCalendario, setActividadesCalendario] = useState<
     ActividadCalendarioItem[]
   >([]);
@@ -67,55 +73,44 @@ export default function Inicio() {
   const [categorias, setCategorias] = useState<CategoriaItem[]>([]);
 
   useEffect(() => {
-    const cargarDatos = async () => {
-      setLoading(true);
-      setError(null);
+    let cancelled = false;
 
-      const rawUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "";
+    const rawUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+    if (!rawUrl) return;
 
-      // Validamos que exista la URL base antes de construir apiBase.
-      if (!rawUrl) {
-        console.error("VITE_API_URL no está definida.");
-        setError("No se pudo determinar la URL del servidor.");
-        setLoading(false);
-        return;
-      }
+    const apiBase = `${rawUrl}/api/v1`;
+    const endpoints = [
+      "asesorias",
+      "cursos-destacados",
+      "acciones-joven",
+      "programas",
+      "salud-mental",
+      "actividades-talleres",
+      "ubicaciones",
+      "categorias",
+    ];
 
-      const apiBase = `${rawUrl}/api/v1`;
-
-      try {
-        const endpoints = [
-          "asesorias",
-          "cursos-destacados",
-          "acciones-joven",
-          "programas",
-          "salud-mental",
-          "actividades-talleres",
-          "ubicaciones",
-          "categorias",
-        ];
-
-        const results = await Promise.allSettled(
-          endpoints.map((ep) =>
-            fetch(`${apiBase}/${ep}`).then((r) => {
-              if (!r.ok) {
-                throw new Error(`Error ${r.status} al consultar ${ep}`);
-              }
-              return r.json();
-            }),
-          ),
-        );
-
-        const ok = (r: PromiseSettledResult<unknown>) =>
-          r.status === "fulfilled"
-            ? (r.value as Record<string, unknown>[])
-            : [];
+    Promise.allSettled(
+      endpoints.map((ep) =>
+        fetch(`${apiBase}/${ep}`).then((r) => {
+          if (!r.ok) throw new Error(`Error ${r.status} al consultar ${ep}`);
+          return r.json();
+        }),
+      ),
+    )
+      .then((results) => {
+        if (cancelled) return;
 
         results.forEach((r, i) => {
           if (r.status === "rejected") {
             console.error(`Fetch "${endpoints[i]}" falló:`, r.reason);
           }
         });
+
+        const ok = (r: PromiseSettledResult<unknown>) =>
+          r.status === "fulfilled"
+            ? (r.value as Record<string, unknown>[])
+            : [];
 
         const [
           asesoriasData,
@@ -128,31 +123,26 @@ export default function Inicio() {
           categoriasData,
         ] = results.map(ok);
 
-        setCategorias((categoriasData || []) as unknown as CategoriaItem[]);
+        setCategorias(categoriasData as CategoriaItem[]);
         setActividadesCalendario(
-          (actividadesData || []) as unknown as ActividadCalendarioItem[],
+          actividadesData as ActividadCalendarioItem[],
         );
 
         const actividades: ConexionItem[] = (actividadesData || [])
-          .filter(
-            (item: Record<string, unknown>) =>
-              !/taller/i.test(String(item.titulo || "")),
-          )
-          .map((item: Record<string, unknown>) => ({
+          .filter((item) => !/taller/i.test(String(item.titulo || "")))
+          .map((item) => ({
             icono: "sports_soccer",
             texto: String(item.titulo || ""),
           }));
 
         const talleres: ConexionItem[] = (actividadesData || [])
-          .filter((item: Record<string, unknown>) =>
-            /taller/i.test(String(item.titulo || "")),
-          )
-          .map((item: Record<string, unknown>) => ({
+          .filter((item) => /taller/i.test(String(item.titulo || "")))
+          .map((item) => ({
             icono: "work_outline",
             texto: String(item.titulo || ""),
           }));
 
-        const datosParseados: DatosInicio = {
+        setDatosInicio({
           encabezado: [],
           asesorias: (asesoriasData || []).map(
             (item: Record<string, unknown>) => ({
@@ -162,16 +152,20 @@ export default function Inicio() {
             }),
           ),
           preuniversitario: [],
-          cursos: (cursosData || []).map((item: Record<string, unknown>) => ({
-            titulo: String(item.titulo || ""),
-            descripcion: String(item.eslogan || item.descripcion || ""),
-            icono: "school",
-          })),
-          accion: (accionData || []).map((item: Record<string, unknown>) => ({
-            titulo: String(item.titulo || ""),
-            descripcion: String(item.descripcion || ""),
-            boton: "Ver más",
-          })),
+          cursos: (cursosData || []).map(
+            (item: Record<string, unknown>) => ({
+              titulo: String(item.titulo || ""),
+              descripcion: String(item.eslogan || item.descripcion || ""),
+              icono: "school",
+            }),
+          ),
+          accion: (accionData || []).map(
+            (item: Record<string, unknown>) => ({
+              titulo: String(item.titulo || ""),
+              descripcion: String(item.descripcion || ""),
+              boton: "Ver más",
+            }),
+          ),
           programas: (programasData || []).map(
             (item: Record<string, unknown>) => ({
               titulo: String(item.titulo || ""),
@@ -179,11 +173,13 @@ export default function Inicio() {
               icono: "groups",
             }),
           ),
-          salud: (saludData || []).map((item: Record<string, unknown>) => ({
-            titulo: String(item.titulo || ""),
-            descripcion: String(item.descripcion || ""),
-            icono: String(item.icono || "health_and_safety"),
-          })),
+          salud: (saludData || []).map(
+            (item: Record<string, unknown>) => ({
+              titulo: String(item.titulo || ""),
+              descripcion: String(item.descripcion || ""),
+              icono: String(item.icono || "health_and_safety"),
+            }),
+          ),
           actividades,
           talleres,
           contacto: {
@@ -194,24 +190,17 @@ export default function Inicio() {
             horario: "",
             email: "",
           },
-        };
-
-        setDatosInicio(datosParseados);
-      } catch (err) {
+        });
+      })
+      .catch((err) => {
         console.error("Error al cargar los datos de inicio:", err);
-        setError(
-          "Ocurrió un error al cargar la información. Intenta nuevamente más tarde.",
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+      });
 
-    cargarDatos();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  // Memoizado para no recalcular el filtro en cada render, solo cuando
-  // cambian el filtro activo o los datos de origen.
   const actividadesFiltradas = useMemo(() => {
     return filtroActivo === "Todos"
       ? actividadesCalendario
@@ -225,27 +214,6 @@ export default function Inicio() {
         });
   }, [filtroActivo, actividadesCalendario, categorias]);
 
-  if (loading)
-    return <div className="cargando">Cargando Santiago Joven...</div>;
-
-  if (error) return <div className="error">{error}</div>;
-
-  if (loading)
-    return <div className="cargando">Cargando Santiago Joven...</div>;
-
-  const datos: DatosInicio = datosInicio ?? {
-    encabezado: [],
-    asesorias: [],
-    preuniversitario: [],
-    cursos: [],
-    accion: [],
-    programas: [],
-    salud: [],
-    actividades: [],
-    talleres: [],
-    contacto: { direccion: "", horario: "", email: "" },
-  };
-
   const {
     asesorias,
     preuniversitario,
@@ -256,11 +224,10 @@ export default function Inicio() {
     actividades,
     talleres,
     contacto,
-  } = datos;
+  } = datosInicio;
 
   return (
     <>
-      {/* encabezado de la pagina principal */}
       <header id="inicio" className="inicio-section">
         <div className="inicio-texto">
           <h1>Santiago Joven: Crece, participa y aprende</h1>
@@ -276,9 +243,7 @@ export default function Inicio() {
         </div>
       </header>
 
-      {/* contenido principal */}
       <main className="contenido-principal">
-        {/* apoyo joven */}
         <section id="apoyo" className="seccion-informativa">
           <div className="seccion-encabezado">
             <span
@@ -333,7 +298,6 @@ export default function Inicio() {
           </div>
         </section>
 
-        {/* proyeccion joven */}
         <section id="proyeccion" className="seccion-informativa">
           <div className="seccion-encabezado">
             <span
@@ -358,7 +322,6 @@ export default function Inicio() {
           )}
         </section>
 
-        {/* accion joven */}
         <div className="fondo-gris">
           <section id="accion" className="accion-joven seccion-informativa">
             <div className="seccion-encabezado">
@@ -389,7 +352,6 @@ export default function Inicio() {
           </section>
         </div>
 
-        {/* nuestros programas */}
         <section id="programas" className="seccion-informativa">
           <div className="seccion-encabezado">
             <span
@@ -411,7 +373,6 @@ export default function Inicio() {
           )}
         </section>
 
-        {/* salud mental */}
         <div className="fondo-gris">
           <section
             id="salud"
@@ -450,7 +411,6 @@ export default function Inicio() {
           </section>
         </div>
 
-        {/* conexion comunitaria */}
         <section
           id="conexion"
           className="conexion-comunitaria seccion-informativa"
@@ -506,7 +466,6 @@ export default function Inicio() {
           </div>
         </section>
 
-        {/* calendario */}
         <div className="fondo-gris">
           <section
             id="calendario"
@@ -557,7 +516,6 @@ export default function Inicio() {
           </section>
         </div>
 
-        {/* contribución */}
         <section
           id="contribucion"
           className="tu-contribucion seccion-informativa"
@@ -587,7 +545,6 @@ export default function Inicio() {
           </div>
         </section>
 
-        {/* tu opinion cuenta */}
         <div className="fondo-gris">
           <section
             id="opinion"
@@ -621,7 +578,6 @@ export default function Inicio() {
           </section>
         </div>
 
-        {/* contactanos y ubicanos */}
         <section
           id="contacto"
           className="contacto-ubicacion seccion-informativa"
