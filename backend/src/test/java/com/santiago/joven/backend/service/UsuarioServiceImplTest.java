@@ -169,18 +169,55 @@ class UsuarioServiceImplTest {
     var update = UsuarioUpdate.builder()
         .nombre("Benjamín Andrés")
         .apellido("Muñoz Soto")
+        .telefono("987654321")
         .build();
 
     when(repository.findById(id)).thenReturn(Optional.of(usuario));
     when(repository.save(usuario)).thenReturn(usuario);
 
-    var updatedResponse = new UsuarioResponse(id, "benjamin.munoz@santiagojoven.org", "Benjamín Andrés", "Muñoz Soto", null, true);
+    var updatedResponse = new UsuarioResponse(id, "benjamin.munoz@santiagojoven.org", "Benjamín Andrés", "Muñoz Soto", "987654321", true);
     when(mapper.toResponse(usuario)).thenReturn(updatedResponse);
 
     var result = service.update(id, update);
 
     assertThat(result.nombre()).isEqualTo("Benjamín Andrés");
     assertThat(result.apellido()).isEqualTo("Muñoz Soto");
+    assertThat(result.telefono()).isEqualTo("987654321");
+  }
+
+  @Test
+  void updateOwnProfile_debeActualizarCamposPermitidos() {
+    var update = UsuarioUpdate.builder()
+        .nombre("Benjamín Andrés")
+        .apellido("Muñoz Soto")
+        .telefono("987654321")
+        .build();
+
+    when(repository.findById(id)).thenReturn(Optional.of(usuario));
+    when(repository.save(usuario)).thenReturn(usuario);
+
+    var updatedResponse = new UsuarioResponse(id, "benjamin.munoz@santiagojoven.org", "Benjamín Andrés", "Muñoz Soto", "987654321", true);
+    when(mapper.toResponse(usuario)).thenReturn(updatedResponse);
+
+    var result = service.updateOwnProfile(id, update);
+
+    assertThat(result.nombre()).isEqualTo("Benjamín Andrés");
+    assertThat(result.apellido()).isEqualTo("Muñoz Soto");
+    assertThat(result.telefono()).isEqualTo("987654321");
+  }
+
+  @Test
+  void updateOwnProfile_noDebeActualizarActivo() {
+    usuario.setActivo(true);
+    var update = UsuarioUpdate.builder().activo(false).build();
+
+    when(repository.findById(id)).thenReturn(Optional.of(usuario));
+    when(repository.save(usuario)).thenReturn(usuario);
+    when(mapper.toResponse(usuario)).thenReturn(response);
+
+    service.updateOwnProfile(id, update);
+
+    assertThat(usuario.getActivo()).isTrue();
   }
 
   @Test

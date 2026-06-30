@@ -2,6 +2,8 @@ package com.santiago.joven.backend.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.santiago.joven.backend.dto.UsuarioRequest;
 import com.santiago.joven.backend.dto.UsuarioResponse;
 import com.santiago.joven.backend.dto.UsuarioUpdate;
+import com.santiago.joven.backend.security.UsuarioSecurity;
 import com.santiago.joven.backend.service.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -21,13 +24,14 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(UsuarioController.class)
-@WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
+@Import(UsuarioSecurity.class)
 class UsuarioControllerTest {
 
   @Autowired private MockMvc mockMvc;
@@ -41,11 +45,12 @@ class UsuarioControllerTest {
           .id(id)
           .email("test@example.com")
           .nombre("Juan")
-          .apellido("Pérez")
+          .apellido("Perez")
           .activo(true)
           .build();
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void findAll_debeRetornar200() throws Exception {
     when(service.findAll()).thenReturn(List.of(response));
 
@@ -56,6 +61,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void findById_cuandoExiste_debeRetornar200() throws Exception {
     when(service.findById(id)).thenReturn(response);
 
@@ -66,6 +72,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void findById_cuandoNoExiste_debeRetornar404() throws Exception {
     when(service.findById(id)).thenThrow(new EntityNotFoundException("not found"));
 
@@ -76,6 +83,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void findByEmail_debeRetornar200() throws Exception {
     when(service.findByEmail("test@example.com")).thenReturn(response);
 
@@ -86,6 +94,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void findByEmail_cuandoNoExiste_debeRetornar404() throws Exception {
     when(service.findByEmail("notfound@example.com"))
         .thenThrow(new EntityNotFoundException("not found"));
@@ -96,6 +105,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void existsByEmail_debeRetornarTrue() throws Exception {
     when(service.existsByEmail("test@example.com")).thenReturn(true);
 
@@ -106,6 +116,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void existsByEmail_debeRetornarFalse() throws Exception {
     when(service.existsByEmail("notfound@example.com")).thenReturn(false);
 
@@ -116,6 +127,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void create_debeRetornar201_conLocationHeader() throws Exception {
     when(service.create(any(UsuarioRequest.class))).thenReturn(response);
 
@@ -138,6 +150,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void create_cuandoErrorDeValidacion_debeRetornar400() throws Exception {
     mockMvc
         .perform(
@@ -150,6 +163,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void update_debeRetornar200() throws Exception {
     when(service.update(any(UUID.class), any(UsuarioUpdate.class))).thenReturn(response);
 
@@ -165,6 +179,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void delete_debeRetornar204() throws Exception {
     mockMvc
         .perform(delete("/api/v1/usuarios/{id}", id))
@@ -172,6 +187,7 @@ class UsuarioControllerTest {
   }
 
   @Test
+  @WithMockUser(authorities = "PERMISSION_MANAGE_USERS")
   void delete_cuandoNoExiste_debeRetornar404() throws Exception {
     doThrow(new EntityNotFoundException("not found")).when(service).delete(id);
 
