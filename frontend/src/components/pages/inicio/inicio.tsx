@@ -1,10 +1,222 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
 import "./inicio.css";
 import Card from "../../cartas/Card";
 import EditableSlider from "../../sliders/EditableSlider";
 import type { CartaItem } from "../../types/CartaItem";
 import type { ConexionItem } from "../../types/ConexionItem";
+
+interface DatosInicio {
+  encabezado: CartaItem[];
+  asesorias: CartaItem[];
+  preuniversitario: CartaItem[];
+  cursos: CartaItem[];
+  accion: CartaItem[];
+  programas: CartaItem[];
+  salud: CartaItem[];
+  actividades: ConexionItem[];
+  talleres: ConexionItem[];
+  contacto: { direccion: string; horario: string; email: string };
+}
+
+interface CategoriaItem {
+  id: string | number;
+  nombre: string;
+}
+
+interface ActividadCalendarioItem {
+  id: string | number;
+  titulo: string;
+  descripcion?: string;
+  categoriaId: string | number;
+}
+
+const ACCESOS_HERO = [
+  { href: "#apoyo", icono: "handshake", titulo: "Apoyo Joven" },
+  { href: "#proyeccion", icono: "rocket_launch", titulo: "Proyección" },
+  { href: "#accion", icono: "campaign", titulo: "Acción Joven" },
+  { href: "#conexion", icono: "groups", titulo: "Conexión" },
+];
+
+const DATOS_VACIOS: DatosInicio = {
+  encabezado: [],
+  asesorias: [],
+  preuniversitario: [],
+  cursos: [],
+  accion: [],
+  programas: [],
+  salud: [],
+  actividades: [],
+  talleres: [],
+  contacto: { direccion: "", horario: "", email: "" },
+};
+
+function SinDatos({ mensaje }: { mensaje: string }) {
+  return (
+    <div className="sin-actividades">
+      <span
+        className="material-symbols-outlined seccion-icono"
+        style={{ color: "#AFB0B1", fontSize: "160px" }}
+      >
+        schedule
+      </span>
+      <p>{mensaje}</p>
+    </div>
+  );
+}
+
+const [datosInicio, setDatosInicio] = useState<DatosInicio>(DATOS_VACIOS);
+const [actividadesCalendario, setActividadesCalendario] = useState<
+  ActividadCalendarioItem[]
+>([]);
+const [filtroActivo, setFiltroActivo] = useState("Todos");
+const [categorias, setCategorias] = useState<CategoriaItem[]>([]);
+
+useEffect(() => {
+  let cancelled = false;
+
+  const rawUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+  if (!rawUrl) return;
+
+  const apiBase = `${rawUrl}/api/v1`;
+  const endpoints = [
+    "asesorias",
+    "cursos-destacados",
+    "acciones-joven",
+    "programas",
+    "salud-mental",
+    "actividades-talleres",
+    "ubicaciones",
+    "categorias",
+  ];
+
+  Promise.allSettled(
+    endpoints.map((ep) =>
+      fetch(`${apiBase}/${ep}`).then((r) => {
+        if (!r.ok) throw new Error(`Error ${r.status} al consultar ${ep}`);
+        return r.json();
+      }),
+    ),
+  )
+    .then((results) => {
+      if (cancelled) return;
+
+      results.forEach((r, i) => {
+        if (r.status === "rejected") {
+          console.error(`Fetch "${endpoints[i]}" falló:`, r.reason);
+        }
+      });
+
+      const ok = (r: PromiseSettledResult<unknown>) =>
+        r.status === "fulfilled" ? (r.value as Record<string, unknown>[]) : [];
+
+      const [
+        asesoriasData,
+        cursosData,
+        accionData,
+        programasData,
+        saludData,
+        actividadesData,
+        ubicacionesData,
+        categoriasData,
+      ] = results.map(ok);
+
+      setCategorias(categoriasData as unknown as CategoriaItem[]);
+      setActividadesCalendario(
+        actividadesData as unknown as ActividadCalendarioItem[],
+      );
+
+      const actividades: ConexionItem[] = (actividadesData || [])
+        .filter((item) => !/taller/i.test(String(item.titulo || "")))
+        .map((item) => ({
+          icono: "sports_soccer",
+          texto: String(item.titulo || ""),
+        }));
+
+      const talleres: ConexionItem[] = (actividadesData || [])
+        .filter((item) => /taller/i.test(String(item.titulo || "")))
+        .map((item) => ({
+          icono: "work_outline",
+          texto: String(item.titulo || ""),
+        }));
+
+      setDatosInicio({
+        encabezado: [],
+        asesorias: (asesoriasData || []).map(
+          (item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.definicion || item.objetivos || ""),
+            icono: "support",
+          }),
+        ),
+        preuniversitario: [],
+        cursos: (cursosData || []).map((item: Record<string, unknown>) => ({
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.eslogan || item.descripcion || ""),
+          icono: "school",
+        })),
+        accion: (accionData || []).map((item: Record<string, unknown>) => ({
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.descripcion || ""),
+          boton: "Ver más",
+        })),
+        programas: (programasData || []).map(
+          (item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
+            icono: "groups",
+          }),
+        ),
+        salud: (saludData || []).map((item: Record<string, unknown>) => ({
+          titulo: String(item.titulo || ""),
+          descripcion: String(item.descripcion || ""),
+          icono: String(item.icono || "health_and_safety"),
+        })),
+        actividades,
+        talleres,
+        contacto: {
+          direccion: String(
+            (ubicacionesData?.[0] as Record<string, unknown>)?.direccion ?? "",
+          ),
+          horario: "",
+          email: "",
+        },
+      });
+    })
+    .catch((err) => {
+      console.error("Error al cargar los datos de inicio:", err);
+    });
+
+  return () => {
+    cancelled = true;
+  };
+}, []);
+
+const actividadesFiltradas = useMemo(() => {
+  return filtroActivo === "Todos"
+    ? actividadesCalendario
+    : actividadesCalendario.filter((actividad) => {
+        const categoria = categorias.find(
+          (filtro) => filtro.id === actividad.categoriaId,
+        );
+        return categoria?.nombre
+          ?.toLowerCase()
+          .includes(filtroActivo.toLowerCase());
+      });
+}, [filtroActivo, actividadesCalendario, categorias]);
+
+const {
+  asesorias,
+  preuniversitario,
+  cursos,
+  accion,
+  programas,
+  salud,
+  actividades,
+  talleres,
+  contacto,
+} = datosInicio;
+
 import EditableCard from "../../cartas/EditableCard";
 import EditableListItem from "../../cartas/EditableListItem";
 import React from "react";
@@ -26,40 +238,6 @@ import { inicioApi } from "./useInicioApi";
 import { tieneRol } from "../../utils/sessionStorage";
 const API_BASE =
   (import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "") + "/api/v1";
-
-const encabezado: CartaItem[] = [
-  {
-    icono: "handshake",
-    iconoColor: "#E3E3E3",
-    iconoTamaño: "2.5rem",
-    titulo: "Apoyo Joven",
-  },
-  {
-    icono: "rocket",
-    iconoColor: "#E3E3E3",
-    iconoTamaño: "2.5rem",
-    titulo: "Proyección",
-  },
-  {
-    icono: "campaign",
-    iconoColor: "#E3E3E3",
-    iconoTamaño: "2.5rem",
-    titulo: "Acción Joven",
-  },
-  {
-    icono: "diversity_3",
-    iconoColor: "#E3E3E3",
-    iconoTamaño: "2.5rem",
-    titulo: "Conexión",
-  },
-];
-
-const contacto = {
-  direccion:
-    "Herrera 360, Comuna de Santiago. (Centro Comunitario Santiago en Compañía)",
-  horario: "Lunes a jueves [09:00 - 18:00 hrs] - Viernes [09:00 a 17:00 hrs]",
-  email: "stgojoven@munistgo.cl",
-};
 
 export default function Inicio() {
   const navigate = useNavigate();
@@ -512,20 +690,15 @@ export default function Inicio() {
           <p className="subtitulo-edad">Dirigido a jóvenes de 14 a 29 años.</p>
         </div>
         <div className="carta-seccion">
-          {encabezado.map((carta) => (
-            <Card
-              key={carta.titulo}
-              icono={carta.icono}
-              iconoColor={carta.iconoColor}
-              iconoTamaño={carta.iconoTamaño}
-              titulo={carta.titulo}
-            />
+          {ACCESOS_HERO.map((acceso) => (
+            <a key={acceso.href} href={acceso.href} className="hero-acceso">
+              <Card icono={acceso.icono} titulo={acceso.titulo} />
+            </a>
           ))}
         </div>
       </header>
 
       <main className="contenido-principal">
-        {/* apoyo joven */}
         <section id="apoyo" className="seccion-informativa">
           <div className="seccion-encabezado">
             <span
@@ -558,26 +731,75 @@ export default function Inicio() {
                 Agregar
               </button>
             )}
-            <div className="contenedor-flex">
-              {asesoriasState.map((carta, index) => (
-                <EditableCard
-                  key={index}
-                  cardProps={{
-                    icono: carta.icono,
-                    iconoColor: carta.iconoColor,
-                    iconoTamaño: carta.iconoTamaño,
-                    titulo: carta.titulo,
-                    descripcion: carta.descripcion,
-                  }}
-                  isAdmin={isAdmin}
-                  onSave={(updated) => saveAsesoria(updated, index)}
-                  onDelete={() => deleteAsesoria(index)}
-                  onAdd={(newCard) => createAsesoria(newCard)}
-                />
-              ))}
-            </div>
+            {asesorias.length === 0 ? (
+              <SinDatos mensaje="No hay asesorías disponibles por el momento." />
+            ) : (
+              <div className="contenedor-flex">
+                {asesoriasState.map((carta, index) => (
+                  <EditableCard
+                    key={index}
+                    cardProps={{
+                      icono: carta.icono,
+                      iconoColor: carta.iconoColor,
+                      iconoTamaño: carta.iconoTamaño,
+                      titulo: carta.titulo,
+                      descripcion: carta.descripcion,
+                    }}
+                    isAdmin={isAdmin}
+                    onSave={(updated) => saveAsesoria(updated, index)}
+                    onDelete={() => deleteAsesoria(index)}
+                    onAdd={(newCard) => createAsesoria(newCard)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <div className="grupo-cartas">
+            <h3>Preuniversitario</h3>
+            {preuniversitario.length === 0 ? (
+              <SinDatos mensaje="No hay cursos preuniversitarios disponibles por el momento." />
+            ) : (
+              <div className="contenedor-flex">
+                {preuniversitarioState.map((carta, index) => (
+                  <EditableCard
+                    key={index}
+                    cardProps={{
+                      icono: carta.icono,
+                      iconoColor: carta.iconoColor,
+                      iconoTamaño: carta.iconoTamaño,
+                      titulo: carta.titulo,
+                      descripcion: carta.descripcion,
+                    }}
+                    isAdmin={isAdmin}
+                    onSave={(updated) =>
+                      updateItem(
+                        preuniversitarioState,
+                        setPreuniversitarioState,
+                        index,
+                        updated,
+                      )
+                    }
+                    onDelete={() =>
+                      deleteItem(
+                        preuniversitarioState,
+                        setPreuniversitarioState,
+                        index,
+                      )
+                    }
+                    onAdd={() => {
+                      const nuevo = getPreparedTemplate(
+                        templates.preuniversitario,
+                        preuniversitarioState.length,
+                      );
+                      setPreuniversitarioState([
+                        ...preuniversitarioState,
+                        nuevo,
+                      ]);
+                    }}
+                  />
+                ))}
+              </div>
+            )}
             <div className="titulo-con-btnAdd">
               <h3>Preuniversitario</h3>
             </div>
@@ -598,47 +820,9 @@ export default function Inicio() {
                 Agregar
               </button>
             )}
-            <div className="contenedor-flex">
-              {preuniversitarioState.map((carta, index) => (
-                <EditableCard
-                  key={index}
-                  cardProps={{
-                    icono: carta.icono,
-                    iconoColor: carta.iconoColor,
-                    iconoTamaño: carta.iconoTamaño,
-                    titulo: carta.titulo,
-                    descripcion: carta.descripcion,
-                  }}
-                  isAdmin={isAdmin}
-                  onSave={(updated) =>
-                    updateItem(
-                      preuniversitarioState,
-                      setPreuniversitarioState,
-                      index,
-                      updated,
-                    )
-                  }
-                  onDelete={() =>
-                    deleteItem(
-                      preuniversitarioState,
-                      setPreuniversitarioState,
-                      index,
-                    )
-                  }
-                  onAdd={() => {
-                    const nuevo = getPreparedTemplate(
-                      templates.preuniversitario,
-                      preuniversitarioState.length,
-                    );
-                    setPreuniversitarioState([...preuniversitarioState, nuevo]);
-                  }}
-                />
-              ))}
-            </div>
           </div>
         </section>
 
-        {/* proyeccion joven */}
         <section id="proyeccion" className="seccion-informativa">
           <div className="seccion-encabezado">
             <span
@@ -670,22 +854,25 @@ export default function Inicio() {
               Agregar
             </button>
           )}
-          <EditableSlider
-            cartas={cursosState}
-            isAdmin={isAdmin}
-            onSave={(updated, index) => saveCurso(updated, index)}
-            onDelete={(index) => deleteCurso(index)}
-            onAdd={() => {
-              const preparado = getPreparedTemplate(
-                templates.cursos,
-                cursosState.length,
-              );
-              createCurso(preparado);
-            }}
-          />
+          {cursos.length === 0 ? (
+            <SinDatos mensaje="No hay cursos destacados por el momento." />
+          ) : (
+            <EditableSlider
+              cartas={cursosState}
+              isAdmin={isAdmin}
+              onSave={(updated, index) => saveCurso(updated, index)}
+              onDelete={(index) => deleteCurso(index)}
+              onAdd={() => {
+                const preparado = getPreparedTemplate(
+                  templates.cursos,
+                  cursosState.length,
+                );
+                createCurso(preparado);
+              }}
+            />
+          )}
         </section>
 
-        {/* accion joven */}
         <div className="fondo-gris">
           <section id="accion" className="accion-joven seccion-informativa">
             <div className="seccion-encabezado">
@@ -715,23 +902,26 @@ export default function Inicio() {
                 </button>
               )}
             </div>
-            <EditableSlider
-              cartas={accionState}
-              isAdmin={isAdmin}
-              onSave={(updated, index) => saveAccion(updated, index)}
-              onDelete={(index) => deleteAccion(index)}
-              onAdd={() => {
-                const preparado = getPreparedTemplate(
-                  templates.accion,
-                  accionState.length,
-                );
-                createAccion(preparado);
-              }}
-            />
+            {accion.length === 0 ? (
+              <SinDatos mensaje="No hay acciones joven disponibles por el momento." />
+            ) : (
+              <EditableSlider
+                cartas={accionState}
+                isAdmin={isAdmin}
+                onSave={(updated, index) => saveAccion(updated, index)}
+                onDelete={(index) => deleteAccion(index)}
+                onAdd={() => {
+                  const preparado = getPreparedTemplate(
+                    templates.accion,
+                    accionState.length,
+                  );
+                  createAccion(preparado);
+                }}
+              />
+            )}
           </section>
         </div>
 
-        {/* nuestros programas */}
         <section id="programas" className="seccion-informativa">
           <div className="seccion-encabezado">
             <span
@@ -760,22 +950,25 @@ export default function Inicio() {
               </button>
             )}
           </div>
-          <EditableSlider
-            cartas={programasState}
-            isAdmin={isAdmin}
-            onSave={(updated, index) => savePrograma(updated, index)}
-            onDelete={(index) => deletePrograma(index)}
-            onAdd={() => {
-              const preparado = getPreparedTemplate(
-                templates.programas,
-                programasState.length,
-              );
-              createPrograma(preparado);
-            }}
-          />
+          {programas.length === 0 ? (
+            <SinDatos mensaje="No hay programas disponibles por el momento." />
+          ) : (
+            <EditableSlider
+              cartas={programasState}
+              isAdmin={isAdmin}
+              onSave={(updated, index) => savePrograma(updated, index)}
+              onDelete={(index) => deletePrograma(index)}
+              onAdd={() => {
+                const preparado = getPreparedTemplate(
+                  templates.programas,
+                  programasState.length,
+                );
+                createPrograma(preparado);
+              }}
+            />
+          )}
         </section>
 
-        {/* salud mental */}
         <div className="fondo-gris">
           <section
             id="salud"
@@ -809,34 +1002,37 @@ export default function Inicio() {
               )}
             </div>
             <div className="grupo-cartas">
-              {saludState.map((carta, index) => (
-                <EditableCard
-                  key={index}
-                  cardProps={{
-                    icono: carta.icono,
-                    iconoColor: carta.iconoColor,
-                    iconoTamaño: carta.iconoTamaño,
-                    titulo: carta.titulo,
-                    subtitulo: carta.subtitulo,
-                    descripcion: carta.descripcion,
-                  }}
-                  isAdmin={isAdmin}
-                  onSave={(updated) => saveSalud(updated, index)}
-                  onDelete={() => deleteSalud(index)}
-                  onAdd={() => {
-                    const preparado = getPreparedTemplate(
-                      templates.salud,
-                      saludState.length,
-                    );
-                    createSalud(preparado);
-                  }}
-                />
-              ))}
+              {saludState.length === 0 ? (
+                <SinDatos mensaje="No hay recursos de salud mental disponibles por el momento." />
+              ) : (
+                saludState.map((carta, index) => (
+                  <EditableCard
+                    key={index}
+                    cardProps={{
+                      icono: carta.icono,
+                      iconoColor: carta.iconoColor,
+                      iconoTamaño: carta.iconoTamaño,
+                      titulo: carta.titulo,
+                      subtitulo: carta.subtitulo,
+                      descripcion: carta.descripcion,
+                    }}
+                    isAdmin={isAdmin}
+                    onSave={(updated) => saveSalud(updated, index)}
+                    onDelete={() => deleteSalud(index)}
+                    onAdd={() => {
+                      const preparado = getPreparedTemplate(
+                        templates.salud,
+                        saludState.length,
+                      );
+                      createSalud(preparado);
+                    }}
+                  />
+                ))
+              )}
             </div>
           </section>
         </div>
 
-        {/* conexion comunitaria */}
         <section
           id="conexion"
           className="conexion-comunitaria seccion-informativa"
@@ -873,46 +1069,50 @@ export default function Inicio() {
                   </button>
                 )}
               </div>
-              <ul>
-                {actividadesState.map((item, index) => (
-                  <EditableListItem
-                    key={`${item.texto}-${index}`}
-                    item={item}
-                    isAdmin={isAdmin}
-                    onSave={(updated, seccion) => {
-                      if (seccion === "actividades") {
-                        saveActividad(updated, item.texto).then(() =>
-                          updateItem(
+              {actividades.length === 0 ? (
+                <SinDatos mensaje="No hay actividades disponibles por el momento." />
+              ) : (
+                <ul>
+                  {actividadesState.map((item, index) => (
+                    <EditableListItem
+                      key={`${item.texto}-${index}`}
+                      item={item}
+                      isAdmin={isAdmin}
+                      onSave={(updated, seccion) => {
+                        if (seccion === "actividades") {
+                          saveActividad(updated, item.texto).then(() =>
+                            updateItem(
+                              actividadesState,
+                              setActividadesState,
+                              index,
+                              updated,
+                            ),
+                          );
+                        } else {
+                          deleteActividad(item.texto).then(() => {
+                            setActividadesState(
+                              actividadesState.filter((_, i) => i !== index),
+                            );
+                            setTalleresState((prev) => [...prev, updated]);
+                          });
+                        }
+                      }}
+                      onDelete={() => {
+                        deleteActividad(item.texto).then(() =>
+                          deleteItem(
                             actividadesState,
                             setActividadesState,
                             index,
-                            updated,
                           ),
                         );
-                      } else {
-                        deleteActividad(item.texto).then(() => {
-                          setActividadesState(
-                            actividadesState.filter((_, i) => i !== index),
-                          );
-                          setTalleresState((prev) => [...prev, updated]);
-                        });
-                      }
-                    }}
-                    onDelete={() => {
-                      deleteActividad(item.texto).then(() =>
-                        deleteItem(
-                          actividadesState,
-                          setActividadesState,
-                          index,
-                        ),
-                      );
-                    }}
-                    onAdd={(newItem) => {
-                      createActividad(newItem);
-                    }}
-                  />
-                ))}
-              </ul>
+                      }}
+                      onAdd={(newItem) => {
+                        createActividad(newItem);
+                      }}
+                    />
+                  ))}
+                </ul>
+              )}
             </div>
             <div className="lista-conexion">
               <div className="titulo-con-btnAdd">
@@ -932,38 +1132,41 @@ export default function Inicio() {
                   </button>
                 )}
               </div>
-              <ul>
-                {talleresState.map((item, index) => (
-                  <EditableListItem
-                    key={`${item.texto}-${index}`}
-                    item={item}
-                    isAdmin={isAdmin}
-                    onSave={(updated) => {
-                      saveActividad(updated, item.texto).then(() =>
-                        updateItem(
-                          talleresState,
-                          setTalleresState,
-                          index,
-                          updated,
-                        ),
-                      );
-                    }}
-                    onDelete={() => {
-                      deleteActividad(item.texto).then(() =>
-                        deleteItem(talleresState, setTalleresState, index),
-                      );
-                    }}
-                    onAdd={(newItem) => {
-                      createActividad(newItem, "talleres");
-                    }}
-                  />
-                ))}
-              </ul>
+              {talleres.length === 0 ? (
+                <SinDatos mensaje="No hay talleres disponibles por el momento." />
+              ) : (
+                <ul>
+                  {talleresState.map((item, index) => (
+                    <EditableListItem
+                      key={`${item.texto}-${index}`}
+                      item={item}
+                      isAdmin={isAdmin}
+                      onSave={(updated) => {
+                        saveActividad(updated, item.texto).then(() =>
+                          updateItem(
+                            talleresState,
+                            setTalleresState,
+                            index,
+                            updated,
+                          ),
+                        );
+                      }}
+                      onDelete={() => {
+                        deleteActividad(item.texto).then(() =>
+                          deleteItem(talleresState, setTalleresState, index),
+                        );
+                      }}
+                      onAdd={(newItem) => {
+                        createActividad(newItem, "talleres");
+                      }}
+                    />
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </section>
 
-        {/* calendario */}
         <div className="fondo-gris">
           <section id="calendario" className="seccion-informativa">
             <div className="seccion-encabezado">
@@ -995,25 +1198,21 @@ export default function Inicio() {
                 pierdas nada!
               </p>
             </div>
-
-            <div className="calendario-filtros-contenedor">
+            <div className="calendario-contenido">
               {["Todos", "Ferias", "Talleres", "Cursos", "Campañas"].map(
-                (cat) => (
+                (filtro) => (
                   <button
-                    key={cat}
-                    className={`filtro-eventos ${filtro === cat ? "activo" : ""}`}
-                    onClick={() => setFiltro(cat)}
+                    key={filtro}
+                    className={`filtro-eventos ${filtroActivo === filtro ? "activo" : ""}`}
+                    onClick={() => setFiltroActivo(filtro)}
                   >
-                    {cat}
+                    {filtro}
                   </button>
                 ),
               )}
             </div>
-
-            {eventosFiltrados.length === 0 ? (
-              <div className="sin-actividades">
-                <p>No hay actividades programadas en esta categoría.</p>
-              </div>
+            {actividadesFiltradas.length === 0 ? (
+              <SinDatos mensaje="No hay actividades programadas en esta categoría." />
             ) : (
               <div className="contenedor-flex grilla-actividades">
                 {eventosFiltrados.map((evento, index) => (
@@ -1031,7 +1230,6 @@ export default function Inicio() {
           </section>
         </div>
 
-        {/* contribución */}
         <section
           id="contribucion"
           className="tu-contribucion seccion-informativa"
@@ -1103,7 +1301,6 @@ export default function Inicio() {
           )}
         </section>
 
-        {/* tu opinion cuenta */}
         <div className="fondo-gris">
           <section
             id="opinion"
@@ -1137,7 +1334,6 @@ export default function Inicio() {
           </section>
         </div>
 
-        {/* contactanos y ubicanos */}
         <section
           id="contacto"
           className="contacto-ubicacion seccion-informativa"

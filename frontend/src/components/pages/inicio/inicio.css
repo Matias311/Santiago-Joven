@@ -541,6 +541,11 @@ body {
   margin: 1.5rem 0;
 }
 
+.filtro-eventos.activo {
+  background-color: #789DE5;
+  color: white;
+}
+
 .filtro-eventos {
   background: var(--surface);
   border: 1px solid var(--surface-border);
