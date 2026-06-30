@@ -109,6 +109,26 @@ public class ActividadTallerServiceImpl implements ActividadTallerService {
             .orElseThrow(
                 () -> new EntityNotFoundException("ActividadTaller no encontrada con id: " + id));
     mapper.updateEntity(update, entity);
+    if (update.categoriaId() != null) {
+      var categoria =
+          categoriaRepository
+              .findById(update.categoriaId())
+              .orElseThrow(
+                  () ->
+                      new EntityNotFoundException(
+                          "Categoria no encontrada con id: " + update.categoriaId()));
+      entity.setCategoria(categoria);
+    }
+    if (update.ubicacionId() != null) {
+      var ubicacion =
+          ubicacionRepository
+              .findById(update.ubicacionId())
+              .orElseThrow(
+                  () ->
+                      new EntityNotFoundException(
+                          "Ubicacion no encontrada con id: " + update.ubicacionId()));
+      entity.setUbicacion(ubicacion);
+    }
     entity = repository.save(entity);
     return mapper.toResponse(entity);
   }
