@@ -9,8 +9,12 @@ import com.santiago.joven.backend.dto.ActividadTallerResponse;
 import com.santiago.joven.backend.dto.ActividadTallerUpdate;
 import com.santiago.joven.backend.mapper.ActividadTallerMapper;
 import com.santiago.joven.backend.model.entity.ActividadTaller;
+import com.santiago.joven.backend.model.entity.Categoria;
+import com.santiago.joven.backend.model.entity.Ubicacion;
 import com.santiago.joven.backend.model.enums.EstadoActividad;
 import com.santiago.joven.backend.repository.ActividadTallerRepository;
+import com.santiago.joven.backend.repository.CategoriaRepository;
+import com.santiago.joven.backend.repository.UbicacionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +32,8 @@ class ActividadTallerServiceImplTest {
 
   @Mock private ActividadTallerRepository repository;
   @Mock private ActividadTallerMapper mapper;
+  @Mock private CategoriaRepository categoriaRepository;
+  @Mock private UbicacionRepository ubicacionRepository;
   @InjectMocks private ActividadTallerServiceImpl service;
 
   private UUID id;
@@ -95,7 +101,11 @@ class ActividadTallerServiceImplTest {
 
   @Test
   void create_debeGuardar() {
-    var request = new ActividadTallerRequest("Nuevo", "Desc", null, LocalDateTime.now(), null, null, null, null, null);
+    var categoriaId = UUID.randomUUID();
+    var request = new ActividadTallerRequest("Nuevo", "Desc", categoriaId, LocalDateTime.now(), null, null, null, null, null);
+    var categoria = new Categoria();
+    categoria.setId(categoriaId);
+    when(categoriaRepository.findById(categoriaId)).thenReturn(Optional.of(categoria));
     when(mapper.toEntity(request)).thenReturn(entity);
     when(repository.save(entity)).thenReturn(entity);
     when(mapper.toResponse(entity)).thenReturn(response);

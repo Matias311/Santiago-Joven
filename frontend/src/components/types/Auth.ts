@@ -47,6 +47,24 @@ export type PayloadActualizarUsuario = {
 };
 
 /**
+ * Body esperado por POST /api/v1/auth/recuperar.
+ * Solicita el envío de un código OTP de 5 dígitos al correo del usuario.
+ */
+export type PayloadRecuperar = {
+  email: string;
+};
+
+/**
+ * Body esperado por POST /api/v1/auth/restablecer.
+ * Valida el código OTP y actualiza la contraseña del usuario.
+ */
+export type PayloadRestablecer = {
+  email: string;
+  codigo: string;
+  nuevaPassword: string;
+};
+
+/**
  * Respuesta devuelta por POST /api/v1/auth/login y POST /api/v1/auth/register.
  * Equivale al schema `LoginResponse` en el OpenAPI.
  */

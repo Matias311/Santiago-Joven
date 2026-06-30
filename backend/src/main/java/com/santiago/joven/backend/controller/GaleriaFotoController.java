@@ -5,6 +5,8 @@ import com.santiago.joven.backend.dto.GaleriaFotoResponse;
 import com.santiago.joven.backend.dto.GaleriaFotoUpdate;
 import com.santiago.joven.backend.service.GaleriaFotoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -45,8 +47,15 @@ public class GaleriaFotoController {
 
   @Operation(
       summary = "Crear foto",
-      description = "Requiere permiso MANAGE_GALLERY",
+      description = "Requiere permiso MANAGE_GALLERY. actividadId debe referirse a una ActividadTaller existente.",
       security = {@SecurityRequirement(name = "bearerAuth")})
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "201", description = "Foto creada exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Datos invalidos"),
+        @ApiResponse(responseCode = "404", description = "ActividadTaller no encontrada"),
+        @ApiResponse(responseCode = "403", description = "No autorizado")
+      })
   @PreAuthorize("hasAuthority('PERMISSION_MANAGE_GALLERY')")
   @PostMapping("")
   public ResponseEntity<GaleriaFotoResponse> create(

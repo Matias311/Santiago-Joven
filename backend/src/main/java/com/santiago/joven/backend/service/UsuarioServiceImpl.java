@@ -75,19 +75,35 @@ public class UsuarioServiceImpl implements UsuarioService {
 
   @Override
   public UsuarioResponse update(UUID id, UsuarioUpdate update) {
-    var entity =
-        repository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con id: " + id));
+    var entity = findEntityById(id);
+    applyUpdate(entity, update, true);
+    entity = repository.save(entity);
+    return mapper.toResponse(entity);
+  }
+
+  @Override
+  public UsuarioResponse updateOwnProfile(UUID id, UsuarioUpdate update) {
+    var entity = findEntityById(id);
+    applyUpdate(entity, update, false);
+    entity = repository.save(entity);
+    return mapper.toResponse(entity);
+  }
+
+  private Usuario findEntityById(UUID id) {
+    return repository
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con id: " + id));
+  }
+
+  private void applyUpdate(Usuario entity, UsuarioUpdate update, boolean allowActivo) {
     if (update.password() != null) {
       entity.setPassword(passwordEncoder.encode(update.password()));
     }
     if (update.email() != null) entity.setEmail(update.email());
     if (update.nombre() != null) entity.setNombre(update.nombre());
     if (update.apellido() != null) entity.setApellido(update.apellido());
-    if (update.activo() != null) entity.setActivo(update.activo());
-    entity = repository.save(entity);
-    return mapper.toResponse(entity);
+    if (update.telefono() != null) entity.setTelefono(update.telefono());
+    if (allowActivo && update.activo() != null) entity.setActivo(update.activo());
   }
 
   @Override
