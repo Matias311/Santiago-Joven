@@ -1,33 +1,54 @@
+/* =========================================================
+   TIPOS
+========================================================= */
+export type CategoriaCalendario = "Ferias" | "Talleres" | "Cursos" | "Campañas";
+export type TagClass = "ferias" | "talleres" | "cursos" | "campañas";
+
 export interface CalendarEvent {
   id: number;
-  categoria: "Ferias" | "Talleres" | "Cursos" | "Campañas";
-  tagClass: "ferias" | "talleres" | "cursos" | "campañas";
+  categoria: CategoriaCalendario;
+  tagClass: TagClass;
   title: string;
   detail: string;
-  date: string;
+  date: string; // "YYYY-MM-DD"
 }
 
+/* =========================================================
+   HELPERS EXPORTADOS
+========================================================= */
+export const estadoToCategoria: Record<string, CategoriaCalendario> = {
+  CONFIRMADO: "Ferias",
+  PENDIENTE: "Talleres",
+  CANCELADO: "Campañas",
+};
+
+export const categoriaToTagClass: Record<CategoriaCalendario, TagClass> = {
+  Ferias: "ferias",
+  Talleres: "talleres",
+  Cursos: "cursos",
+  Campañas: "campañas",
+};
+
+/* =========================================================
+   INTERNOS
+========================================================= */
 const statusTexts = {
   proximamente: "Próximamente",
   "en-proceso": "En proceso",
   expirado: "Ya expiró",
-};
+} as const;
 
 interface CalendarCardProps {
   eventProps: CalendarEvent;
+  onClick: () => void; // 👈 agregado
 }
 
-/* Convierte YYYY-MM-DD o DD-MM-YYYY a texto */
-
-const formatDatetoText = (dateString: string): string => {
+const formatDateToText = (dateString: string): string => {
   const parts = dateString.split("-");
-  let date: Date;
-
-  if (parts[0].length === 4) {
-    date = new Date(`${dateString}T00:00:00`);
-  } else {
-    date = new Date(`${parts[2]}-${parts[1]}-${parts[0]}T00:00:00`);
-  }
+  const date =
+    parts[0].length === 4
+      ? new Date(`${dateString}T00:00:00`)
+      : new Date(`${parts[2]}-${parts[1]}-${parts[0]}T00:00:00`);
 
   if (isNaN(date.getTime())) return dateString;
 
@@ -38,30 +59,30 @@ const formatDatetoText = (dateString: string): string => {
   }).format(date);
 };
 
-export default function CalendarCard({ eventProps }: CalendarCardProps) {
-  // fecha del evento
-  const parts = eventProps.date.split("-");
-
+const calcularEstado = (dateString: string): keyof typeof statusTexts => {
+  const parts = dateString.split("-");
   const fechaEvento =
     parts[0].length === 4
-      ? new Date(`${eventProps.date}T00:00:00`)
+      ? new Date(`${dateString}T00:00:00`)
       : new Date(`${parts[2]}-${parts[1]}-${parts[0]}T00:00:00`);
 
-  // fecha actual
   const fechaActual = new Date();
-
   fechaActual.setHours(0, 0, 0, 0);
   fechaEvento.setHours(0, 0, 0, 0);
 
-  let estadoFinal: "proximamente" | "en-proceso" | "expirado";
+  if (fechaEvento.getTime() < fechaActual.getTime()) return "expirado";
+  if (fechaEvento.getTime() === fechaActual.getTime()) return "en-proceso";
+  return "proximamente";
+};
 
-  if (fechaEvento.getTime() < fechaActual.getTime()) {
-    estadoFinal = "expirado";
-  } else if (fechaEvento.getTime() === fechaActual.getTime()) {
-    estadoFinal = "en-proceso";
-  } else {
-    estadoFinal = "proximamente";
-  }
+/* =========================================================
+   COMPONENTE
+========================================================= */
+export default function CalendarCard({
+  eventProps,
+  onClick,
+}: CalendarCardProps) {
+  const estadoFinal = calcularEstado(eventProps.date);
 
   return (
     <div className="calendar-item">
@@ -71,9 +92,11 @@ export default function CalendarCard({ eventProps }: CalendarCardProps) {
 
       <h3>{eventProps.title}</h3>
 
-      <p className="item-location">{eventProps.detail}</p>
+      <button className="item-detail-btn" onClick={onClick}>
+        Ver más detalles
+      </button>
 
-      <span className="item-date">{formatDatetoText(eventProps.date)}</span>
+      <span className="item-date">{formatDateToText(eventProps.date)}</span>
 
       <span className={`eventProps-status ${estadoFinal}`}>
         {statusTexts[estadoFinal]}

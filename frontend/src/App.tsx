@@ -55,7 +55,10 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar
+        modoOscuro={modoOscuro}
+        onToggleModo={() => setModoOscuro((prev) => !prev)}
+      />
       <PopupEncuesta hayEncuestas={true} />
       {/* Cambiar a false para ocultar el popup si es que no hay encuestas */}
       <Routes>
