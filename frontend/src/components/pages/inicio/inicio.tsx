@@ -30,13 +30,37 @@ interface ActividadCalendarioItem {
   categoriaId: string | number;
 }
 
+// Accesos rápidos del hero. Se definen fuera del componente para no
+// recrear el array en cada render (su contenido es estático).
+const ACCESOS_HERO = [
+  { href: "#apoyo", icono: "handshake", titulo: "Apoyo Joven" },
+  { href: "#proyeccion", icono: "rocket_launch", titulo: "Proyección" },
+  { href: "#accion", icono: "campaign", titulo: "Acción Joven" },
+  { href: "#conexion", icono: "groups", titulo: "Conexión" },
+];
+
+// Bloque reutilizable para los mensajes de "no hay datos disponibles".
+// Mantiene exactamente el mismo markup, clases y estilos que se repetían
+// 7 veces en el archivo original.
+function SinDatos({ mensaje }: { mensaje: string }) {
+  return (
+    <div className="sin-actividades">
+      <span
+        className="material-symbols-outlined seccion-icono"
+        style={{ color: "#AFB0B1", fontSize: "160px" }}
+      >
+        schedule
+      </span>
+      <p>{mensaje}</p>
+    </div>
+  );
+}
+
 export default function Inicio() {
   const [datosInicio, setDatosInicio] = useState<DatosInicio | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [actividadesCalendario, setActividadesCalendario] = useState<
-    ActividadCalendarioItem[]
-  >([]);
+  const [actividadesCalendario, setActividadesCalendario] = useState<ActividadCalendarioItem[]>([]);
   const [filtroActivo, setFiltroActivo] = useState("Todos");
   const [categorias, setCategorias] = useState<CategoriaItem[]>([]);
 
@@ -216,7 +240,6 @@ export default function Inicio() {
   };
 
   const {
-    encabezado,
     asesorias,
     preuniversitario,
     cursos,
@@ -238,30 +261,11 @@ export default function Inicio() {
           <p className="subtitulo-edad">Dirigido a jóvenes de 14 a 29 años.</p>
         </div>
         <div className="carta-seccion">
-          <a href="#apoyo" className="hero-acceso">
-            <Card
-              icono="handshake"
-              titulo="Apoyo Joven"
-            />
-          </a>
-          <a href="#proyeccion" className="hero-acceso">
-            <Card
-              icono="rocket_launch"
-              titulo="Proyección"
-            />
-          </a>
-          <a href="#accion" className="hero-acceso">
-            <Card
-              icono="campaign"
-              titulo="Acción Joven"
-            />
-          </a>
-          <a href="#conexion" className="hero-acceso">
-            <Card
-              icono="groups"
-              titulo="Conexión"
-            />
-          </a>
+          {ACCESOS_HERO.map((acceso) => (
+            <a key={acceso.href} href={acceso.href} className="hero-acceso">
+              <Card icono={acceso.icono} titulo={acceso.titulo} />
+            </a>
+          ))}
         </div>
       </header>
 
@@ -285,15 +289,7 @@ export default function Inicio() {
           <div className="grupo-cartas">
             <h3>Asesoría</h3>
             {asesorias.length === 0 ? (
-              <div className="sin-actividades">
-                <span
-                  className="material-symbols-outlined seccion-icono"
-                  style={{ color: "#AFB0B1", fontSize: "160px" }}
-                >
-                  schedule
-                </span>
-                <p>No hay asesorías disponibles por el momento.</p>
-              </div>
+              <SinDatos mensaje="No hay asesorías disponibles por el momento." />
             ) : (
               <div className="contenedor-flex">
                 {asesorias.map((carta: CartaItem) => (
@@ -312,17 +308,7 @@ export default function Inicio() {
           <div className="grupo-cartas">
             <h3>Preuniversitario</h3>
             {preuniversitario.length === 0 ? (
-              <div className="sin-actividades">
-                <span
-                  className="material-symbols-outlined seccion-icono"
-                  style={{ color: "#AFB0B1", fontSize: "160px" }}
-                >
-                  schedule
-                </span>
-                <p>
-                  No hay cursos preuniversitarios disponibles por el momento.
-                </p>
-              </div>
+              <SinDatos mensaje="No hay cursos preuniversitarios disponibles por el momento." />
             ) : (
               <div className="contenedor-flex">
                 {preuniversitario.map((carta: CartaItem) => (
@@ -359,15 +345,7 @@ export default function Inicio() {
             Cursos Destacados
           </h3>
           {cursos.length === 0 ? (
-            <div className="sin-actividades">
-              <span
-                className="material-symbols-outlined seccion-icono"
-                style={{ color: "#AFB0B1", fontSize: "160px" }}
-              >
-                schedule
-              </span>
-              <p>No hay cursos destacados por el momento.</p>
-            </div>
+            <SinDatos mensaje="No hay cursos destacados por el momento." />
           ) : (
             <Slider cartas={cursos} />
           )}
@@ -390,15 +368,7 @@ export default function Inicio() {
               </p>
             </div>
             {accion.length === 0 ? (
-              <div className="sin-actividades">
-                <span
-                  className="material-symbols-outlined seccion-icono"
-                  style={{ color: "#AFB0B1", fontSize: "160px" }}
-                >
-                  schedule
-                </span>
-                <p>No hay acciones joven disponibles por el momento.</p>
-              </div>
+              <SinDatos mensaje="No hay acciones joven disponibles por el momento." />
             ) : (
               accion.map((carta: CartaItem) => (
                 <Card
@@ -428,15 +398,7 @@ export default function Inicio() {
             </p>
           </div>
           {programas.length === 0 ? (
-            <div className="sin-actividades">
-              <span
-                className="material-symbols-outlined seccion-icono"
-                style={{ color: "#AFB0B1", fontSize: "160px" }}
-              >
-                schedule
-              </span>
-              <p>No hay programas disponibles por el momento.</p>
-            </div>
+            <SinDatos mensaje="No hay programas disponibles por el momento." />
           ) : (
             <Slider cartas={programas} />
           )}
@@ -463,17 +425,7 @@ export default function Inicio() {
             </div>
             <div className="grupo-cartas">
               {salud.length === 0 ? (
-                <div className="sin-actividades">
-                  <span
-                    className="material-symbols-outlined seccion-icono"
-                    style={{ color: "#AFB0B1", fontSize: "160px" }}
-                  >
-                    schedule
-                  </span>
-                  <p>
-                    No hay recursos de salud mental disponibles por el momento.
-                  </p>
-                </div>
+                <SinDatos mensaje="No hay recursos de salud mental disponibles por el momento." />
               ) : (
                 salud.map((carta: CartaItem) => (
                   <Card
@@ -513,15 +465,7 @@ export default function Inicio() {
             <div className="lista-conexion">
               <h3>Actividades</h3>
               {actividades.length === 0 ? (
-                <div className="sin-actividades">
-                  <span
-                    className="material-symbols-outlined seccion-icono"
-                    style={{ color: "#AFB0B1", fontSize: "160px" }}
-                  >
-                    schedule
-                  </span>
-                  <p>No hay actividades disponibles por el momento.</p>
-                </div>
+                <SinDatos mensaje="No hay actividades disponibles por el momento." />
               ) : (
                 <ul>
                   {actividades.map((item: ConexionItem) => (
@@ -538,15 +482,7 @@ export default function Inicio() {
             <div className="lista-conexion">
               <h3>Talleres</h3>
               {talleres.length === 0 ? (
-                <div className="sin-actividades">
-                  <span
-                    className="material-symbols-outlined seccion-icono"
-                    style={{ color: "#AFB0B1", fontSize: "160px" }}
-                  >
-                    schedule
-                  </span>
-                  <p>No hay talleres disponibles por el momento.</p>
-                </div>
+                <SinDatos mensaje="No hay talleres disponibles por el momento." />
               ) : (
                 <ul>
                   {talleres.map((item: ConexionItem) => (
@@ -596,15 +532,7 @@ export default function Inicio() {
               )}
             </div>
             {actividadesFiltradas.length === 0 ? (
-              <div className="sin-actividades">
-                <span
-                  className="material-symbols-outlined seccion-icono"
-                  style={{ color: "#AFB0B1", fontSize: "160px" }}
-                >
-                  schedule
-                </span>
-                <p>No hay actividades programadas en esta categoría.</p>
-              </div>
+              <SinDatos mensaje="No hay actividades programadas en esta categoría." />
             ) : (
               <div className="contenedor-flex">
                 {actividadesFiltradas.map(
