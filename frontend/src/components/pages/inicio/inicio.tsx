@@ -168,6 +168,7 @@ const encabezado: CartaItem[] = [
     iconoColor: "#E3E3E3",
     iconoTamaño: "2.5rem",
     titulo: "Proyección",
+    ruta: "/proyeccion#cursos-destacados",
   },
   {
     icono: "campaign",
@@ -201,6 +202,7 @@ export default function Inicio() {
               iconoColor={carta.iconoColor}
               iconoTamaño={carta.iconoTamaño}
               titulo={carta.titulo}
+              ruta={carta.ruta}
             />
           ))}
         </div>

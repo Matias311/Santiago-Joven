@@ -1,6 +1,7 @@
 import "./Card.css";
-import type { CartaItem } from '../types/CartaItem';
-import SpotlightCard from '../DisenoCartas/DisenoCartas';
+import { Link } from "react-router-dom";
+import type { CartaItem } from "../types/CartaItem";
+import SpotlightCard from "../DisenoCartas/DisenoCartas";
 
 /**
  * Componente de tarjeta universal reutilizable.
@@ -47,22 +48,47 @@ function Card({
   descripcion,
   boton,
   clase,
+  ruta,
+  gridItems,
 }: CartaItem) {
-  return (
-    <SpotlightCard 
-      className={`carta-universal ${clase || ''}`} 
+  const hasGridItems = Array.isArray(gridItems) && gridItems.length === 4;
+
+  const iconElement = (
+    <span
+      className="material-symbols-outlined icono"
+      style={{
+        color: iconoColor,
+        fontSize: iconoTamaño,
+        background: iconoFondo,
+      }}
+    >
+      {icono}
+    </span>
+  );
+
+  const content = (
+    <SpotlightCard
+      className={`carta-universal ${clase || ""}`}
       spotlightColor="rgba(146, 231, 252, 0.37)"
       style={{ boxShadow: sliderSombra }}
     >
-      <span
-        className="material-symbols-outlined icono"
-        style={{ color: iconoColor, fontSize: iconoTamaño, background: iconoFondo }}
-      >
-        {icono}
-      </span>
       <h3 style={{ color: tituloColor }}>{titulo}</h3>
       {subtitulo && <p className="subtitulo-carta">{subtitulo}</p>}
-      {descripcion && <p>{descripcion}</p>}
+      {hasGridItems ? (
+        <div className="card-grid">
+          {gridItems!.map((item, index) => (
+            <p key={index} className={`card-grid-item item-${index + 1}`}>
+              {item}
+            </p>
+          ))}
+          <div className="grid-center">{iconElement}</div>
+        </div>
+      ) : (
+        <>
+          {iconElement}
+          {descripcion && <p>{descripcion}</p>}
+        </>
+      )}
       {boton && (
         <button className="btn-inscribase" style={{ background: botoncolor }}>
           {boton}
@@ -70,7 +96,16 @@ function Card({
       )}
     </SpotlightCard>
   );
-}
 
+  if (ruta) {
+    return (
+      <Link to={ruta} className="card-link">
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
+}
 
 export default Card;

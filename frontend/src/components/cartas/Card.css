@@ -26,13 +26,15 @@
   text-align: left;
   color: #1e293b;
   box-shadow: var(--sombra);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .contenedor-flex .carta-universal:hover,
 .grupo-cartas .carta-universal:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
 }
 
 .contenedor-flex .icono,
@@ -51,7 +53,7 @@
 
 .contenedor-flex .carta-universal h3,
 .grupo-cartas .carta-universal h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1rem;
   font-weight: 700;
   color: var(--azul-oscuro);
@@ -75,8 +77,8 @@
 }
 
 .carta-seccion .carta-universal {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: var(--radio);
   padding: 1.4rem 1rem;
   display: flex;
@@ -85,12 +87,14 @@
   text-align: center;
   color: var(--blanco);
   backdrop-filter: blur(8px);
-  transition: background 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    transform 0.2s;
   cursor: pointer;
 }
 
 .carta-seccion .carta-universal:hover {
-  background: rgba(255,255,255,0.22);
+  background: rgba(255, 255, 255, 0.22);
   transform: translateY(-3px);
 }
 
@@ -112,6 +116,65 @@
   color: var(--blanco);
 }
 
+.card-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  grid-template-rows: repeat(3, auto);
+  gap: 1rem;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.card-grid-item {
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 1.25rem;
+  padding: 1rem;
+  color: #0f172a;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.card-grid-item.item-1 {
+  grid-area: 1 / 1 / 2 / 3;
+}
+.card-grid-item.item-2 {
+  grid-area: 1 / 3 / 2 / 4;
+}
+.card-grid-item.item-3 {
+  grid-area: 2 / 1 / 3 / 3;
+}
+.card-grid-item.item-4 {
+  grid-area: 2 / 3 / 3 / 4;
+}
+
+.grid-center {
+  grid-area: 1 / 2 / 3 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.grid-center .icono {
+  width: 5rem;
+  height: 5rem;
+  font-size: 2.4rem;
+  border-radius: 1.5rem;
+}
+
+/* Enlaces de tarjetas */
+.card-link {
+  text-decoration: none;
+  display: block;
+}
+
+.card-link .carta-universal {
+  height: 100%;
+}
+
 /* Botones */
 .btn-inscribase {
   background: linear-gradient(135deg, #4f772c, #69a84f);
@@ -123,8 +186,10 @@
   font-weight: 700;
   cursor: pointer;
   margin-top: 1.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-  font-family: 'Inter', sans-serif;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  font-family: "Inter", sans-serif;
 }
 
 .btn-inscribase:hover {
@@ -162,7 +227,7 @@
 }
 
 .dark .carta-seccion .carta-universal {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.18);
 }
 
