@@ -6,6 +6,8 @@ import com.santiago.joven.backend.dto.ActividadTallerUpdate;
 import com.santiago.joven.backend.model.enums.EstadoActividad;
 import com.santiago.joven.backend.service.ActividadTallerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -48,8 +50,15 @@ public class ActividadTallerController {
 
   @Operation(
       summary = "Crear actividad/taller",
-      description = "Requiere permiso CREATE_ACTIVITY",
+      description = "Requiere permiso CREATE_ACTIVITY. categoriaId debe referirse a una Categoria existente; ubicacionId es opcional.",
       security = {@SecurityRequirement(name = "bearerAuth")})
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "201", description = "Actividad creada exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Datos invalidos"),
+        @ApiResponse(responseCode = "404", description = "Categoria o Ubicacion no encontrada"),
+        @ApiResponse(responseCode = "403", description = "No autorizado")
+      })
   @PreAuthorize("hasAuthority('PERMISSION_CREATE_ACTIVITY')")
   @PostMapping("")
   public ResponseEntity<ActividadTallerResponse> create(
