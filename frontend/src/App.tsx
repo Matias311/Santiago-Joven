@@ -7,32 +7,8 @@ import { Base } from "./components/Base/Base";
 import Footer from "./components/Footer/Footer";
 import AccessibilityWidget from "./components/Accesibilidad/Accesibilidad";
 import PopupEncuesta from "./components/popupencuesta/PopupEncuesta";
+import ConexionComunitaria from "./components/pages/ConexionComunitaria/ConexionComunitaria";
 
-/**
- * @module App
- * @description Componente raíz de la aplicación Santiago Joven. Gestiona el enrutamiento,
- * la persistencia y sincronización del tema oscuro/claro, e integra los componentes
- * principales como la barra de navegación, footer, widget de accesibilidad y popup de encuestas.
- */
-
-/**
- * Componente principal (App) de la aplicación.
- *
- * @component
- * @description
- * - Maneja el estado global del modo oscuro/claro con persistencia en localStorage
- * - Aplica la clase CSS "dark" o "light" al elemento raíz del documento
- * - Respeta las preferencias del sistema operativo si no hay tema guardado
- * - Proporciona las rutas de la aplicación usando React Router
- * - Integra componentes de UI como Navbar, Footer, Accesibilidad y PopupEncuesta
- *
- * @returns {JSX.Element} Árbol de componentes de la aplicación con enrutamiento y tema configurado
- *
- * @example
- * // En main.tsx
- * import App from './App'
- * ReactDOM.createRoot(document.getElementById('root')!).render(<App />)
- */
 function App() {
   /**
    * Estado del modo oscuro/claro.
@@ -79,44 +55,33 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* 
-        Navbar: Barra de navegación con toggle del tema oscuro/claro
-        Props:
-        - modoOscuro: estado actual del modo oscuro
-        - onToggleModo: callback para cambiar el tema
-      */}
-      <Navbar modoOscuro={modoOscuro} onToggleModo={() => setModoOscuro((value) => !value)} />
-      
-      {/* 
-        PopupEncuesta: Widget de encuestas flotante
-        Props:
-        - hayEncuestas: true para mostrar, false para ocultar
-        Nota: Cambiar a false si no hay encuestas activas
-      */}
+      <Navbar
+        modoOscuro={modoOscuro}
+        onToggleModo={() => setModoOscuro((prev) => !prev)}
+      />
       <PopupEncuesta hayEncuestas={true} />
-      
-      {/* 
-        Routes: Define las rutas de la aplicación
-        Nota: Mantener la estructura tal como está. Cambiar solo el contenido
-        para agregar nuevas rutas siguiendo el patrón Base + contenido
-      */}
+      {/* Cambiar a false para ocultar el popup si es que no hay encuestas */}
       <Routes>
         {/* Aqui tienen que poner exactamente lo mismo, pero cambiando el elemento por el componente que les corresponda  */}
-        <Route path="/" element={<Base content={<Inicio />} />} /> {/* esto de aca no se borra */}
-        <Route path="/asesoria" element={<Base content={<Asesoria />} />} />
+        <Route path="/" element={<Base content={<Inicio />} />} />{" "}
+        {/* esto de aca no se borra */}
+        <Route
+          path="/conexioncomunitaria"
+          element={<Base content={<ConexionComunitaria />} />}
+        />
       </Routes>
-      
+
       {/* 
         AccessibilityWidget: Widget de accesibilidad flotante
         Props:
         - targetSelector: selector CSS del elemento contenedor principal
       */}
       <AccessibilityWidget targetSelector="#site-content" />
-      
+
       {/* Footer: Pie de página */}
       <Footer />
     </BrowserRouter>
   );
 }
 
-  export default App;
+export default App;
