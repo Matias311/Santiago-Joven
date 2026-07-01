@@ -1,0 +1,225 @@
+/* Estilos para la carta reutilizable de Proyección */
+.proyeccion-card {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 2rem;
+  padding: 2rem 2.5rem;
+  max-width: 54rem;
+  width: 100%;
+  box-shadow: var(--tema-sombra, 0 18px 50px rgba(15, 23, 42, 0.08));
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.proyeccion-card:hover {
+  transform: translateY(-4px);
+}
+
+/* =============================================================
+   TEMAS
+   Definen el color base y la sombra de cada tipo de tarjeta.
+   Agregar nuevos cursos solo requiere sumar un tema aquí.
+   ============================================================= */
+.proyeccion-card.tema-azul {
+  --tema-color: #0ea5e9;
+  --tema-sombra: 0 16px 40px rgba(56, 189, 248, 0.2);
+}
+
+.proyeccion-card.tema-verde {
+  --tema-color: #3f7d44;
+  --tema-sombra: 0 16px 40px rgba(32, 197, 141, 0.2);
+}
+
+.proyeccion-card.tema-naranja {
+  --tema-color: #f59e0b;
+  --tema-sombra: 0 16px 40px rgba(245, 158, 11, 0.2);
+}
+
+.proyeccion-card-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.proyeccion-card-icono-top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  background: transparent;
+  color: var(--tema-color, #0ea5e9);
+}
+
+.proyeccion-card h3 {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.proyeccion-card-subtitulo {
+  margin: 0.4rem 0 0;
+  color: #334155;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Grid: 2 textos | ícono | 2 textos */
+.proyeccion-card-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1.5rem 2rem;
+  position: relative;
+  z-index: 1;
+  align-items: center;
+}
+
+/* Items de texto sin recuadro */
+.proyeccion-card-grid-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #0f172a;
+  text-align: center;
+}
+
+.proyeccion-card-grid-item p {
+  margin: 0;
+}
+
+.item-1 {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+}
+
+.item-2 {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+}
+
+.item-3 {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+
+.item-4 {
+  grid-column: 3 / 4;
+  grid-row: 2 / 3;
+}
+
+/* Ícono central más grande y sin recuadro visible */
+.proyeccion-card-center {
+  grid-column: 2 / 3;
+  grid-row: 1 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.proyeccion-card-icono-medio {
+  width: 10rem;
+  height: 10rem;
+  font-size: 9rem !important;
+  font-variation-settings: "OPSZ" 144;
+  display: block;
+  overflow: visible;
+  color: var(--tema-color, #0ea5e9);
+}
+
+/* Imagen central (ej: logo de Excel) */
+.proyeccion-card-imagen-medio {
+  width: 7rem;
+  height: 7rem;
+  object-fit: contain;
+}
+
+/* Layout simple: ícono centrado + un párrafo (ej: Acción Joven) */
+.proyeccion-card-simple {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.proyeccion-card-simple p {
+  margin: 0;
+  color: #334155;
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 42rem;
+}
+
+.dark .proyeccion-card-simple p {
+  color: #cbd5e1;
+}
+
+.btn-proyeccion {
+  border: none;
+  background: var(--tema-color, #0ea5e9);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.95rem 2rem;
+  width: fit-content;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  align-self: center;
+}
+
+.btn-proyeccion:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(14, 165, 233, 0.24);
+}
+
+.proyeccion-card-link {
+  text-decoration: none;
+  display: block;
+}
+
+/* =============================================================
+   MODO OSCURO
+   ============================================================= */
+.dark .proyeccion-card {
+  background: #0f172a;
+  border-color: rgba(148, 163, 184, 0.16);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+}
+
+.dark .proyeccion-card h3 {
+  color: #f1f5f9;
+}
+
+.dark .proyeccion-card-subtitulo {
+  color: #94a3b8;
+}
+
+.dark .proyeccion-card-grid-item {
+  color: #cbd5e1;
+}
+
+.dark .proyeccion-card:hover {
+  background: #111a2b;
+  box-shadow: 0 22px 52px rgba(0, 0, 0, 0.65);
+}
