@@ -9,12 +9,12 @@ import "swiper/css/scrollbar";
 import "./ConexionComunitaria.css";
 import Card, { Modal, type CardData } from "../../cartas/CardConexion.tsx";
 import CalendarCard, {
-  categoriaToTagClass,
   type CalendarEvent,
   type CategoriaCalendario,
 } from "../../cartas/CalendarCard.tsx";
+import { categoriaToTagClass } from "../../cartas/Calendarutils.ts";
 
-// Nombres de categoría (tal como están en la BD) que definen cada sección
+// Nombres de categoría que definen cada sección
 const NOMBRE_CATEGORIA_ACTIVIDADES = "Campañas";
 const NOMBRE_CATEGORIA_TALLERES = "Talleres";
 
@@ -158,7 +158,6 @@ function apiToCalendarEvent(
 }
 
 export default function ConexionComunitaria() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardData | null>(null);
   const [activeFilter, setActiveFilter] = useState("Todos");
   const [actividades, setActividades] = useState<CardData[]>([]);
@@ -448,13 +447,7 @@ export default function ConexionComunitaria() {
           </div>
         </section>
 
-        {selectedCard && (
-          <Modal
-            card={selectedCard}
-            isLoggedIn={isLoggedIn}
-            onClose={handleClose}
-          />
-        )}
+        {selectedCard && <Modal card={selectedCard} onClose={handleClose} />}
       </main>
     </>
   );

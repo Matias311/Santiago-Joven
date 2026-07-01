@@ -17,7 +17,6 @@ export interface CardData {
 // ModalProps sin onLoginRequest ya que el botón redirige directamente al enlace
 interface ModalProps {
   card: CardData;
-  isLoggedIn: boolean;
   onClose: () => void;
 }
 

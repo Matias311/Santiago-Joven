@@ -1,5 +1,8 @@
 import { useState } from "react";
-import CalendarCard, { type CalendarEvent } from "./CalendarCard";
+import CalendarCard, {
+  type CalendarEvent,
+  type CategoriaCalendario,
+} from "./CalendarCard";
 import "./EditableCard.css";
 
 interface EditableCalendarCardProps {
@@ -7,7 +10,7 @@ interface EditableCalendarCardProps {
   isAdmin: boolean;
   onSave: (updated: CalendarEvent) => void;
   onDelete: () => void;
-  // Acción al presionar "Ver más detalles" dentro de CalendarCard
+  // Acción al presionar "Ver mas detalles" dentro de CalendarCard
   onDetailClick: () => void;
 }
 
@@ -40,7 +43,7 @@ export default function EditableCalendarCard({
       };
       setFormData({
         ...formData,
-        categoria: value as any,
+        categoria: value as CategoriaCalendario,
         tagClass: categoriaMap[value],
       });
     } else {
@@ -59,7 +62,7 @@ export default function EditableCalendarCard({
   return (
     <>
       <div className="editable_calendar_wrapper">
-        {/* "Ver más detalles" redirige a Conexión Comunitaria via onDetailClick */}
+        {/* "Ver más detalles" redirige a Conexion Comunitaria */}
         <CalendarCard eventProps={eventProps} onClick={onDetailClick} />
 
         {isAdmin && (

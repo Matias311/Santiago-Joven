@@ -29,4 +29,7 @@ export interface CartaItem {
   boton?: string;
   /** Clase CSS adicional para el contenedor raíz de la tarjeta. */
   clase?: string;
+  eslogan?: string;
+  objetivo?: string;
+  enlaceInscripcion?: string;
 }

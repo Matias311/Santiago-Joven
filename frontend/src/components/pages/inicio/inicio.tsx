@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import "./inicio.css";
 import Card from "../../cartas/Card";
 import EditableSlider from "../../sliders/EditableSlider";
@@ -17,18 +17,6 @@ interface DatosInicio {
   actividades: ConexionItem[];
   talleres: ConexionItem[];
   contacto: { direccion: string; horario: string; email: string };
-}
-
-interface CategoriaItem {
-  id: string | number;
-  nombre: string;
-}
-
-interface ActividadCalendarioItem {
-  id: string | number;
-  titulo: string;
-  descripcion?: string;
-  categoriaId: string | number;
 }
 
 const ACCESOS_HERO = [
@@ -65,165 +53,14 @@ function SinDatos({ mensaje }: { mensaje: string }) {
   );
 }
 
-const [datosInicio, setDatosInicio] = useState<DatosInicio>(DATOS_VACIOS);
-const [actividadesCalendario, setActividadesCalendario] = useState<
-  ActividadCalendarioItem[]
->([]);
-const [filtroActivo, setFiltroActivo] = useState("Todos");
-const [categorias, setCategorias] = useState<CategoriaItem[]>([]);
-
-useEffect(() => {
-  let cancelled = false;
-
-  const rawUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
-  if (!rawUrl) return;
-
-  const apiBase = `${rawUrl}/api/v1`;
-  const endpoints = [
-    "asesorias",
-    "cursos-destacados",
-    "acciones-joven",
-    "programas",
-    "salud-mental",
-    "actividades-talleres",
-    "ubicaciones",
-    "categorias",
-  ];
-
-  Promise.allSettled(
-    endpoints.map((ep) =>
-      fetch(`${apiBase}/${ep}`).then((r) => {
-        if (!r.ok) throw new Error(`Error ${r.status} al consultar ${ep}`);
-        return r.json();
-      }),
-    ),
-  )
-    .then((results) => {
-      if (cancelled) return;
-
-      results.forEach((r, i) => {
-        if (r.status === "rejected") {
-          console.error(`Fetch "${endpoints[i]}" falló:`, r.reason);
-        }
-      });
-
-      const ok = (r: PromiseSettledResult<unknown>) =>
-        r.status === "fulfilled" ? (r.value as Record<string, unknown>[]) : [];
-
-      const [
-        asesoriasData,
-        cursosData,
-        accionData,
-        programasData,
-        saludData,
-        actividadesData,
-        ubicacionesData,
-        categoriasData,
-      ] = results.map(ok);
-
-      setCategorias(categoriasData as unknown as CategoriaItem[]);
-      setActividadesCalendario(
-        actividadesData as unknown as ActividadCalendarioItem[],
-      );
-
-      const actividades: ConexionItem[] = (actividadesData || [])
-        .filter((item) => !/taller/i.test(String(item.titulo || "")))
-        .map((item) => ({
-          icono: "sports_soccer",
-          texto: String(item.titulo || ""),
-        }));
-
-      const talleres: ConexionItem[] = (actividadesData || [])
-        .filter((item) => /taller/i.test(String(item.titulo || "")))
-        .map((item) => ({
-          icono: "work_outline",
-          texto: String(item.titulo || ""),
-        }));
-
-      setDatosInicio({
-        encabezado: [],
-        asesorias: (asesoriasData || []).map(
-          (item: Record<string, unknown>) => ({
-            titulo: String(item.titulo || ""),
-            descripcion: String(item.definicion || item.objetivos || ""),
-            icono: "support",
-          }),
-        ),
-        preuniversitario: [],
-        cursos: (cursosData || []).map((item: Record<string, unknown>) => ({
-          titulo: String(item.titulo || ""),
-          descripcion: String(item.eslogan || item.descripcion || ""),
-          icono: "school",
-        })),
-        accion: (accionData || []).map((item: Record<string, unknown>) => ({
-          titulo: String(item.titulo || ""),
-          descripcion: String(item.descripcion || ""),
-          boton: "Ver más",
-        })),
-        programas: (programasData || []).map(
-          (item: Record<string, unknown>) => ({
-            titulo: String(item.titulo || ""),
-            descripcion: String(item.descripcion || ""),
-            icono: "groups",
-          }),
-        ),
-        salud: (saludData || []).map((item: Record<string, unknown>) => ({
-          titulo: String(item.titulo || ""),
-          descripcion: String(item.descripcion || ""),
-          icono: String(item.icono || "health_and_safety"),
-        })),
-        actividades,
-        talleres,
-        contacto: {
-          direccion: String(
-            (ubicacionesData?.[0] as Record<string, unknown>)?.direccion ?? "",
-          ),
-          horario: "",
-          email: "",
-        },
-      });
-    })
-    .catch((err) => {
-      console.error("Error al cargar los datos de inicio:", err);
-    });
-
-  return () => {
-    cancelled = true;
-  };
-}, []);
-
-const actividadesFiltradas = useMemo(() => {
-  return filtroActivo === "Todos"
-    ? actividadesCalendario
-    : actividadesCalendario.filter((actividad) => {
-        const categoria = categorias.find(
-          (filtro) => filtro.id === actividad.categoriaId,
-        );
-        return categoria?.nombre
-          ?.toLowerCase()
-          .includes(filtroActivo.toLowerCase());
-      });
-}, [filtroActivo, actividadesCalendario, categorias]);
-
-const {
-  asesorias,
-  preuniversitario,
-  cursos,
-  accion,
-  programas,
-  salud,
-  actividades,
-  talleres,
-  contacto,
-} = datosInicio;
-
 import EditableCard from "../../cartas/EditableCard";
 import EditableListItem from "../../cartas/EditableListItem";
 import React from "react";
+
+import { categoriaToTagClass } from "../../cartas/Calendarutils";
 import {
   type CalendarEvent,
   type CategoriaCalendario,
-  categoriaToTagClass,
 } from "../../cartas/CalendarCard";
 import EditableCalendarCard from "../../cartas/EditableCalendarCard";
 import type { Survey } from "../../cartas/SurveyCard";
@@ -242,16 +79,10 @@ const API_BASE =
 export default function Inicio() {
   const navigate = useNavigate();
 
-  {
-    /* Acá debería de ir el auth de si es admin o no, pero mientras pongo esto */
-  }
-
   // Estado que guarda si el usuario es admin o no
-  // false por defecto no es admin hasta verificarlo
   const [isAdmin, setIsAdmin] = useState(false);
 
   // Función que revisa en localStorage si el usuario tiene rol ADMIN
-  // y actualiza el estado de React
   const updateAdmin = () => {
     setIsAdmin(tieneRol("ADMIN"));
   };
@@ -266,41 +97,23 @@ export default function Inicio() {
     return () => clearInterval(interval);
   }, []);
 
-  {
-    /* -- Convierte las listas en estados para que puedan ser editables -- */
-  }
-
-  {
-    /* listas que usan el elemento Card normal */
-  }
+  // listas que usan el elemento Card normal
   const [asesoriasState, setAsesoriasState] = useState<CartaItem[]>([]);
-  const [preuniversitarioState, setPreuniversitarioState] = useState<
-    CartaItem[]
-  >([]);
   const [saludState, setSaludState] = useState<CartaItem[]>([]);
 
-  {
-    /* listas que usan el elemento List */
-  }
+  // listas que usan el elemento List
   const [actividadesState, setActividadesState] = useState<ConexionItem[]>([]);
   const [talleresState, setTalleresState] = useState<ConexionItem[]>([]);
 
-  {
-    /* listas que usan el elemento Slider */
-  }
+  // listas que usan el elemento Slider
   const [accionState, setAccionState] = useState<CartaItem[]>([]);
   const [programasState, setProgramasState] = useState<CartaItem[]>([]);
   const [cursosState, setCursosState] = useState<CartaItem[]>([]);
 
-  {
-    /* listas que usan el elemento Calendar */
-  }
+  // listas que usan el elemento Calendar
   const [calendarioState, setCalendarioState] = useState<CalendarEvent[]>([]);
-  const [filtro, setFiltro] = useState<string>("Todos");
 
-  {
-    /* listas que usan el elemento Survey */
-  }
+  // listas que usan el elemento Survey
   const [encuestaState, setEncuestaState] = useState<Survey[]>([]);
 
   const [idsAPI, setIdsAPI] = useState<{
@@ -321,9 +134,6 @@ export default function Inicio() {
     encuestas: {},
   });
 
-  // Mapa tipo de categoría (ASESORIA, CURSO, ACTIVIDAD, GENERAL) -> id de
-  // una categoría existente de ese tipo. Se necesita porque varios endpoints
-  // exigen un categoriaId válido al crear un nuevo registro.
   const [categoriasPorTipo, setCategoriasPorTipo] = useState<
     Record<string, string>
   >({});
@@ -343,7 +153,131 @@ export default function Inicio() {
   };
 
   const [loading, setLoading] = useState(true);
+  const [datosInicio, setDatosInicio] = useState<DatosInicio>(DATOS_VACIOS);
+  const [filtroActivo, setFiltroActivo] = useState("Todos");
+  const [categoriasPorNombre, setCategoriasPorNombre] = useState<
+    Record<string, string>
+  >({});
 
+  // Fetch inicial de datos
+  useEffect(() => {
+    let cancelled = false;
+
+    const rawUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+    if (!rawUrl) return;
+
+    const apiBase = `${rawUrl}/api/v1`;
+    const endpoints = [
+      "asesorias",
+      "cursos-destacados",
+      "acciones-joven",
+      "programas",
+      "salud-mental",
+      "actividades-talleres",
+      "ubicaciones",
+      "categorias",
+    ];
+
+    Promise.allSettled(
+      endpoints.map((ep) =>
+        fetch(`${apiBase}/${ep}`).then((r) => {
+          if (!r.ok) throw new Error(`Error ${r.status} al consultar ${ep}`);
+          return r.json();
+        }),
+      ),
+    )
+      .then((results) => {
+        if (cancelled) return;
+
+        results.forEach((r, i) => {
+          if (r.status === "rejected") {
+            console.error(`Fetch "${endpoints[i]}" falló:`, r.reason);
+          }
+        });
+
+        const ok = (r: PromiseSettledResult<unknown>) =>
+          r.status === "fulfilled"
+            ? (r.value as Record<string, unknown>[])
+            : [];
+
+        const [
+          asesoriasData,
+          cursosData,
+          accionData,
+          programasData,
+          saludData,
+          actividadesData,
+          ubicacionesData,
+        ] = results.map(ok);
+
+        const actividades: ConexionItem[] = (actividadesData || [])
+          .filter((item) => !/taller/i.test(String(item.titulo || "")))
+          .map((item) => ({
+            icono: "sports_soccer",
+            texto: String(item.titulo || ""),
+          }));
+
+        const talleres: ConexionItem[] = (actividadesData || [])
+          .filter((item) => /taller/i.test(String(item.titulo || "")))
+          .map((item) => ({
+            icono: "work_outline",
+            texto: String(item.titulo || ""),
+          }));
+
+        setDatosInicio({
+          encabezado: [],
+          asesorias: (asesoriasData || []).map(
+            (item: Record<string, unknown>) => ({
+              titulo: String(item.titulo || ""),
+              descripcion: String(item.definicion || item.objetivos || ""),
+              icono: "support",
+            }),
+          ),
+          preuniversitario: [],
+          cursos: (cursosData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.eslogan || item.descripcion || ""),
+            icono: "school",
+          })),
+          accion: (accionData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
+            boton: "Ver más",
+          })),
+          programas: (programasData || []).map(
+            (item: Record<string, unknown>) => ({
+              titulo: String(item.titulo || ""),
+              descripcion: String(item.descripcion || ""),
+              icono: "groups",
+            }),
+          ),
+          salud: (saludData || []).map((item: Record<string, unknown>) => ({
+            titulo: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
+            icono: String(item.icono || "health_and_safety"),
+          })),
+          actividades,
+          talleres,
+          contacto: {
+            direccion: String(
+              (ubicacionesData?.[0] as Record<string, unknown>)?.direccion ??
+                "",
+            ),
+            horario: "",
+            email: "",
+          },
+        });
+      })
+      .catch((err) => {
+        console.error("Error al cargar los datos de inicio:", err);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Fetch para datos editables
   useEffect(() => {
     Promise.allSettled([
       fetch(`${API_BASE}/asesorias`).then((r) => r.json()),
@@ -440,7 +374,10 @@ export default function Inicio() {
           tituloColor: "#0ea5e9",
           sliderSombra: "0 16px 40px rgba(56,189,248,0.2)",
           titulo: String(item.titulo || ""),
-          descripcion: String(item.eslogan || item.descripcion || ""),
+          descripcion: String(item.descripcion || ""),
+          eslogan: String(item.eslogan || ""),
+          objetivo: String(item.objetivo || ""),
+          enlaceInscripcion: String(item.enlaceInscripcion || ""),
         })),
       );
 
@@ -487,6 +424,14 @@ export default function Inicio() {
           .map((item: Record<string, unknown>) => ({
             icono: "sports_soccer",
             texto: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
+            imagen: String(item.imagen || ""),
+            date: String(item.fechaHora || "").split("T")[0],
+            lugar: String(item.ubicacionId || ""),
+            cupos: Number(item.cantidadMaximaParticipantes || 0),
+            cupos_disponibles:
+              Number(item.cantidadMaximaParticipantes || 0) -
+              Number(item.inscritos || 0),
           })),
       );
 
@@ -498,6 +443,14 @@ export default function Inicio() {
           .map((item: Record<string, unknown>) => ({
             icono: "work_outline",
             texto: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
+            imagen: String(item.imagen || ""),
+            date: String(item.fechaHora || "").split("T")[0],
+            lugar: String(item.ubicacionId || ""),
+            cupos: Number(item.cantidadMaximaParticipantes || 0),
+            cupos_disponibles:
+              Number(item.cantidadMaximaParticipantes || 0) -
+              Number(item.inscritos || 0),
           })),
       );
 
@@ -508,9 +461,6 @@ export default function Inicio() {
         ]),
       );
 
-      // Para cada tipo de categoría guardamos el id de la PRIMERA categoría
-      // de ese tipo que exista, para poder usarla como categoriaId por
-      // defecto al crear nuevos registros (asesorías, cursos, actividades).
       const nuevasCategoriasPorTipo: Record<string, string> = {};
       (categoriasData || []).forEach((c: Record<string, unknown>) => {
         const tipo = String(c.tipo || "");
@@ -520,6 +470,12 @@ export default function Inicio() {
       });
       setCategoriasPorTipo(nuevasCategoriasPorTipo);
 
+      const mapNombre: Record<string, string> = {};
+      (categoriasData || []).forEach((c: Record<string, unknown>) => {
+        const nombre = String(c.nombre || "");
+        if (nombre) mapNombre[nombre] = String(c.id);
+      });
+      setCategoriasPorNombre(mapNombre);
       setCalendarioState(
         (actividadesData || []).map(
           (item: Record<string, unknown>, index: number) => {
@@ -543,6 +499,7 @@ export default function Inicio() {
           (item: Record<string, unknown>, index: number) => ({
             id: index + 1,
             title: String(item.titulo || ""),
+            descripcion: String(item.descripcion || ""),
             desde: "",
             hasta: "",
             url: String(item.linkGoogleForms || ""),
@@ -552,12 +509,17 @@ export default function Inicio() {
 
       setLoading(false);
     });
+    // Se ejecuta solo al montar: idsAPI se omite a propósito, ya que
+    // incluirlo dispararía este fetch de nuevo cada vez que se crea/edita
+    // un ítem (porque idsAPI cambia en cada updateIdsAPI).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const eventosFiltrados = calendarioState.filter(
     (evt) =>
-      filtro === "Todos" ||
-      evt.categoria.toLowerCase() === filtro.toLowerCase().replace(/s$/, "s"),
+      filtroActivo === "Todos" ||
+      evt.categoria.toLowerCase() ===
+        filtroActivo.toLowerCase().replace(/s$/, "s"),
   );
 
   const updateItem = <Carta,>(
@@ -580,11 +542,16 @@ export default function Inicio() {
     setList(updatedList);
   };
 
-  const getPreparedTemplate = <T extends Record<string, any>>(
+  const getPreparedTemplate = <T extends object>(
     template: T,
     currentLength: number,
   ): T => {
     const base = { ...template };
+    // `interface` no satisface un índice de string como Record<string, unknown>
+    // (a diferencia de `type`), aunque tenga las mismas propiedades. Por eso
+    // se castea vía `unknown`: solo se usa para mutar dinámicamente acá
+    // adentro; la firma pública de la función sigue siendo segura (T -> T).
+    const mutable = base as unknown as Record<string, unknown>;
 
     const ignorar = [
       "icono",
@@ -596,25 +563,21 @@ export default function Inicio() {
     ];
 
     (Object.keys(base) as Array<keyof T>).forEach((key) => {
-      const value = base[key];
+      const value = mutable[key as string];
       if (
         !ignorar.includes(key as string) &&
         typeof value === "string" &&
         value.trim() !== ""
       ) {
-        (base as any)[key] = "Insertar datos";
+        mutable[key as string] = "Insertar datos";
       }
     });
 
-    if ("id" in base) (base as any).id = Date.now();
-    if ("title" in base)
-      (base as any).title = `Nueva carta ${currentLength + 1}`;
-    if ("titulo" in base)
-      (base as any).titulo = `Nueva carta ${currentLength + 1}`;
-    if ("texto" in base)
-      (base as any).texto = `Nuevo elemento ${currentLength + 1}`;
-    if ("date" in base)
-      (base as any).date = new Date().toISOString().split("T")[0];
+    if ("id" in base) mutable.id = Date.now();
+    if ("title" in base) mutable.title = `Nueva carta ${currentLength + 1}`;
+    if ("titulo" in base) mutable.titulo = `Nueva carta ${currentLength + 1}`;
+    if ("texto" in base) mutable.texto = `Nuevo elemento ${currentLength + 1}`;
+    if ("date" in base) mutable.date = new Date().toISOString().split("T")[0];
 
     return base;
   };
@@ -647,42 +610,39 @@ export default function Inicio() {
   } = inicioApi({
     idsAPI,
     updateIdsAPI,
-
     categoriasPorTipo,
-
     asesoriasState,
     setAsesoriasState,
-
     cursosState,
     setCursosState,
-
     accionState,
     setAccionState,
-
     programasState,
     setProgramasState,
-
     saludState,
     setSaludState,
-
     actividadesState,
     setActividadesState,
-
     talleresState,
     setTalleresState,
-
     calendarioState,
     setCalendarioState,
-
     encuestaState,
     setEncuestaState,
-
     updateItem,
     deleteItem,
+    categoriasPorNombre,
   });
+
+  const { contacto } = datosInicio;
 
   return (
     <>
+      {loading && (
+        <div className="cargando-banner" role="status">
+          Cargando contenido…
+        </div>
+      )}
       <header id="inicio" className="inicio-section">
         <div className="inicio-texto">
           <h1>Santiago Joven: Crece, participa y aprende</h1>
@@ -714,9 +674,7 @@ export default function Inicio() {
             </p>
           </div>
           <div className="grupo-cartas">
-            <div className="titulo-con-btnAdd">
-              <h3>Asesoría</h3>
-            </div>
+            <h3>Asesoría</h3>
             {isAdmin && (
               <button
                 className="card_edit_btn"
@@ -731,7 +689,7 @@ export default function Inicio() {
                 Agregar
               </button>
             )}
-            {asesorias.length === 0 ? (
+            {asesoriasState.length === 0 ? (
               <SinDatos mensaje="No hay asesorías disponibles por el momento." />
             ) : (
               <div className="contenedor-flex">
@@ -756,69 +714,41 @@ export default function Inicio() {
           </div>
           <div className="grupo-cartas">
             <h3>Preuniversitario</h3>
-            {preuniversitario.length === 0 ? (
-              <SinDatos mensaje="No hay cursos preuniversitarios disponibles por el momento." />
-            ) : (
-              <div className="contenedor-flex">
-                {preuniversitarioState.map((carta, index) => (
-                  <EditableCard
-                    key={index}
-                    cardProps={{
-                      icono: carta.icono,
-                      iconoColor: carta.iconoColor,
-                      iconoTamaño: carta.iconoTamaño,
-                      titulo: carta.titulo,
-                      descripcion: carta.descripcion,
-                    }}
-                    isAdmin={isAdmin}
-                    onSave={(updated) =>
-                      updateItem(
-                        preuniversitarioState,
-                        setPreuniversitarioState,
-                        index,
-                        updated,
-                      )
-                    }
-                    onDelete={() =>
-                      deleteItem(
-                        preuniversitarioState,
-                        setPreuniversitarioState,
-                        index,
-                      )
-                    }
-                    onAdd={() => {
-                      const nuevo = getPreparedTemplate(
-                        templates.preuniversitario,
-                        preuniversitarioState.length,
-                      );
-                      setPreuniversitarioState([
-                        ...preuniversitarioState,
-                        nuevo,
-                      ]);
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-            <div className="titulo-con-btnAdd">
-              <h3>Preuniversitario</h3>
-            </div>
             {isAdmin && (
               <button
                 className="card_edit_btn"
                 onClick={() => {
-                  const updatedList = [
-                    ...preuniversitarioState,
-                    getPreparedTemplate(
-                      templates.preuniversitario,
-                      preuniversitarioState.length,
-                    ),
-                  ];
-                  setPreuniversitarioState(updatedList);
+                  const preparado = getPreparedTemplate(
+                    templates.encuesta,
+                    encuestaState.length,
+                  );
+                  createEncuesta({
+                    ...preparado,
+                    title: `Preuniversitario ${encuestaState.length + 1}`,
+                  });
                 }}
               >
                 Agregar
               </button>
+            )}
+            {encuestaState.filter((e) => e.title.includes("Preuniversitario"))
+              .length === 0 ? (
+              <SinDatos mensaje="No hay cursos preuniversitarios disponibles por el momento." />
+            ) : (
+              <div className="contenedor-flex">
+                {encuestaState
+                  .filter((e) => e.title.includes("Preuniversitario"))
+                  .map((encuesta, index) => (
+                    <EditableSurveyCard
+                      key={encuesta.id}
+                      eventProps={encuesta}
+                      isAdmin={isAdmin}
+                      onSave={(updated) => saveEncuesta(updated, index)}
+                      onDelete={() => deleteEncuesta(index)}
+                      onAdd={(newSurvey) => createEncuesta(newSurvey)}
+                    />
+                  ))}
+              </div>
             )}
           </div>
         </section>
@@ -854,7 +784,7 @@ export default function Inicio() {
               Agregar
             </button>
           )}
-          {cursos.length === 0 ? (
+          {cursosState.length === 0 ? (
             <SinDatos mensaje="No hay cursos destacados por el momento." />
           ) : (
             <EditableSlider
@@ -902,7 +832,7 @@ export default function Inicio() {
                 </button>
               )}
             </div>
-            {accion.length === 0 ? (
+            {accionState.length === 0 ? (
               <SinDatos mensaje="No hay acciones joven disponibles por el momento." />
             ) : (
               <EditableSlider
@@ -950,7 +880,7 @@ export default function Inicio() {
               </button>
             )}
           </div>
-          {programas.length === 0 ? (
+          {programasState.length === 0 ? (
             <SinDatos mensaje="No hay programas disponibles por el momento." />
           ) : (
             <EditableSlider
@@ -1069,7 +999,7 @@ export default function Inicio() {
                   </button>
                 )}
               </div>
-              {actividades.length === 0 ? (
+              {actividadesState.length === 0 ? (
                 <SinDatos mensaje="No hay actividades disponibles por el momento." />
               ) : (
                 <ul>
@@ -1078,36 +1008,21 @@ export default function Inicio() {
                       key={`${item.texto}-${index}`}
                       item={item}
                       isAdmin={isAdmin}
-                      onSave={(updated, seccion) => {
-                        if (seccion === "actividades") {
-                          saveActividad(updated, item.texto).then(() =>
-                            updateItem(
-                              actividadesState,
-                              setActividadesState,
-                              index,
-                              updated,
-                            ),
-                          );
-                        } else {
-                          deleteActividad(item.texto).then(() => {
-                            setActividadesState(
-                              actividadesState.filter((_, i) => i !== index),
-                            );
-                            setTalleresState((prev) => [...prev, updated]);
-                          });
-                        }
+                      onSave={(updated) => {
+                        const tituloOriginal = item.texto;
+                        saveActividad(updated, tituloOriginal, index, false); // false para actividades
                       }}
                       onDelete={() => {
-                        deleteActividad(item.texto).then(() =>
+                        deleteActividad(item.texto).then(() => {
                           deleteItem(
                             actividadesState,
                             setActividadesState,
                             index,
-                          ),
-                        );
+                          );
+                        });
                       }}
                       onAdd={(newItem) => {
-                        createActividad(newItem);
+                        createActividad(newItem, "actividades");
                       }}
                     />
                   ))}
@@ -1132,7 +1047,7 @@ export default function Inicio() {
                   </button>
                 )}
               </div>
-              {talleres.length === 0 ? (
+              {talleresState.length === 0 ? (
                 <SinDatos mensaje="No hay talleres disponibles por el momento." />
               ) : (
                 <ul>
@@ -1142,19 +1057,13 @@ export default function Inicio() {
                       item={item}
                       isAdmin={isAdmin}
                       onSave={(updated) => {
-                        saveActividad(updated, item.texto).then(() =>
-                          updateItem(
-                            talleresState,
-                            setTalleresState,
-                            index,
-                            updated,
-                          ),
-                        );
+                        const tituloOriginal = item.texto;
+                        saveActividad(updated, tituloOriginal, index, false); // false para actividades
                       }}
                       onDelete={() => {
-                        deleteActividad(item.texto).then(() =>
-                          deleteItem(talleresState, setTalleresState, index),
-                        );
+                        deleteActividad(item.texto).then(() => {
+                          deleteItem(talleresState, setTalleresState, index);
+                        });
                       }}
                       onAdd={(newItem) => {
                         createActividad(newItem, "talleres");
@@ -1176,23 +1085,21 @@ export default function Inicio() {
               >
                 calendar_month
               </span>
-              <h2>
-                Calendario de Actividades{" "}
-                {isAdmin && (
-                  <button
-                    className="card_edit_btn"
-                    onClick={() => {
-                      const preparado = getPreparedTemplate(
-                        templates.calendario,
-                        calendarioState.length,
-                      );
-                      createCalendario(preparado);
-                    }}
-                  >
-                    Agregar
-                  </button>
-                )}
-              </h2>
+              <h2>Calendario de Actividades</h2>
+              {isAdmin && (
+                <button
+                  className="card_edit_btn"
+                  onClick={() => {
+                    const preparado = getPreparedTemplate(
+                      templates.calendario,
+                      calendarioState.length,
+                    );
+                    createCalendario(preparado);
+                  }}
+                >
+                  Agregar
+                </button>
+              )}
               <p>
                 Revisa nuestros próximos eventos. ¡Filtra por categoría y no te
                 pierdas nada!
@@ -1211,7 +1118,7 @@ export default function Inicio() {
                 ),
               )}
             </div>
-            {actividadesFiltradas.length === 0 ? (
+            {eventosFiltrados.length === 0 ? (
               <SinDatos mensaje="No hay actividades programadas en esta categoría." />
             ) : (
               <div className="contenedor-flex grilla-actividades">
@@ -1241,7 +1148,6 @@ export default function Inicio() {
             >
               calendar_month
             </span>
-
             <div
               style={{
                 display: "flex",
@@ -1252,7 +1158,6 @@ export default function Inicio() {
             >
               <h2>Tu contribución cuenta</h2>
             </div>
-
             <p>
               Ayúdanos a mejorar los programas comunales. Estas encuestas son
               anónimas y nos sirve para generar estadísticas y nuevas
@@ -1273,7 +1178,8 @@ export default function Inicio() {
               </button>
             )}
           </div>
-          {encuestaState.length === 0 ? (
+          {encuestaState.filter((e) => !e.title.includes("Preuniversitario"))
+            .length === 0 ? (
             <div className="sin-encuestas">
               <span
                 className="material-symbols-outlined seccion-icono"
@@ -1285,18 +1191,22 @@ export default function Inicio() {
             </div>
           ) : (
             <div className="contenedor-flex grilla-actividades">
-              {encuestaState.map((evento, index) => (
-                <EditableSurveyCard
-                  key={evento.id}
-                  eventProps={evento}
-                  isAdmin={isAdmin}
-                  onSave={(updated) => saveEncuesta(updated, index)}
-                  onDelete={() => deleteEncuesta(index)}
-                  onAdd={(newSurvey) => {
-                    createEncuesta(newSurvey);
-                  }}
-                />
-              ))}
+              {encuestaState
+                .filter((e) => !e.title.includes("Preuniversitario"))
+                .map((evento) => (
+                  <EditableSurveyCard
+                    key={evento.id}
+                    eventProps={evento}
+                    isAdmin={isAdmin}
+                    onSave={(updated) =>
+                      saveEncuesta(updated, encuestaState.indexOf(evento))
+                    }
+                    onDelete={() =>
+                      deleteEncuesta(encuestaState.indexOf(evento))
+                    }
+                    onAdd={(newSurvey) => createEncuesta(newSurvey)}
+                  />
+                ))}
             </div>
           )}
         </section>

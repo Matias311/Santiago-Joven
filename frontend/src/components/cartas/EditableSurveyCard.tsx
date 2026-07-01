@@ -22,7 +22,9 @@ export default function EditableSurveyCard({
   const [formData, setFormData] = useState<Survey>(eventProps);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => {
     setFormData({
       ...formData,
@@ -55,6 +57,16 @@ export default function EditableSurveyCard({
                 onChange={handleChange}
               />
             </div>
+
+            <p>Descripción</p>
+            <textarea
+              id="description"
+              name="descripcion"
+              value={formData.descripcion}
+              onChange={handleChange}
+              placeholder="Describe la carta"
+              rows={6}
+            ></textarea>
 
             <div className="container">
               <p>URL de la encuesta</p>

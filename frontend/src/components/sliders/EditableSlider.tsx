@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import EditableCard from "../cartas/EditableCard";
 import { type CartaItem } from "../types/CartaItem";
 // ESTILO SLIDER
@@ -21,14 +21,13 @@ export default function EditableSlider({
 }: SliderProps) {
   const [indexActual, setindexActual] = useState(0);
 
-  // Para ver si la carta activa se está editando
+  // Para ver si la carta activa se esta editando
   const [isEditing, setIsEditing] = useState(false);
 
-  const siguienteCarta = () => {
+  const siguienteCarta = useCallback(() => {
     if (isEditing) return;
     setindexActual((prev) => (prev === cartas.length - 1 ? 0 : prev + 1));
-  };
-
+  }, [isEditing, cartas.length]);
   const cartaAnterior = () => {
     if (isEditing) return; // Bloquea las flechas manuales si edita
     setindexActual((prev) => (prev === 0 ? cartas.length - 1 : prev - 1));
@@ -40,7 +39,7 @@ export default function EditableSlider({
 
     const timer = setInterval(siguienteCarta, 5000);
     return () => clearInterval(timer);
-  }, [cartas.length, indexActual, isEditing]);
+  }, [cartas.length, isEditing, siguienteCarta]);
 
   return (
     <div className="contenedor-slider">

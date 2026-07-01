@@ -1,6 +1,7 @@
 import { type CartaItem } from "../types/CartaItem";
 import Card from "../../components/cartas/Card";
 import { useState, useEffect } from "react";
+import { iconos } from "../../assets/IconosCards/iconos";
 
 import "./EditableCard.css";
 
@@ -13,46 +14,6 @@ interface EditableCardProps {
   onDelete: () => void;
   onAdd?: (newCard: CartaItem) => void;
 }
-
-/** Lista de iconos **/
-export const iconos = [
-  "search",
-  "arrow_forward",
-  "arrow_back",
-  "cancel",
-  "logout",
-  "login",
-  "arrow_forward_ios",
-  "chevron_right",
-  "star",
-  "add",
-  "check_circle",
-  "settings",
-  "close",
-  "menu",
-  "home",
-  "service_toolbox",
-  "school",
-  "book_ribbon",
-  "calculate",
-  "account_balance",
-  "smart_toy",
-  "content_copy",
-  "family_group",
-  "potted_plant",
-  "call",
-  "home_health",
-  "record_voice_over",
-  "event_available",
-  "conversation",
-  "mic",
-  "draw",
-  "lightbulb",
-  "handshake",
-  "rocket",
-  "campaign",
-  "diversity_3",
-];
 
 export default function EditableCard({
   cardProps,
@@ -176,6 +137,91 @@ export default function EditableCard({
               rows={6}
             ></textarea>
 
+            {/* URL de la página */}
+            {"url" in formData && formData.url != null && (
+              <>
+                <p>URL de la página</p>
+                <input
+                  type="text"
+                  name="url"
+                  value={(formData as { url?: string }).url || ""}
+                  onChange={handleChange}
+                  placeholder="https://ejemplo.com"
+                />
+              </>
+            )}
+
+            {/* Imagen de la página */}
+            {"imagen" in formData && formData.imagen != null && (
+              <>
+                <p>URL de la imagen</p>
+                <input
+                  type="text"
+                  name="imagen"
+                  value={(formData as { imagen?: string }).imagen || ""}
+                  onChange={handleChange}
+                  placeholder="https://ejemplo.com/imagen.jpg"
+                />
+              </>
+            )}
+
+            {/* Descripción de la página (meta description) */}
+            {"descripcionPagina" in formData &&
+              formData.descripcionPagina != null && (
+                <>
+                  <p>Descripción de la página (SEO)</p>
+                  <textarea
+                    id="description"
+                    name="descripcion"
+                    value={formData.descripcion}
+                    onChange={handleChange}
+                    placeholder="Describe la carta"
+                    rows={6}
+                  ></textarea>
+                </>
+              )}
+            {/* Eslogan */}
+            {"eslogan" in formData && formData.eslogan != null && (
+              <>
+                <p>Eslogan</p>
+                <textarea
+                  name="eslogan"
+                  value={formData.eslogan as string}
+                  onChange={handleChange}
+                  placeholder="Ingresa el eslogan"
+                  rows={2}
+                />
+              </>
+            )}
+
+            {/* Objetivo */}
+            {"objetivo" in formData && formData.objetivo != null && (
+              <>
+                <p>Objetivo</p>
+                <textarea
+                  name="objetivo"
+                  value={formData.objetivo as string}
+                  onChange={handleChange}
+                  placeholder="Ingresa el objetivo"
+                  rows={3}
+                />
+              </>
+            )}
+
+            {/* Enlace de inscripción */}
+            {"enlaceInscripcion" in formData &&
+              formData.enlaceInscripcion != null && (
+                <>
+                  <p>Enlace de inscripción</p>
+                  <input
+                    type="url"
+                    name="enlaceInscripcion"
+                    value={formData.enlaceInscripcion as string}
+                    onChange={handleChange}
+                    placeholder="https://..."
+                  />
+                </>
+              )}
             {/* Selector de icono y color */}
             {formData.icono != null && (
               <>
