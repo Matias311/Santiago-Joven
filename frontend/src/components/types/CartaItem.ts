@@ -29,4 +29,14 @@ export interface CartaItem {
   boton?: string;
   /** Clase CSS adicional para el contenedor raíz de la tarjeta. */
   clase?: string;
+  /** Ruta a la que redirige la tarjeta cuando se hace clic. */
+  ruta?: string;
+  /** 4 párrafos para mostrar alrededor del icono central. */
+  gridItems?: string[];
+  /** Icono central en el diseño de párrafos alrededor. */
+  iconoMedio?: string;
+  /** Fondo del icono central. */
+  iconoMedioFondo?: string;
+  /** Tema visual de la tarjeta (define colores vía CSS, ej: "azul", "naranja"). */
+  tema?: string;
 }

@@ -7,6 +7,7 @@ import { Base } from "./components/Base/Base";
 import Footer from "./components/Footer/Footer";
 import AccessibilityWidget from "./components/Accesibilidad/Accesibilidad";
 import PopupEncuesta from "./components/popupencuesta/PopupEncuesta";
+import Proyeccion from "./components/pages/proyeccion/proyeccion";
 
 /**
  * @module App
@@ -85,8 +86,11 @@ function App() {
         - modoOscuro: estado actual del modo oscuro
         - onToggleModo: callback para cambiar el tema
       */}
-      <Navbar modoOscuro={modoOscuro} onToggleModo={() => setModoOscuro((value) => !value)} />
-      
+      <Navbar
+        modoOscuro={modoOscuro}
+        onToggleModo={() => setModoOscuro((value) => !value)}
+      />
+
       {/* 
         PopupEncuesta: Widget de encuestas flotante
         Props:
@@ -94,7 +98,7 @@ function App() {
         Nota: Cambiar a false si no hay encuestas activas
       */}
       <PopupEncuesta hayEncuestas={true} />
-      
+
       {/* 
         Routes: Define las rutas de la aplicación
         Nota: Mantener la estructura tal como está. Cambiar solo el contenido
@@ -102,21 +106,23 @@ function App() {
       */}
       <Routes>
         {/* Aqui tienen que poner exactamente lo mismo, pero cambiando el elemento por el componente que les corresponda  */}
-        <Route path="/" element={<Base content={<Inicio />} />} /> {/* esto de aca no se borra */}
+        <Route path="/" element={<Base content={<Inicio />} />} />{" "}
+        {/* esto de aca no se borra */}
         <Route path="/asesoria" element={<Base content={<Asesoria />} />} />
+        <Route path="/proyeccion" element={<Base content={<Proyeccion />} />} />
       </Routes>
-      
+
       {/* 
         AccessibilityWidget: Widget de accesibilidad flotante
         Props:
         - targetSelector: selector CSS del elemento contenedor principal
       */}
       <AccessibilityWidget targetSelector="#site-content" />
-      
+
       {/* Footer: Pie de página */}
       <Footer />
     </BrowserRouter>
   );
 }
 
-  export default App;
+export default App;

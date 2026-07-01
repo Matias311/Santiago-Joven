@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import "./slider.css";
 import Card from "../cartas/Card";
-import type { CartaItem } from '../types/CartaItem';
+import ProyeccionCard from "../cartas/ProyeccionCard";
+import type { CartaItem } from "../types/CartaItem";
 
 /**
  * Props del componente Slider.
@@ -29,8 +30,10 @@ interface Props {
 export default function Slider({ cartas }: Props) {
   const [indiceActual, setIndiceActual] = useState(0);
 
-  const siguienteCarta = () => setIndiceActual((prev) => (prev === cartas.length - 1 ? 0 : prev + 1));
-  const cartaAnterior = () => setIndiceActual((prev) => (prev === 0 ? cartas.length - 1 : prev - 1));
+  const siguienteCarta = () =>
+    setIndiceActual((prev) => (prev === cartas.length - 1 ? 0 : prev + 1));
+  const cartaAnterior = () =>
+    setIndiceActual((prev) => (prev === 0 ? cartas.length - 1 : prev - 1));
 
   const siguienteCartaRef = useRef(siguienteCarta);
   siguienteCartaRef.current = siguienteCarta;
@@ -49,25 +52,43 @@ export default function Slider({ cartas }: Props) {
 
       <div className="slider-activo">
         {/* Solo renderiza la carta en el índice actual */}
-        {cartas.map((carta, index) => (
-          index === indiceActual && (
-            <Card
-              key={carta.titulo}
-              icono={carta.icono}
-              iconoColor={carta.iconoColor}
-              iconoTamaño={carta.iconoTamaño}
-              iconoFondo={carta.iconoFondo}
-              titulo={carta.titulo}
-              tituloColor={carta.tituloColor}
-              subtitulo={carta.subtitulo}
-              sliderSombra={carta.sliderSombra}
-              descripcion={carta.descripcion}
-              boton={carta.boton}
-              botoncolor={carta.botoncolor}
-              clase={carta.clase}
-            />
-          )
-        ))}
+        {cartas.map(
+          (carta, index) =>
+            index === indiceActual &&
+            (carta.tema ? (
+              <ProyeccionCard
+                key={carta.titulo}
+                icono={carta.icono}
+                iconoFondo={carta.iconoFondo}
+                iconoMedio={carta.iconoMedio || carta.icono || "smart_toy"}
+                titulo={carta.titulo}
+                subtitulo={carta.subtitulo}
+                items={carta.gridItems}
+                descripcion={carta.descripcion}
+                boton={carta.boton}
+                tema={carta.tema}
+                clase={carta.clase}
+                ruta={carta.ruta}
+              />
+            ) : (
+              <Card
+                key={carta.titulo}
+                icono={carta.icono}
+                iconoColor={carta.iconoColor}
+                iconoTamaño={carta.iconoTamaño}
+                iconoFondo={carta.iconoFondo}
+                titulo={carta.titulo}
+                tituloColor={carta.tituloColor}
+                subtitulo={carta.subtitulo}
+                sliderSombra={carta.sliderSombra}
+                descripcion={carta.descripcion}
+                boton={carta.boton}
+                botoncolor={carta.botoncolor}
+                clase={carta.clase}
+                ruta={carta.ruta}
+              />
+            )),
+        )}
       </div>
 
       <button className="flecha-slider" onClick={siguienteCarta}>

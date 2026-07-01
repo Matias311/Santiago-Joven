@@ -1,0 +1,192 @@
+/* =============================================================
+   HERO SECTION - PROYECCIÓN
+   Encabezado con degradado azul-verde, igual al de inicio.
+   ============================================================= */
+.proyeccion-section {
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    var(--azul) 0%,
+    #1a9e73 60%,
+    var(--verde) 100%
+  );
+  min-height: 400px;
+  padding: 7rem 3rem;
+  color: var(--blanco);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: -200px;
+  padding-top: 15rem;
+}
+
+.proyeccion-texto {
+  max-width: 700px;
+}
+
+.proyeccion-texto h1 {
+  font-family: "Outfit", sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.proyeccion-texto p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  opacity: 0.92;
+}
+
+/* Dos cards de acceso rápido (Proyección / Acción Joven) */
+.proyeccion-accesos {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.proyeccion-accesos .carta-universal {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radio);
+  padding: 1.4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--blanco);
+  backdrop-filter: blur(8px);
+  transition:
+    background 0.2s,
+    transform 0.2s;
+  cursor: pointer;
+}
+
+.proyeccion-accesos .carta-universal:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-3px);
+}
+
+.proyeccion-accesos .icono {
+  font-size: 1.6rem;
+  margin-bottom: 0.6rem;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.proyeccion-accesos .carta-universal h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: var(--blanco);
+}
+
+/* =============================================================
+   CURSOS DESTACADOS
+   Título de la sección en verde oscuro, igual que #proyeccion en inicio.
+   ============================================================= */
+#cursos-destacados h2 {
+  color: #0ea5e9;
+}
+
+/* =============================================================
+   ACCIÓN JOVEN
+   Fondo ámbar suave que diferencia visualmente la sección.
+   ============================================================= */
+.fondo-naranja-suave {
+  background: #fffbeb;
+  padding: 2rem;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+.accion-joven .seccion-encabezado h2 {
+  color: var(--naranja);
+}
+
+/* =============================================================
+   CONTACTO Y UBICACIÓN
+   Reutiliza los estilos de inicio.css (.contacto-layout, etc.)
+   Sin sobrescrituras necesarias; sección idéntica al inicio.
+   ============================================================= */
+.mapa-ubicacion {
+  margin-top: 2rem;
+  border-radius: var(--radio-grande);
+  overflow: hidden;
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--sombra);
+}
+
+.mapa-ubicacion iframe {
+  width: 100%;
+  min-height: 320px;
+  border: 0;
+  display: block;
+}
+
+/* =============================================================
+   MODO OSCURO
+   ============================================================= */
+.dark .proyeccion-section {
+  background: linear-gradient(
+    135deg,
+    var(--azul) 0%,
+    #1a9e73 60%,
+    var(--verde) 100%
+  );
+}
+
+.dark .fondo-naranja-suave {
+  background: #1a1200;
+}
+
+.dark .accion-joven .seccion-encabezado h2 {
+  color: var(--naranja);
+}
+
+/* =============================================================
+   RESPONSIVE
+   ============================================================= */
+@media (max-width: 768px) {
+  .proyeccion-section {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+    margin-top: -130px;
+    padding-top: 15rem;
+    min-height: auto;
+    text-align: center;
+  }
+
+  .proyeccion-accesos {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .proyeccion-texto h1 {
+    font-size: 1.8rem;
+  }
+
+  .fondo-naranja-suave {
+    width: 100%;
+    margin-left: 0;
+    padding: 1.5rem;
+  }
+}
+
+/* =============================================================
+   ESTADO DE CARGA
+   ============================================================= */
+.proyeccion-cargando {
+  text-align: center;
+  padding: 2rem;
+  color: var(--texto-secundario, #64748b);
+  font-size: 0.95rem;
+}
