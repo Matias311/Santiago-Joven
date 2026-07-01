@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import "./programas.css";
 import InfoCard from "../../cartas/InfoCard";
 import Card from "../../cartas/Card";
@@ -97,6 +98,18 @@ const metodologiaSenda =
  * @returns {JSX.Element} Página completa de Programas.
  */
 export default function Programas() {
+  const navigate = useNavigate();
+
+  // Navega a inicio y hace scroll a la sección de contacto
+  const irAContacto = () => {
+    navigate("/");
+    setTimeout(() => {
+      document
+        .getElementById("contacto")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }, 300);
+  };
+
   return (
     <>
       <header className="programas-header">
@@ -155,7 +168,7 @@ export default function Programas() {
             textMetodologia={metodologiaLazos}
             etiquetaCTA="¿Quieres ser parte de Lazos?"
             textBoton="¡Contáctanos!"
-            alClickBoton={() => {}}
+            alClickBoton={irAContacto}
           />
         </section>
 
@@ -184,7 +197,7 @@ export default function Programas() {
               textMetodologia={metodologiaSenda}
               etiquetaCTA="¿Quieres ser parte de Senda?"
               textBoton="¡Contáctanos!"
-              alClickBoton={() => {}}
+              alClickBoton={irAContacto}
             />
           </section>
         </div>

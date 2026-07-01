@@ -1,0 +1,300 @@
+/* =========================================================
+   VARIABLES (Modo Claro / Oscuro Autocontenido)
+========================================================= */
+:root {
+  --bg-card: #fff;
+  --bg-modal: #fff;
+  --border-color: #e2e8f0;
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 10px 28px rgba(0, 0, 0, 0.1);
+  --bg-icon: #fdf1e6;
+  --text-title: #1e3a5f;
+  --text-desc: #64748b;
+  --text-muted: #94a3b8;
+  --bg-input: #f8fafc;
+  --primary-btn: #2563eb;
+  --bg-expirado: #fef2f2;
+  --text-expirado: #ef4444;
+}
+.dark {
+  --bg-card: #0f172a;
+  --bg-modal: #111827;
+  --border-color: rgba(148, 163, 184, 0.16);
+  --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.55);
+  --shadow-card-hover: 0 22px 52px rgba(0, 0, 0, 0.65);
+  --bg-icon: rgba(255, 255, 255, 0.08);
+  --text-title: #f8fafc;
+  --text-desc: #cbd5e1;
+  --bg-input: #0f172a;
+  --bg-expirado: #451a03;
+  --text-expirado: #fca5a5;
+}
+
+/* =========================================================
+   TARJETAS (CARDS)
+========================================================= */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 1.4rem 1.5rem;
+  cursor: pointer;
+  display: block;
+  width: 260px;
+  transition: all 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.card-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.card_icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  background: var(--bg-icon);
+  border-radius: 10px;
+  margin-bottom: 0.7rem;
+}
+.card-header-icon {
+  font-size: 20px;
+}
+
+.card_title {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-title);
+  margin-bottom: 0.35rem;
+}
+.card_description {
+  font-size: 0.85rem;
+  color: var(--text-desc);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* =========================================================
+   MODAL (Estructura y Textos)
+========================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: block;
+  z-index: 1000;
+  padding: 1rem;
+}
+.modal {
+  background: var(--bg-modal);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  margin: 2rem auto;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.modal-close:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+.modal-body {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-title);
+  margin: 0 0 6px;
+}
+
+/* Textos unificados */
+.modal-subtitle-info p,
+.modal-descripcion-preu,
+.modal-taller,
+.modal-profesor,
+.modal-modalidad {
+  font-size: 13.5px;
+  color: var(--text-desc);
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+.modal-profesor strong,
+.modal-modalidad strong {
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.modal-section-title,
+.modal-preu-heading {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  display: block;
+}
+.modal-section-title span {
+  font-weight: 400;
+  color: var(--text-desc);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.modal-list,
+.modal-list-preu {
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+}
+.modal-list li,
+.modal-list-preu li {
+  font-size: 13.5px;
+  color: var(--text-desc);
+  line-height: 1.6;
+}
+
+/* =========================================================
+   FORMULARIOS Y BOTONES
+========================================================= */
+.modal-form {
+  display: block;
+  margin: 1rem 0;
+}
+.modal-form div {
+  margin-bottom: 10px;
+}
+.modal-form label {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+.modal-form input {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--text-title);
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.modal-form input:focus {
+  border-color: var(--primary-btn);
+}
+.modal-form input::placeholder {
+  color: #64748b;
+}
+
+.modal-footer-action,
+.modal-footer-preu {
+  margin-top: 1.2rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+}
+
+.modal-btn-main {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  display: block;
+  text-align: center;
+  box-sizing: border-box;
+}
+.modal-btn-main.participar {
+  background: var(--primary-btn);
+  color: #fff;
+  transition: opacity 0.2s;
+}
+.modal-btn-main.participar:hover {
+  opacity: 0.85;
+}
+.modal-btn-main.cerrado,
+.modal-btn-main.cancelado,
+.modal-btn-main.lleno {
+  background: #334155;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.modal-badge-encuesta {
+  background: #dbeafe;
+  color: #2563eb;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 0.2s;
+}
+.modal-badge-encuesta:hover {
+  opacity: 0.8;
+}
+
+.modal-footer-info {
+  margin-top: 8px;
+}
+.modal-plazo,
+.modal-cupos,
+.modal-login-warning {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 2px 0;
+}
+
+/* Estados de alerta (Modo claro/oscuro dinámico por variable) */
+.event-status.expirado {
+  background: var(--bg-expirado);
+  color: var(--text-expirado);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}

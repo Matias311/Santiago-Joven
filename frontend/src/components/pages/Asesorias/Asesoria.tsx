@@ -3,8 +3,8 @@ import Card from "../../cartas/Card";
 import InfoCard from "../../cartas/InfoCard";
 import type { CartaItem } from "../../types/CartaItem";
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
-// Acceso directo del encabezado hacia la sección de asesorías
 const headerIconos: CartaItem[] = [
   {
     icono: "handshake",
@@ -15,7 +15,6 @@ const headerIconos: CartaItem[] = [
 ];
 const anclas = ["#asesorias"];
 
-// Íconos de Material Symbols (pequeño = esquina superior derecha, grande = decorativo)
 const IcoNetworkSmall = (
   <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>
     work
@@ -40,7 +39,6 @@ const IcoWorkGrande = (
   </span>
 );
 
-// Contenido de las tarjetas de la sección "Asesorías"
 const cartasCapacitacion = [
   {
     colorAcento: "#78A75A",
@@ -72,19 +70,23 @@ const cartasCapacitacion = [
   },
 ];
 
-// Componente slider: muestra una tarjeta a la vez y permite navegar entre ellas.
-// Avanza automáticamente cada 15 segundos.
-function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
+// Recibe onContacto para pasárselo al botón de cada InfoCard
+function SliderInfoCard({
+  cartas,
+  onContacto,
+}: {
+  cartas: typeof cartasCapacitacion;
+  onContacto: () => void;
+}) {
   const [actual, setActual] = useState(0);
   const [direccion, setDireccion] = useState<"right" | "left">("right");
   const [animando, setAnimando] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Cambia a la carta indicada, activa la animación y reinicia el temporizador
   const cambiar = (index: number, dir: "right" | "left") => {
     setDireccion(dir);
     setAnimando(false);
-    setTimeout(() => setAnimando(true), 10); // Pequeño delay para que la animación se reinicie
+    setTimeout(() => setAnimando(true), 10);
     setActual(index);
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
@@ -92,7 +94,6 @@ function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
     }, 15000);
   };
 
-  // Al montar el componente, inicia el avance automático
   useEffect(() => {
     setAnimando(true);
     timerRef.current = setTimeout(() => {
@@ -117,7 +118,6 @@ function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
           <span className="material-symbols-outlined">chevron_left</span>
         </button>
 
-        {/* Aplica la clase de animación según la dirección de navegación */}
         <div className={animando ? `slide-enter-${direccion}` : ""}>
           <InfoCard
             colorAcento={carta.colorAcento}
@@ -129,7 +129,7 @@ function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
             textMetodologia={carta.textMetodologia}
             etiquetaCTA={carta.etiquetaCTA}
             textBoton={carta.textBoton}
-            alClickBoton={() => {}} //TODO: Agregar funcionalidad:3
+            alClickBoton={onContacto}
           />
         </div>
 
@@ -138,7 +138,6 @@ function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
         </button>
       </div>
 
-      {/* Puntos de navegación: el activo toma el color de acento de la carta actual */}
       <div className="slider-dots">
         {cartas.map((_, i) => (
           <button
@@ -154,6 +153,18 @@ function SliderInfoCard({ cartas }: { cartas: typeof cartasCapacitacion }) {
 }
 
 export default function Asesoria() {
+  const navigate = useNavigate();
+
+  // Navega a inicio y hace scroll a la sección de contacto
+  const irAContacto = () => {
+    navigate("/");
+    setTimeout(() => {
+      document
+        .getElementById("contacto")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }, 300);
+  };
+
   return (
     <>
       <header id="asesoria-inicio" className="asesoria-header">
@@ -165,7 +176,6 @@ export default function Asesoria() {
           </p>
         </div>
 
-        {/* Acceso directo a la sección, centrado al tener un solo elemento */}
         <div className="carta-seccion">
           {headerIconos.map((carta, index) => (
             <a
@@ -196,7 +206,10 @@ export default function Asesoria() {
             <h2 style={{ color: "#78A75A" }}>Asesorías</h2>
             <p>Programas de capacitación y asesoría para adultos y jóvenes.</p>
           </div>
-          <SliderInfoCard cartas={cartasCapacitacion} />
+          <SliderInfoCard
+            cartas={cartasCapacitacion}
+            onContacto={irAContacto}
+          />
         </section>
       </main>
     </>

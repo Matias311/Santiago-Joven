@@ -1,8 +1,11 @@
 import "./inicio.css";
 import Card from "../../cartas/Card";
+import CardPREU, {
+  type CardData,
+  type CardPreuData,
+} from "../../cartas/CardPREU";
 import Slider from "../../sliders/slider";
 import type { CartaItem } from "../../types/CartaItem";
-import type { ConexionItem } from "../../types/ConexionItem";
 import { Link } from "react-router-dom";
 
 const asesorias: CartaItem[] = [
@@ -24,27 +27,66 @@ const asesorias: CartaItem[] = [
   },
 ];
 
-const preuniversitario: CartaItem[] = [
+const preuniversitario: CardPreuData[] = [
   {
-    icono: "book_ribbon",
-    iconoColor: "#DA954B",
-    iconoTamaño: "40px",
-    titulo: "Competencia Lectora",
-    descripcion: "Potencia tu comprensión y análisis de textos.",
+    img: "/img/preu-lectora.jpg",
+    icon: "book_ribbon",
+    iconColor: "#DA954B",
+    title: "Competencia Lectora",
+    description: "Potencia tu comprensión y análisis de textos.",
+    profesor: "Por definir",
+    horarios: ["Por definir"],
+    modalidad: "Por definir",
+    fechaLimite: "Por definir",
+    cuposDisponibles: 0,
+    cuposTotales: 0,
+    date: "Por definir",
+    lugar: "Por definir",
+    cupos_disponibles: 0,
+    cupos: 0,
+    btn: "Participar",
+    urlEncuesta: "https://classroom.google.com/",
+    btnClass: "participar",
   },
   {
-    icono: "calculate",
-    iconoColor: "#DA954B",
-    iconoTamaño: "40px",
-    titulo: "M1 (Matemáticas)",
-    descripcion: "Refuerza tus habilidades numéricas para la PAES.",
+    img: "/img/preu-m1.jpg",
+    icon: "calculate",
+    iconColor: "#DA954B",
+    title: "M1 (Matemáticas)",
+    description: "Refuerza tus habilidades numéricas para la PAES.",
+    profesor: "Por definir",
+    horarios: ["Por definir"],
+    modalidad: "Por definir",
+    fechaLimite: "Por definir",
+    cuposDisponibles: 0,
+    cuposTotales: 0,
+    date: "Por definir",
+    lugar: "Por definir",
+    cupos_disponibles: 0,
+    cupos: 0,
+    btn: "Participar",
+    urlEncuesta: "https://classroom.google.com/",
+    btnClass: "participar",
   },
   {
-    icono: "account_balance",
-    iconoColor: "#DA954B",
-    iconoTamaño: "40px",
-    titulo: "Ciencias Sociales",
-    descripcion: "Prepárate para la prueba de Historia y Cs. Sociales.",
+    img: "/img/preu-sociales.jpg",
+    icon: "account_balance",
+    iconColor: "#DA954B",
+    title: "Ciencias Sociales",
+    description: "Prepárate para la prueba de Historia y Cs. Sociales.",
+    profesor: "Por definir",
+    horarios: ["Por definir"],
+    modalidad: "Por definir",
+    fechaLimite: "Por definir",
+    cuposDisponibles: 0,
+    cuposTotales: 0,
+    date: "Por definir",
+    lugar: "Por definir",
+    cupos_disponibles: 0,
+    cupos: 0,
+    btn: "Participar",
+    urlEncuesta: "https://classroom.google.com/",
+    btnClass: "participar",
   },
 ];
 
@@ -137,19 +179,95 @@ const salud: CartaItem[] = [
   },
 ];
 
-const actividades: ConexionItem[] = [
+// ── Actividades ahora como CardData para abrir modal ──
+const actividades: CardData[] = [
   {
-    icono: "event_available",
-    texto: "Ferias vocacionales y de emprendimiento.",
+    img: "/img/actividad-feria.jpg",
+    icon: "event_available",
+    iconColor: "#789DE5",
+    title: "Ferias vocacionales y de emprendimiento.",
+    description:
+      "Explora nuevas oportunidades laborales y conecta con emprendedores locales para impulsar tu futuro profesional.",
+    date: "Por definir",
+    lugar: "Por definir",
+    cupos_disponibles: 0,
+    cupos: 0,
+    btn: "Ver más",
+    btnClass: "participar",
   },
-  { icono: "account_balance", texto: "Viaje cultural al Museo." },
-  { icono: "conversation", texto: "Reuniones y círculos de conversación." },
+  {
+    img: "/img/actividad-museo.jpg",
+    icon: "account_balance",
+    iconColor: "#789DE5",
+    title: "Viaje cultural al Museo.",
+    description:
+      "Visita guiada a museos de Santiago para conocer la historia y cultura de nuestro país.",
+    date: "Por definir",
+    lugar: "Por definir",
+    cupos_disponibles: 0,
+    cupos: 0,
+    btn: "Ver más",
+    btnClass: "participar",
+  },
+  {
+    img: "/img/actividad-reunion.jpg",
+    icon: "conversation",
+    iconColor: "#789DE5",
+    title: "Reuniones y círculos de conversación.",
+    description:
+      "Espacios de diálogo para compartir ideas, experiencias y construir comunidad entre jóvenes.",
+    date: "Por definir",
+    lugar: "Por definir",
+    cupos_disponibles: 0,
+    cupos: 0,
+    btn: "Ver más",
+    btnClass: "participar",
+  },
 ];
 
-const talleres: ConexionItem[] = [
-  { icono: "mic", texto: "Taller de liderazgo y oratoria." },
-  { icono: "draw", texto: "Talleres creativos (Música, dibujo, teatro)." },
-  { icono: "lightbulb", texto: "Taller de debate y pensamiento crítico." },
+const talleres: CardData[] = [
+  {
+    img: "/img/taller-liderazgo.jpg",
+    icon: "mic",
+    iconColor: "#789DE5",
+    title: "Taller de liderazgo y oratoria.",
+    description:
+      "Desarrolla habilidades de comunicación, confianza y liderazgo para destacar en cualquier ámbito.",
+    date: "Por definir",
+    lugar: "Por definir",
+    cupos_disponibles: 0,
+    cupos: 0,
+    btn: "Ver más",
+    btnClass: "participar",
+  },
+  {
+    img: "/img/taller-creativos.jpg",
+    icon: "draw",
+    iconColor: "#789DE5",
+    title: "Talleres creativos (Música, dibujo, teatro).",
+    description:
+      "Explora tu lado artístico a través de talleres de música, dibujo y expresión teatral.",
+    date: "Por definir",
+    lugar: "Por definir",
+    cupos_disponibles: 0,
+    cupos: 0,
+    btn: "Ver más",
+    btnClass: "participar",
+  },
+  {
+    img: "/img/taller-debate.jpg",
+    icon: "lightbulb",
+    iconColor: "#789DE5",
+    title: "Taller de debate y pensamiento crítico.",
+    description:
+      "Aprende a argumentar, analizar y defender tus ideas con fundamentos sólidos.",
+    date: "Por definir",
+    lugar: "Por definir",
+    cupos_disponibles: 0,
+    cupos: 0,
+    btn: "Ver más",
+    btnClass: "participar",
+  },
 ];
 
 const contacto = {
@@ -244,18 +362,13 @@ export default function Inicio() {
               ))}
             </div>
           </div>
+
+          {/* ── PREUNIVERSITARIO ── */}
           <div className="grupo-cartas">
             <h3>Preuniversitario</h3>
             <div className="contenedor-flex">
               {preuniversitario.map((carta) => (
-                <Card
-                  key={carta.titulo}
-                  icono={carta.icono}
-                  iconoColor={carta.iconoColor}
-                  iconoTamaño={carta.iconoTamaño}
-                  titulo={carta.titulo}
-                  descripcion={carta.descripcion}
-                />
+                <CardPREU key={carta.title} data={carta} />
               ))}
             </div>
           </div>
@@ -381,31 +494,24 @@ export default function Inicio() {
             </p>
           </div>
           <div className="contenedor-flex">
+            {/* ── Actividades como cards con modal ── */}
             <div className="lista-conexion">
               <h3>Actividades</h3>
-              <ul>
+              <div className="contenedor-flex">
                 {actividades.map((item) => (
-                  <li key={item.texto}>
-                    <span className="material-symbols-outlined">
-                      {item.icono}
-                    </span>
-                    {item.texto}
-                  </li>
+                  <CardPREU key={item.title} data={item} />
                 ))}
-              </ul>
+              </div>
             </div>
+
+            {/* ── Talleres como cards con modal ── */}
             <div className="lista-conexion">
               <h3>Talleres</h3>
-              <ul>
+              <div className="contenedor-flex">
                 {talleres.map((item) => (
-                  <li key={item.texto}>
-                    <span className="material-symbols-outlined">
-                      {item.icono}
-                    </span>
-                    {item.texto}
-                  </li>
+                  <CardPREU key={item.title} data={item} />
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
         </section>
